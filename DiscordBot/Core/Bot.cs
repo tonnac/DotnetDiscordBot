@@ -19,12 +19,7 @@ public class Bot
 
     public Bot()
     {
-#if RELEASE
-        string configpath = "config.json";
-#else
-        string configpath = "../../../config.json";
-#endif
-        using (StreamReader r = new StreamReader(configpath))
+        using (StreamReader r = new StreamReader("config.json"))
         {
             string json = r.ReadToEnd();
             _config = JsonConvert.DeserializeObject<Config>(json);

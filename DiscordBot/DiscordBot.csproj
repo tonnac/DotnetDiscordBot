@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>a191a526-0f97-4f06-91a1-742e489ca23f</UserSecretsId>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,4 +42,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="copy /y &quot;$(ProjectDir)/config.json&quot; &quot;$(OutDir)/&quot;" />
+	</Target>
 </Project>
