@@ -30,7 +30,7 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search);
         }
 
-        [Command]
+        [Command, Aliases("l")]
         public async Task Leave(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
