@@ -96,7 +96,7 @@ public class MusicPlayer
             else bar += "▬";
         }
 
-        bar += $" [{current.ToString(@"mm\:ss")}/{total.ToString(@"mm\:ss")}]";
+        bar += $" [{current:hh\\:mm\\:ss}/{total:hh\\:mm\\:ss}]";
 
         embedBuilder.WithFooter(bar);
         embedBuilder.AddField(new DiscordEmbedField("현재 재생중인 음악", $"[{currtrack.LavaLinkTrack.Title}]({currtrack.LavaLinkTrack.Uri.AbsoluteUri})" + $"by {currtrack.User.Mention}"));
@@ -119,7 +119,57 @@ public class MusicPlayer
             await Connection.ResumeAsync();
         }
     }
+    public async Task Seek(CommandContext ctx, string position)
+    {
+        if (Connection.CurrentState.CurrentTrack != null)
+        {
+            string[] separator = { "h", "m", "s" };
+            TimeSpan positionTime = new TimeSpan();
+            if (position.Contains('h') && position.Contains('m') && position.Contains('s'))
+            {
+                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                int hour = int.Parse(splitResult[0]);
+                int minute = int.Parse(splitResult[1]);
+                int sec = int.Parse(splitResult[2]);
+                positionTime = new TimeSpan(hour, minute, sec);
+            }
+            else if (position.Contains('m') && position.Contains('s'))
+            {
+                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                int minute = int.Parse(splitResult[0]);
+                int sec = int.Parse(splitResult[1]);
+                positionTime = new TimeSpan(0, minute, sec);
+            }
+            else if (position.Contains('h'))
+            {
+                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                int hour = int.Parse(splitResult[0]);
+                positionTime = new TimeSpan(hour, 0, 0);               
+            }
+            else if (position.Contains('m'))
+            {
+                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                int minutes = int.Parse(splitResult[0]);
+                positionTime = new TimeSpan(0, minutes, 0);
+            }
+            else if (position.Contains('s'))
+            {
+                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                int sec = int.Parse(splitResult[0]);
+                positionTime = new TimeSpan(0, 0, sec);
+            }
+            
+            await Connection.SeekAsync(positionTime);
+        } 
+    }
 
+    public async Task Skip(CommandContext ctx)
+    {
+        if (Connection.CurrentState.CurrentTrack != null)
+        {
+            await Connection.SeekAsync(_queue.Peek().LavaLinkTrack.Length);
+        }
+    }
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
     {
         if (_queue.Count == 0)

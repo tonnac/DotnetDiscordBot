@@ -38,9 +38,10 @@ namespace DiscordBot.Commands
             {
                 return;
             }
+
             await player.Leave();
         }
-        
+
         [Command, Aliases("q")]
         public async Task Queue(CommandContext ctx)
         {
@@ -49,9 +50,10 @@ namespace DiscordBot.Commands
             {
                 return;
             }
+
             await player.Queue(ctx);
         }
-        
+
         [Command, Aliases("np")]
         public async Task NowPlaying(CommandContext ctx)
         {
@@ -60,9 +62,10 @@ namespace DiscordBot.Commands
             {
                 return;
             }
+
             await player.NowPlaying(ctx);
         }
-        
+
         [Command]
         public async Task Pause(CommandContext ctx)
         {
@@ -71,6 +74,7 @@ namespace DiscordBot.Commands
             {
                 return;
             }
+
             await player.Pause(ctx);
         }
 
@@ -82,10 +86,35 @@ namespace DiscordBot.Commands
             {
                 return;
             }
+
             await player.Resume(ctx);
         }
-    
-        private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx)
+
+        [Command]
+        public async Task Seek(CommandContext ctx, [RemainingText] string positionString)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+   
+            await player.Seek(ctx, positionString);
+        }
+        
+        [Command, Aliases("s")]
+        public async Task Skip(CommandContext ctx)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx, false);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Skip(ctx);
+        }
+
+        private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx, bool notCreating = true)
         {
             if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
             {
@@ -103,13 +132,17 @@ namespace DiscordBot.Commands
                     await ctx.RespondAsync(String.Format(Localization.NotInSameChannel, player.Connection.Node.Discord.CurrentUser.Username));
                     return null;
                 }
-            }
-            else
-            {
-                player = await CreateMusicPlayer(ctx);
+
+                return player;
             }
 
-            return player;
+            if (notCreating)
+            {
+                player = await CreateMusicPlayer(ctx);
+                return player;
+            }
+
+            return null;
         }
 
         private async Task<MusicPlayer?> CreateMusicPlayer(CommandContext ctx)
@@ -120,25 +153,23 @@ namespace DiscordBot.Commands
                 ctx.Client.Logger.LogError(new EventId(200, "LavaLinkExtension"), null, "LavaLinkExtension null");
                 return null;
             }
+
             LavalinkNodeConnection? node = lava.ConnectedNodes.Values.First();
             if (node == null)
             {
                 ctx.Client.Logger.LogError(new EventId(201, "LavaLinkNodeConnection"), null, "LavaLinkNodeConnection null");
                 return null;
             }
-            
+
             LavalinkGuildConnection? conn = await node.ConnectAsync(ctx.Member.VoiceState.Channel);
             if (conn == null)
             {
                 ctx.Client.Logger.LogError(new EventId(202, "LavaLinkGuildConnection"), null, "LavaLinkGuildConnection null");
                 return null;
             }
-            
-            conn.ChannelDisconnected += (connection) =>
-            {
-                _musicPlayers.Remove(connection.Guild);
-            };
-            
+
+            conn.ChannelDisconnected += (connection) => { _musicPlayers.Remove(connection.Guild); };
+
             MusicPlayer musicPlayer = new MusicPlayer(conn);
             _musicPlayers.TryAdd(ctx.Guild, musicPlayer);
             return musicPlayer;
