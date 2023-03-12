@@ -2,17 +2,18 @@
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
+using Discord;
 
 namespace DiscordBot.Music;
 
 public class MusicTrack
 {
-    private readonly DiscordUser _requester;
     public DiscordChannel Channel { get; }
     public LavalinkTrack LavaLinkTrack { get; }
+    public DiscordUser User { get; }
     private MusicTrack(DiscordUser requester, DiscordChannel channel, LavalinkTrack lavaLinkTrack)
     {
-        _requester = requester;
+        User = requester;
         Channel = channel;
         LavaLinkTrack = lavaLinkTrack;
     }

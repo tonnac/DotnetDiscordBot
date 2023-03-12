@@ -1,4 +1,5 @@
 ﻿using DisCatSharp.CommandsNext;
+using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Lavalink.EventArgs;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ public class MusicPlayer
     public async Task Play(CommandContext ctx, string searchQuery)
     {
         var loadResult = await Connection.Node.Rest.GetTracksAsync(searchQuery);
-        
+
         if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
             || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
         {
@@ -47,6 +48,78 @@ public class MusicPlayer
         await Connection.DisconnectAsync();
     }
 
+    public async Task Queue(CommandContext ctx)
+    {
+        if (_queue.Count == 0)
+        {
+            return;
+        }
+
+        DiscordMessageBuilder messageBuilder = new DiscordMessageBuilder();
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
+        int index = 0;
+        MusicTrack currtrack = _queue.Peek();
+        String urlInedxer = "";
+        foreach (MusicTrack musicTrack in _queue)
+        {
+            index++;
+            urlInedxer += index + " - " + $"[{musicTrack.LavaLinkTrack.Title}]({musicTrack.LavaLinkTrack.Uri.AbsoluteUri})" + $"by {musicTrack.User.Mention}" + "\n";
+        }
+
+        embedBuilder.Color = DiscordColor.Orange;
+        embedBuilder.AddField(new DiscordEmbedField("현재 재생중인 음악", $"[{currtrack.LavaLinkTrack.Title}]({currtrack.LavaLinkTrack.Uri.AbsoluteUri})" + $"by {currtrack.User.Mention}"));
+        embedBuilder.AddField(new DiscordEmbedField("대기열", urlInedxer));
+        messageBuilder.AddEmbed(embedBuilder);
+        await ctx.RespondAsync(messageBuilder);
+    }
+
+    public async Task NowPlaying(CommandContext ctx)
+    {
+        if (_queue.Count == 0)
+        {
+            return;
+        }
+
+        DiscordMessageBuilder messageBuilder = new DiscordMessageBuilder();
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
+        MusicTrack currtrack = _queue.Peek();
+
+        embedBuilder.Color = DiscordColor.Blue;
+
+        var current = Connection.CurrentState.PlaybackPosition;
+        var total = currtrack.LavaLinkTrack.Length;
+        var diff = (int)(current.TotalSeconds / total.TotalSeconds * 15); // Bar's length
+        var bar = "\u25B6 ";
+        for (int i = 0; i < 15; i++)
+        {
+            if (i == diff) bar += "\uD83D\uDD18";
+            else bar += "▬";
+        }
+
+        bar += $" [{current.ToString(@"mm\:ss")}/{total.ToString(@"mm\:ss")}]";
+
+        embedBuilder.WithFooter(bar);
+        embedBuilder.AddField(new DiscordEmbedField("현재 재생중인 음악", $"[{currtrack.LavaLinkTrack.Title}]({currtrack.LavaLinkTrack.Uri.AbsoluteUri})" + $"by {currtrack.User.Mention}"));
+        messageBuilder.AddEmbed(embedBuilder);
+        await ctx.RespondAsync(messageBuilder);
+    }
+
+    public async Task Pause(CommandContext ctx)
+    {
+        if (Connection.CurrentState.CurrentTrack != null)
+        {
+            await Connection.PauseAsync();
+        }
+    }
+
+    public async Task Resume(CommandContext ctx)
+    {
+        if (Connection.CurrentState.CurrentTrack != null)
+        {
+            await Connection.ResumeAsync();
+        }
+    }
+
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
     {
         if (_queue.Count == 0)
@@ -58,7 +131,7 @@ public class MusicPlayer
         
         MusicTrack track = _queue.Peek();
         connection.Node.Discord.Logger.LogDebug(new EventId(703, "Track Start"), $"Track Started {args.Track.Title}");
-        await track.Channel.SendMessageAsync($"Play Track {args.Track.Title}");
+        await track.Channel.SendMessageAsync($"Play Track {args.Track.Title} \n URL : {args.Track.Uri.AbsoluteUri} \n By : {track.User.Mention}");
     }
     
     private async Task OnTrackFinished(LavalinkGuildConnection connection, TrackFinishEventArgs args)

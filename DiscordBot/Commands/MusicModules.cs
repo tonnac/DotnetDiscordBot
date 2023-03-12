@@ -30,7 +30,7 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search);
         }
 
-        [Command]
+        [Command, Aliases("l")]
         public async Task Leave(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -39,6 +39,50 @@ namespace DiscordBot.Commands
                 return;
             }
             await player.Leave();
+        }
+        
+        [Command, Aliases("q")]
+        public async Task Queue(CommandContext ctx)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+            await player.Queue(ctx);
+        }
+        
+        [Command, Aliases("np")]
+        public async Task NowPlaying(CommandContext ctx)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+            await player.NowPlaying(ctx);
+        }
+        
+        [Command]
+        public async Task Pause(CommandContext ctx)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+            await player.Pause(ctx);
+        }
+
+        [Command]
+        public async Task Resume(CommandContext ctx)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+            await player.Resume(ctx);
         }
     
         private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx)
