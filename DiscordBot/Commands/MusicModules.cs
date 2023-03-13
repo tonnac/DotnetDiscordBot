@@ -114,6 +114,19 @@ namespace DiscordBot.Commands
             await player.Skip(ctx);
         }
 
+
+        [Command, Aliases("r")]
+        public async Task Remove(CommandContext ctx, string indexString)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx, false);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Remove(ctx,indexString);
+        }
+
         private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx, bool notCreating = true)
         {
             if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
