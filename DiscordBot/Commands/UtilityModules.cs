@@ -76,7 +76,6 @@ namespace DiscordBot.Commands
             });
 
             var reply = result.Choices[0].Message;
-            Console.WriteLine(reply);
             await ctx.RespondAsync($"{reply.Content.Trim()}");
         }
     }
