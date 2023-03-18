@@ -110,4 +110,13 @@
 	<data name="play_Description" xml:space="preserve">
 		<value>Plays audio from YouTube</value>
 	</data>
+	<data name="NowPlaying" xml:space="preserve">
+		<value>NowPlaing</value>
+	</data>
+	<data name="RequestedBy" xml:space="preserve">
+		<value>Requested By</value>
+	</data>
+	<data name="Duration" xml:space="preserve">
+		<value>Duration</value>
+	</data>
 </root>

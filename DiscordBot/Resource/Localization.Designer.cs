@@ -60,6 +60,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duration.
+        /// </summary>
+        internal static string Duration {
+            get {
+                return ResourceManager.GetString("Duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to join a voice channel first!.
         /// </summary>
         internal static string NotInChannel {
@@ -78,6 +87,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NowPlaing.
+        /// </summary>
+        internal static string NowPlaying {
+            get {
+                return ResourceManager.GetString("NowPlaying", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plays audio from YouTube.
         /// </summary>
         internal static string play_Description {
@@ -92,6 +110,15 @@ namespace DiscordBot.Resource {
         internal static string play_Usage {
             get {
                 return ResourceManager.GetString("play_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested By.
+        /// </summary>
+        internal static string RequestedBy {
+            get {
+                return ResourceManager.GetString("RequestedBy", resourceCulture);
             }
         }
     }

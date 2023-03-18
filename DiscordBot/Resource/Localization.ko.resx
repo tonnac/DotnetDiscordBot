@@ -110,4 +110,13 @@
 	<data name="play_Description" xml:space="preserve">
 		<value>YouTube로 부터 음악을 재생합니다.</value>
 	</data>
+	<data name="NowPlaying" xml:space="preserve">
+		<value>현재 재생중인 곡</value>
+	</data>
+	<data name="RequestedBy" xml:space="preserve">
+		<value>선곡</value>
+	</data>
+	<data name="Duration" xml:space="preserve">
+		<value>재생시간</value>
+	</data>
 </root>
