@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
 
 namespace DiscordBot;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class Config
 {
-    public Config(string token, string hostname, string authorization, ushort port, string locale, string prefix)
+    public Config(string token, string hostname, string authorization, ushort port, string locale, string prefix, string openAIAPIKey)
     {
         Token = token;
         Hostname = hostname;
@@ -13,6 +14,7 @@ public class Config
         Port = port;
         Locale = locale;
         Prefix = prefix;
+        OpenAIAPIKey = openAIAPIKey;
     }
 
     [JsonProperty] public string Token { get; set; }
@@ -21,4 +23,5 @@ public class Config
     [JsonProperty] public ushort Port{ get; set; }
     [JsonProperty] public string Locale{ get; set; }
     [JsonProperty] public string Prefix{ get; set; }
+    [JsonProperty] public string OpenAIAPIKey{ get; set; }
 }

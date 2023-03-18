@@ -10,6 +10,7 @@ using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using OpenAI_API;
 
 namespace DiscordBot.Core;
 public class Bot
@@ -34,11 +35,13 @@ public class Bot
             MinimumLogLevel = LogLevel.Debug,
             Intents = DiscordIntents.All,
         });
-        
+
+
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
             .AddSingleton(_client)
             .AddSingleton(_config)
+            .AddSingleton(new OpenAIAPI(new APIAuthentication(_config.OpenAIAPIKey)))
             .BuildServiceProvider();
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
@@ -71,6 +74,7 @@ public class Bot
         {
             throw new Exception("LavaLink null");
         }
+
         await lavaLink.ConnectAsync(lavaConfig);
         await Task.Delay(-1);
     }
