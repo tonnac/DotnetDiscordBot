@@ -69,6 +69,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no queue.
+        /// </summary>
+        internal static string ErrorNotQueue {
+            get {
+                return ResourceManager.GetString("ErrorNotQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to join a voice channel first!.
         /// </summary>
         internal static string NotInChannel {
@@ -119,6 +128,15 @@ namespace DiscordBot.Resource {
         internal static string Queue {
             get {
                 return ResourceManager.GetString("Queue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: {0}remove &lt;Queue Number&gt;.
+        /// </summary>
+        internal static string remove_Usage {
+            get {
+                return ResourceManager.GetString("remove_Usage", resourceCulture);
             }
         }
         

@@ -131,4 +131,10 @@
 	<data name="TotalLength" xml:space="preserve">
 		<value>Total Length</value>
 	</data>
+	<data name="ErrorNotQueue" xml:space="preserve">
+		<value>There is no queue</value>
+	</data>
+	<data name="remove_Usage" xml:space="preserve">
+		<value>Usage: {0}remove &lt;Queue Number&gt;</value>
+	</data>
 </root>

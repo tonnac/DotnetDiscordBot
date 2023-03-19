@@ -131,4 +131,10 @@
 	<data name="TotalLength" xml:space="preserve">
 		<value>총 재생시간</value>
 	</data>
+	<data name="ErrorNotQueue" xml:space="preserve">
+		<value>대기열에 음악이 없습니다</value>
+	</data>
+	<data name="remove_Usage" xml:space="preserve">
+		<value>사용 방법: {0}remove &lt;Queue Number&gt;</value>
+	</data>
 </root>

@@ -13,12 +13,14 @@ namespace DiscordBot.Music;
 public class MusicPlayer
 {
     private readonly List<MusicTrack> _list = new List<MusicTrack>();
+    private readonly Config _config;
     public readonly LavalinkGuildConnection Connection;
     private static readonly int QueuePagePerCount = 10;
 
-    public MusicPlayer(LavalinkGuildConnection connection)
+    public MusicPlayer(LavalinkGuildConnection connection, Config config)
     {
         Connection = connection;
+        _config = config;
 
         Connection.PlaybackStarted += OnTractStarted;
         Connection.PlaybackFinished += OnTrackFinished;
@@ -217,21 +219,23 @@ public class MusicPlayer
     public async Task Remove(CommandContext ctx, string indexString)
     {
         if (Connection.CurrentState.CurrentTrack == null)
-            return;
-
-        int index = int.Parse(indexString) - 1;
-        if (index == 0)
         {
-            await Connection.SeekAsync(_list.First().LavaLinkTrack.Length);
+            await ctx.RespondAsync(Localization.ErrorNotQueue);
             return;
         }
+        
+        int index = int.Parse(indexString);
 
-        if (index < _list.Count)
+        if (index < 1 || index >= _list.Count)
         {
-            var track =  _list[index];
-            _list.RemoveAt(index);
-            await ctx.RespondAsync($"Remove {index} {track.LavaLinkTrack.Title} {track.User.Mention}!");
+            await ctx.RespondAsync(String.Format(Localization.remove_Usage, _config.Prefix));
+            return;
         }
+            
+
+        var track =  _list[index];
+        _list.RemoveAt(index);
+        await ctx.RespondAsync($"Remove {index} {track.LavaLinkTrack.Title} {track.User.Mention}!");
     }
 
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
