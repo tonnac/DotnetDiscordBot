@@ -137,4 +137,7 @@
 	<data name="remove_Usage" xml:space="preserve">
 		<value>사용 방법: {0}remove &lt;Queue Number&gt;</value>
 	</data>
+	<data name="seek_Usage" xml:space="preserve">
+		<value>사용 방법: {0}seek &lt;시간h/m/s&gt; 예 - {0}seek 2m 10s</value>
+	</data>
 </root>

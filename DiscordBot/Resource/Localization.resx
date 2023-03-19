@@ -137,4 +137,7 @@
 	<data name="remove_Usage" xml:space="preserve">
 		<value>Usage: {0}remove &lt;Queue Number&gt;</value>
 	</data>
+	<data name="seek_Usage" xml:space="preserve">
+		<value>Usage: {0}seek &lt;number h/m/s&gt; Example - {0}seek 2m 10s</value>
+	</data>
 </root>

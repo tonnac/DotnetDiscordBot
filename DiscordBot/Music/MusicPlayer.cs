@@ -1,4 +1,5 @@
-﻿using DisCatSharp;
+﻿using System.Text.RegularExpressions;
+using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.Interactivity;
@@ -166,46 +167,21 @@ public class MusicPlayer
     }
     public async Task Seek(CommandContext ctx, string position)
     {
-        if (Connection.CurrentState.CurrentTrack != null)
+        if (Connection.CurrentState.CurrentTrack == null)
         {
-            string[] separator = { "h", "m", "s" };
-            TimeSpan positionTime = new TimeSpan();
-            if (position.Contains('h') && position.Contains('m') && position.Contains('s'))
-            {
-                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                int hour = int.Parse(splitResult[0]);
-                int minute = int.Parse(splitResult[1]);
-                int sec = int.Parse(splitResult[2]);
-                positionTime = new TimeSpan(hour, minute, sec);
-            }
-            else if (position.Contains('m') && position.Contains('s'))
-            {
-                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                int minute = int.Parse(splitResult[0]);
-                int sec = int.Parse(splitResult[1]);
-                positionTime = new TimeSpan(0, minute, sec);
-            }
-            else if (position.Contains('h'))
-            {
-                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                int hour = int.Parse(splitResult[0]);
-                positionTime = new TimeSpan(hour, 0, 0);               
-            }
-            else if (position.Contains('m'))
-            {
-                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                int minutes = int.Parse(splitResult[0]);
-                positionTime = new TimeSpan(0, minutes, 0);
-            }
-            else if (position.Contains('s'))
-            {
-                string[] splitResult = position.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                int sec = int.Parse(splitResult[0]);
-                positionTime = new TimeSpan(0, 0, sec);
-            }
-            
-            await Connection.SeekAsync(positionTime);
-        } 
+            await ctx.RespondAsync(Localization.ErrorNotQueue);
+            return;
+        }
+
+        try
+        {
+            await Connection.SeekAsync(Utility.GetTime(position));
+        }
+        catch (Exception e)
+        {
+            await ctx.RespondAsync(String.Format(Localization.seek_Usage, _config.Prefix));
+            return;
+        }
     }
 
     public async Task Skip(CommandContext ctx)

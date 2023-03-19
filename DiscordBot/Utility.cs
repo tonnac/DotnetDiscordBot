@@ -1,10 +1,33 @@
-﻿using DisCatSharp;
+﻿using System.Text.RegularExpressions;
+using DisCatSharp;
 
 namespace DiscordBot;
 
 public static class Utility
 {
     private static readonly int BarLength = 15;
+
+    private static class DefaultOpts
+    {
+        public static float HoursPerDay = 24;
+        public static float DaysPerWeek = 7;
+        public static float WeeksPerMonth = 4;
+        public static float MonthsPerYear = 12;
+        public static float DaysPerYear = 365.25f;
+    }
+
+    private static readonly Dictionary<string, List<string>> UnitMap = new Dictionary<string, List<string>>()
+    {
+        { "ms", new List<string> {"ms", "milli", "millisecond", "milliseconds"} },
+        { "s", new List<string> {"s", "sec", "secs", "second", "seconds"} },
+        { "m", new List<string> {"m", "min", "mins", "minute", "minutes"} },
+        { "h", new List<string> {"h", "hr", "hrs", "hour", "hours"} },
+        { "d", new List<string> {"d", "day", "days"} },
+        { "w", new List<string> {"w", "week", "weeks"} },
+        { "mth", new List<string> {"mon", "mth", "mths", "month", "months"} },
+        { "y", new List<string> {"y", "yr", "yrs", "year", "years"} },
+    };
+    
     public static string ToDuration(this TimeSpan time)
     {
         return time.Hours > 0 ? time.ToString(@"hh\:mm\:ss") : time.ToString(@"mm\:ss");
@@ -31,5 +54,58 @@ public static class Utility
 
         bar += $"[{current.ToDuration()} / {total.ToDuration()}]".InlineCode();
         return bar;
+    }
+
+    public static TimeSpan GetTime(string query)
+    {
+        Regex regex = new Regex("[0-9.]+[^0-9 ]*");
+
+        var mc = regex.Matches(query);
+
+        if (mc.Count == 0)
+        {
+            throw new Exception("can't find unit value");
+        }
+
+        Func<Dictionary<string, float>> getUnitValues = () =>
+        {
+            Dictionary<string, float> unitValues = new Dictionary<string, float>
+            {
+                { "ms", 0.001f },
+                { "s", 1 },
+                { "m", 60 },
+                { "h", 3600 }
+            };
+
+            unitValues.Add("d", DefaultOpts.HoursPerDay * unitValues["h"]);
+            unitValues.Add("w", DefaultOpts.DaysPerWeek * unitValues["d"]);
+            unitValues.Add("mth", DefaultOpts.DaysPerYear / DefaultOpts.MonthsPerYear * unitValues["d"]);
+            unitValues.Add("y", DefaultOpts.DaysPerYear * unitValues["d"]);
+
+            return unitValues;
+        };
+
+        int seconds = 0;
+        foreach (Match match in mc)
+        {
+            Regex valueRegex = new Regex("[0-9.]+");
+            Regex unitRegex = new Regex("[a-z]+");
+
+            var value = Convert.ToInt32(valueRegex.Match(match.Value).Value);
+            var unit = unitRegex.Match(match.Value);
+
+            var unitValues = getUnitValues();
+
+            if (unitValues.TryGetValue(unit.Value, out float unitValue))
+            {
+                seconds += Convert.ToInt32(unitValue * value);
+            }
+            else
+            {
+                throw new Exception("can't find unit value");
+            }
+        }
+
+        return new TimeSpan(0, 0, seconds);
     }
 }

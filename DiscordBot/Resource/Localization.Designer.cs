@@ -150,6 +150,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Usage: {0}seek &lt;number h/m/s&gt; Example - {0}seek 2m 10s.
+        /// </summary>
+        internal static string seek_Usage {
+            get {
+                return ResourceManager.GetString("seek_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Length.
         /// </summary>
         internal static string TotalLength {
