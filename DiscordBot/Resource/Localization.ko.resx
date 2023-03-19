@@ -119,4 +119,16 @@
 	<data name="Duration" xml:space="preserve">
 		<value>재생시간</value>
 	</data>
+	<data name="Queue" xml:space="preserve">
+		<value>대기열</value>
+	</data>
+	<data name="TotalSongs" xml:space="preserve">
+		<value>총 곡수</value>
+	</data>
+	<data name="UpNext" xml:space="preserve">
+		<value>다음 곡</value>
+	</data>
+	<data name="TotalLength" xml:space="preserve">
+		<value>총 재생시간</value>
+	</data>
 </root>

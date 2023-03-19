@@ -3,6 +3,9 @@ using System.Reflection;
 using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
+using DisCatSharp.Interactivity;
+using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Net;
 using DiscordBot.Music;
@@ -36,6 +39,11 @@ public class Bot
             Intents = DiscordIntents.All,
         });
 
+        _client.UseInteractivity(new InteractivityConfiguration()
+        {
+            PollBehaviour = PollBehaviour.DeleteEmojis,
+            Timeout = TimeSpan.FromSeconds(5)
+        });
 
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()

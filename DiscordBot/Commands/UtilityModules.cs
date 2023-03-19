@@ -3,7 +3,6 @@ using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
-using Discord;
 using DiscordBot.Resource;
 using OpenAI_API;
 using OpenAI_API.Chat;
@@ -16,12 +15,12 @@ namespace DiscordBot.Commands
         {
             _client = client;
             _config = config;
-            this.openAIAPI = openAIAPI;
+            _openAiApi = openAIAPI;
         }
 
         private readonly DiscordClient _client;
         private readonly Config _config;
-        private readonly OpenAIAPI openAIAPI;
+        private readonly OpenAIAPI _openAiApi;
         
         [Command, Aliases("h")]
         public async Task Help(CommandContext ctx)
@@ -34,8 +33,8 @@ namespace DiscordBot.Commands
 
             var copyCommands =
                 (from pair in commandNext.RegisteredCommands
-                 where pair.Key == pair.Value.Name
-                 select pair.Value)
+                    where pair.Key == pair.Value.Name
+                    select pair.Value)
                 .OrderBy((command => command.Name)).ToList();
 
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
@@ -64,14 +63,14 @@ namespace DiscordBot.Commands
         [Command, Aliases("g")]
         public async Task Gpt(CommandContext ctx, [RemainingText] string chatMessage)
         {
-            var result = await openAIAPI.Chat.CreateChatCompletionAsync(new OpenAI_API.Chat.ChatRequest()
+            var result = await _openAiApi.Chat.CreateChatCompletionAsync(new OpenAI_API.Chat.ChatRequest()
             {
                 Model = OpenAI_API.Models.Model.ChatGPTTurbo,
                 Temperature = 0.1,
                 MaxTokens = 2048,
                 Messages = new ChatMessage[]
                 {
-                new ChatMessage(ChatMessageRole.User, chatMessage)
+                    new ChatMessage(ChatMessageRole.User, chatMessage)
                 }
             });
 

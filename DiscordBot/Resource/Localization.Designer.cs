@@ -114,11 +114,47 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Queue.
+        /// </summary>
+        internal static string Queue {
+            get {
+                return ResourceManager.GetString("Queue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Requested By.
         /// </summary>
         internal static string RequestedBy {
             get {
                 return ResourceManager.GetString("RequestedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Length.
+        /// </summary>
+        internal static string TotalLength {
+            get {
+                return ResourceManager.GetString("TotalLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Songs.
+        /// </summary>
+        internal static string TotalSongs {
+            get {
+                return ResourceManager.GetString("TotalSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Up Next.
+        /// </summary>
+        internal static string UpNext {
+            get {
+                return ResourceManager.GetString("UpNext", resourceCulture);
             }
         }
     }

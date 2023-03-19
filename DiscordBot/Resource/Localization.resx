@@ -119,4 +119,16 @@
 	<data name="Duration" xml:space="preserve">
 		<value>Duration</value>
 	</data>
+	<data name="Queue" xml:space="preserve">
+		<value>Queue</value>
+	</data>
+	<data name="TotalSongs" xml:space="preserve">
+		<value>Total Songs</value>
+	</data>
+	<data name="UpNext" xml:space="preserve">
+		<value>Up Next</value>
+	</data>
+	<data name="TotalLength" xml:space="preserve">
+		<value>Total Length</value>
+	</data>
 </root>
