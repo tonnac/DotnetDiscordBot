@@ -140,4 +140,13 @@
 	<data name="seek_Usage" xml:space="preserve">
 		<value>Usage: {0}seek &lt;number h/m/s&gt; Example - {0}seek 2m 10s</value>
 	</data>
+	<data name="addedQueue" xml:space="preserve">
+		<value>Added to queue</value>
+	</data>
+	<data name="positionInQueue" xml:space="preserve">
+		<value>Position in queue</value>
+	</data>
+	<data name="disconnected" xml:space="preserve">
+		<value>Disconnected</value>
+	</data>
 </root>

@@ -140,4 +140,13 @@
 	<data name="seek_Usage" xml:space="preserve">
 		<value>사용 방법: {0}seek &lt;시간h/m/s&gt; 예 - {0}seek 2m 10s</value>
 	</data>
+	<data name="addedQueue" xml:space="preserve">
+		<value>대기열 추가</value>
+	</data>
+	<data name="positionInQueue" xml:space="preserve">
+		<value>대기열 순서</value>
+	</data>
+	<data name="disconnected" xml:space="preserve">
+		<value>채널을 떠나는 중입니다</value>
+	</data>
 </root>

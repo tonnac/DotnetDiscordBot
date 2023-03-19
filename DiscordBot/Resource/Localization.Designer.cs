@@ -60,6 +60,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Added to queue.
+        /// </summary>
+        internal static string addedQueue {
+            get {
+                return ResourceManager.GetString("addedQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnected.
+        /// </summary>
+        internal static string disconnected {
+            get {
+                return ResourceManager.GetString("disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration.
         /// </summary>
         internal static string Duration {
@@ -119,6 +137,15 @@ namespace DiscordBot.Resource {
         internal static string play_Usage {
             get {
                 return ResourceManager.GetString("play_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position in queue.
+        /// </summary>
+        internal static string positionInQueue {
+            get {
+                return ResourceManager.GetString("positionInQueue", resourceCulture);
             }
         }
         

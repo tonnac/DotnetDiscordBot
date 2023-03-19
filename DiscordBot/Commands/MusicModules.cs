@@ -31,6 +31,18 @@ namespace DiscordBot.Commands
 
             await player.Play(ctx, search);
         }
+        
+        [Command, Aliases("b")]
+        public async Task Bgm(CommandContext ctx, [RemainingText] string search)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Play(ctx, search, true);
+        }
 
         [Command, Aliases("l")]
         public async Task Leave(CommandContext ctx)
@@ -41,7 +53,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            await player.Leave();
+            await player.Leave(ctx);
         }
 
         [Command, Aliases("q")]

@@ -8,6 +8,7 @@ namespace DiscordBot.Music;
 
 public class MusicTrack
 {
+    public TimeSpan TimeSpan = TimeSpan.Zero;
     public DiscordChannel Channel { get; }
     public LavalinkTrack LavaLinkTrack { get; }
     public DiscordUser User { get; }
