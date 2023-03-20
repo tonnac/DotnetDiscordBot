@@ -109,17 +109,24 @@ public static class Utility
         return new TimeSpan(0, 0, seconds);
     }
 
-    public static string? MakeYouTubeShareUrl(string uri, TimeSpan seekTime = default)
+    public static string MakeYouTubeShareUrl(string uri, TimeSpan seekTime = default)
     {
         string? youTubeKey = GetYouTubeKey(uri);
-        if (youTubeKey == null)
-            return null;
+        if (string.IsNullOrEmpty(youTubeKey))
+            return String.Empty;
 
         if (seekTime.TotalSeconds > 0)
             return $"https://youtu.be/{youTubeKey}" + $"?t={(int) seekTime.TotalSeconds}";
         return $"https://youtu.be/{youTubeKey}";
     }
+    public static string MakeYouTubeThumbnailUrl(string uri)
+    {
+        string youTubeKey = GetYouTubeKey(uri);
+        if (string.IsNullOrEmpty(youTubeKey))
+            return String.Empty;
 
+        return $"https://img.youtube.com/vi/{youTubeKey}/mqdefault.jpg";
+    }
     public static string? GetYouTubeKey(string uri)
     {
         Regex pattern = new Regex(@"v=([0-9A-Za-z_-]{11})");
