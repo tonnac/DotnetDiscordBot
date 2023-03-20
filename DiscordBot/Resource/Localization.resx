@@ -149,4 +149,10 @@
 	<data name="disconnected" xml:space="preserve">
 		<value>Disconnected</value>
 	</data>
+	<data name="SaveMusic" xml:space="preserve">
+		<value>SaveMusic</value>
+	</data>
+	<data name="SaveTime" xml:space="preserve">
+		<value>SaveTime</value>
+	</data>
 </root>

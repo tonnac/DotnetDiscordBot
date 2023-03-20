@@ -108,4 +108,29 @@ public static class Utility
 
         return new TimeSpan(0, 0, seconds);
     }
+
+    public static string? MakeYouTubeShareUrl(string uri, TimeSpan seekTime = default)
+    {
+        string? youTubeKey = GetYouTubeKey(uri);
+        if (youTubeKey == null)
+            return null;
+
+        if (seekTime.TotalSeconds > 0)
+            return $"https://youtu.be/{youTubeKey}" + $"?t={(int) seekTime.TotalSeconds}";
+        return $"https://youtu.be/{youTubeKey}";
+    }
+
+    public static string? GetYouTubeKey(string uri)
+    {
+        Regex pattern = new Regex(@"v=([0-9A-Za-z_-]{11})");
+
+        Match match = pattern.Match(uri);
+        if (match.Success)
+        {
+            string key = match.Groups[1].Value;
+            return key;
+        }
+
+        return null;
+    }
 }

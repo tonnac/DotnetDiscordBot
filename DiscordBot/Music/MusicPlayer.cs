@@ -251,6 +251,28 @@ public class MusicPlayer
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
     }
 
+    public async Task Grab(CommandContext ctx)
+    {
+        if (Connection.CurrentState.CurrentTrack == null)
+        {
+            return;
+        }
+
+        MusicTrack currTrack = FindTrack(Connection.CurrentState.CurrentTrack);
+        var current = Connection.CurrentState.PlaybackPosition;
+        var total = currTrack.LavaLinkTrack.Length;
+        var currentTimeIncludeUri = Utility.MakeYouTubeShareUrl(currTrack.LavaLinkTrack.Uri.AbsoluteUri,current); 
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithColor(DiscordColor.DarkGreen)
+            .WithAuthor(Localization.SaveMusic)
+            .WithDescription($"[{currTrack.LavaLinkTrack.Title}]({currentTimeIncludeUri})")
+            .AddField(new DiscordEmbedField("URL", currentTimeIncludeUri))
+            .AddField(new DiscordEmbedField(Localization.RequestedBy, currTrack.User.Mention))
+            .AddField(new DiscordEmbedField(Localization.SaveTime, Utility.ProgressBar(current, total)));
+
+        await ctx.User.SendMessageAsync(embedBuilder);
+    }
+
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
     {
         if (_list.Count == 0 && _bgmList.Count == 0)
