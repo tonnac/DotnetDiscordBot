@@ -177,6 +177,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SaveMusic.
+        /// </summary>
+        internal static string SaveMusic {
+            get {
+                return ResourceManager.GetString("SaveMusic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SaveTime.
+        /// </summary>
+        internal static string SaveTime {
+            get {
+                return ResourceManager.GetString("SaveTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usage: {0}seek &lt;number h/m/s&gt; Example - {0}seek 2m 10s.
         /// </summary>
         internal static string seek_Usage {

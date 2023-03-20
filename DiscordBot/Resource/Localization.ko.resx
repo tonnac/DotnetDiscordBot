@@ -149,4 +149,10 @@
 	<data name="disconnected" xml:space="preserve">
 		<value>채널을 떠나는 중입니다</value>
 	</data>
+	<data name="SaveMusic" xml:space="preserve">
+		<value>노래 저장</value>
+	</data>
+	<data name="SaveTime" xml:space="preserve">
+		<value>저장시간</value>
+	</data>
 </root>
