@@ -14,14 +14,12 @@ public class MusicPlayer
 {
     private readonly List<MusicTrack> _list = new List<MusicTrack>();
     private readonly List<MusicTrack> _bgmList = new List<MusicTrack>();
-    private readonly Config _config;
     public readonly LavalinkGuildConnection Connection;
     private static readonly int QueuePagePerCount = 10;
 
-    public MusicPlayer(LavalinkGuildConnection connection, Config config)
+    public MusicPlayer(LavalinkGuildConnection connection)
     {
         Connection = connection;
-        _config = config;
 
         Connection.PlaybackStarted += OnTractStarted;
         Connection.PlaybackFinished += OnTrackFinished;
@@ -202,7 +200,7 @@ public class MusicPlayer
         catch (Exception e)
         {
             Connection.Node.Discord.Logger.LogError(new EventId(705, "invalid seek command"), e.Message);
-            await ctx.RespondAsync(String.Format(Localization.seek_Usage, _config.Prefix));
+            await ctx.RespondAsync(String.Format(Localization.seek_Usage, Config.Prefix));
         }
     }
 
@@ -231,7 +229,7 @@ public class MusicPlayer
 
         if (index < 1 || index >= copyTracks.Count)
         {
-            await ctx.RespondAsync(String.Format(Localization.remove_Usage, _config.Prefix));
+            await ctx.RespondAsync(String.Format(Localization.remove_Usage, Config.Prefix));
             return;
         }
 

@@ -7,7 +7,6 @@
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>a191a526-0f97-4f06-91a1-742e489ca23f</UserSecretsId>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +17,6 @@
     <PackageReference Include="Discord.Net.Core" Version="3.9.0" />
     <PackageReference Include="Discord.Net.WebSocket" Version="3.9.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="OpenAI" Version="1.6.0" />
   </ItemGroup>
@@ -42,8 +40,4 @@
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="copy /y &quot;$(ProjectDir)/config.json&quot; &quot;$(OutDir)/&quot;" />
-	</Target>
 </Project>

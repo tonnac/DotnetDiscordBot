@@ -1,0 +1,12 @@
+﻿namespace DiscordBot;
+
+public static class Config
+{
+    public static readonly string Token;
+    public static readonly string Hostname;
+    public static readonly string Authorization;
+    public static readonly ushort Port;
+    public static readonly string Locale;
+    public static readonly string Prefix;
+    public static readonly string OpenAiApiKey;
+}

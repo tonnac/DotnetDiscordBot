@@ -11,15 +11,13 @@ namespace DiscordBot.Commands
 {
     public sealed class UtilityModules : BaseCommandModule
     {
-        public UtilityModules(DiscordClient client, Config config, OpenAIAPI openAIAPI)
+        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI)
         {
             _client = client;
-            _config = config;
             _openAiApi = openAIAPI;
         }
 
         private readonly DiscordClient _client;
-        private readonly Config _config;
         private readonly OpenAIAPI _openAiApi;
         
         [Command, Aliases("h")]

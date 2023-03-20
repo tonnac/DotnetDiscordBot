@@ -12,28 +12,20 @@ using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using OpenAI_API;
 
 namespace DiscordBot.Core;
 public class Bot
 {
     private readonly DiscordClient _client;
-    private readonly Config? _config;
 
     public Bot()
     {
-        using (StreamReader r = new StreamReader("config.json"))
-        {
-            string json = r.ReadToEnd();
-            _config = JsonConvert.DeserializeObject<Config>(json);
-        }
-
-        Localization.Culture = new CultureInfo(_config.Locale, false);
+        Localization.Culture = new CultureInfo(Config.Locale, false);
         
         _client = new DiscordClient(new DiscordConfiguration
         {
-            Token = _config.Token,
+            Token = Config.Token,
             TokenType = TokenType.Bot,
             MinimumLogLevel = LogLevel.Debug,
             Intents = DiscordIntents.All,
@@ -48,13 +40,12 @@ public class Bot
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
             .AddSingleton(_client)
-            .AddSingleton(_config)
-            .AddSingleton(new OpenAIAPI(new APIAuthentication(_config.OpenAIAPIKey)))
+            .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
         {
-            StringPrefixes = new List<string>{ _config.Prefix },
+            StringPrefixes = new List<string>{ Config.Prefix },
             ServiceProvider = services
         });
         commandNext.UnregisterCommands(commandNext.FindCommand("help", out string rawArguments));
@@ -67,13 +58,13 @@ public class Bot
         
         var endPoint = new ConnectionEndpoint
         {
-            Port = _config.Port,
-            Hostname = _config.Hostname
+            Port = Config.Port,
+            Hostname = Config.Hostname
         };
         
         var lavaConfig = new LavalinkConfiguration
         {
-            Password = _config.Authorization,
+            Password = Config.Authorization,
             RestEndpoint = endPoint,
             SocketEndpoint = endPoint
         };

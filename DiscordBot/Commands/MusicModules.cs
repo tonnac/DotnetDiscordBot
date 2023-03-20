@@ -11,14 +11,12 @@ namespace DiscordBot.Commands
 {
     public class MusicModules : BaseCommandModule
     {
-        public MusicModules(Dictionary<DiscordGuild, MusicPlayer> musicPlayers, Config config)
+        public MusicModules(Dictionary<DiscordGuild, MusicPlayer> musicPlayers)
         {
             _musicPlayers = musicPlayers;
-            _config = config;
         }
 
         private readonly Dictionary<DiscordGuild, MusicPlayer> _musicPlayers;
-        private readonly Config _config;
 
         [Command, Aliases("p", "p1")]
         public async Task Play(CommandContext ctx, [RemainingText] string search)
@@ -197,7 +195,7 @@ namespace DiscordBot.Commands
 
             conn.ChannelDisconnected += (connection) => { _musicPlayers.Remove(connection.Guild); };
 
-            MusicPlayer musicPlayer = new MusicPlayer(conn, _config);
+            MusicPlayer musicPlayer = new MusicPlayer(conn);
             _musicPlayers.TryAdd(ctx.Guild, musicPlayer);
             return musicPlayer;
         }
