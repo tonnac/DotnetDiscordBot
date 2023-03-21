@@ -30,8 +30,8 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search);
         }
         
-        [Command, Aliases("b")]
-        public async Task Bgm(CommandContext ctx, [RemainingText] string search)
+        [Command, Aliases("lp")]
+        public async Task LongPlay(CommandContext ctx, [RemainingText] string search)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
             if (player == null)
