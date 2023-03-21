@@ -1,0 +1,9 @@
+version: "1"
+
+services:
+  dotnetdiscordbot:
+    build: .
+    container_name: dotnet-discordbot
+    restart: unless-stopped
+    volumes:
+      - ./DiscordBot/Config.cs:/app/Config.cs:ro
