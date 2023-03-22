@@ -45,7 +45,7 @@ public class MusicPlayer
             return;
         }
 
-        List<MusicTrack> addedTrack = loadResult.LoadResultType == LavalinkLoadResultType.PlaylistLoaded ? loadResult.Tracks.Select(track => MusicTrack.CreateMusicTrack(ctx, track)).ToList() : new List<MusicTrack> {MusicTrack.CreateMusicTrack(ctx, loadResult.Tracks.First())};
+        List<MusicTrack> addedTrack = loadResult.LoadResultType == LavalinkLoadResultType.PlaylistLoaded ? loadResult.Tracks.Select(track => MusicTrack.CreateMusicTrack(ctx, track, isLongPlay)).ToList() : new List<MusicTrack> {MusicTrack.CreateMusicTrack(ctx, loadResult.Tracks.First(), isLongPlay)};
 
         int position;
         if (isLongPlay)
@@ -71,14 +71,17 @@ public class MusicPlayer
             }
             else if (_lpTrackList.Count > 0 && _lpTrackList.First().LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier && isLongPlay == false)
             {
-                _lpTrackList.First().TimeSpan = Connection.CurrentState.PlaybackPosition;
+                if (_lpTrackList.First() is LongPlayTrack longPlayTrack)
+                {
+                    longPlayTrack.TimeSpan = Connection.CurrentState.PlaybackPosition;
+                }
                 await Connection.PlayAsync(newTrack.LavaLinkTrack);
             }
             else
             {
                 var embedBuilder = new DiscordEmbedBuilder()
                     .WithAuthor(Localization.addedQueue)
-                    .WithDescription($"[{newTrack.LavaLinkTrack.Title}]({newTrack.LavaLinkTrack.Uri})")
+                    .WithDescription(newTrack.GetTrackTitle())
                     .AddField(new DiscordEmbedField(Localization.RequestedBy, newTrack.User.Mention, true))
                     .AddField(new DiscordEmbedField(Localization.Duration, newTrack.LavaLinkTrack.Length.ToDuration().InlineCode(), true))
                     .AddField(new DiscordEmbedField(Localization.positionInQueue, Convert.ToString(position).InlineCode(), true));
@@ -125,7 +128,7 @@ public class MusicPlayer
             DiscordEmbedBuilder EmbedBuilder(int index) =>
                 new DiscordEmbedBuilder().WithColor(DiscordColor.Orange)
                     .WithAuthor(Localization.Queue)
-                    .WithDescription($"{Localization.NowPlaying.Bold()}: [{currentTrack.LavaLinkTrack.Title}]({currentTrack.LavaLinkTrack.Uri}) \n\n{Localization.UpNext.Bold()} \n {string.Join("\n", chunkedTracks[index].Select((track, i) => $"{Convert.ToString(QueuePagePerCount * index + i + 1).InlineCode()} [{track.LavaLinkTrack.Title}]({track.LavaLinkTrack.Uri}) \n{track.LavaLinkTrack.Length.ToDuration()}"))}")
+                    .WithDescription($"{Localization.NowPlaying.Bold()}: {currentTrack.GetTrackTitle()} \n\n{Localization.UpNext.Bold()} \n {string.Join("\n", chunkedTracks[index].Select((track, i) => $"{Convert.ToString(QueuePagePerCount * index + i + 1).InlineCode()} {track.GetTrackTitle()} \n{track.LavaLinkTrack.Length.ToDuration()}"))}")
                     .AddField(new DiscordEmbedField($"{Localization.TotalSongs}: \n", $"{copyTrack.Count}".InlineCode(), true))
                     .AddField(new DiscordEmbedField($"{Localization.TotalLength}: \n", $"{totalLength.ToDuration()}".InlineCode(), true));
 
@@ -157,7 +160,7 @@ public class MusicPlayer
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithColor(DiscordColor.Blue)
             .WithAuthor(Localization.NowPlaying)
-            .WithDescription($"[{currTrack.LavaLinkTrack.Title}]({currTrack.LavaLinkTrack.Uri.AbsoluteUri})")
+            .WithDescription(currTrack.GetTrackTitle())
             .AddField(new DiscordEmbedField(Localization.RequestedBy, currTrack.User.Mention))
             .AddField(new DiscordEmbedField(Localization.Duration, Utility.ProgressBar(current, total)));
 
@@ -242,7 +245,7 @@ public class MusicPlayer
         }
 
         var embedBuilder = new DiscordEmbedBuilder()
-            .WithDescription($"Removed Track {Convert.ToString(index).InlineCode()} [{track.LavaLinkTrack.Title}]({track.LavaLinkTrack.Uri})");
+            .WithDescription($"Removed Track {Convert.ToString(index).InlineCode()} {track.GetTrackTitle()}");
         await ctx.RespondAsync(embedBuilder);
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
     }
@@ -284,7 +287,7 @@ public class MusicPlayer
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithColor(DiscordColor.Azure)
             .WithAuthor(Localization.NowPlaying)
-            .WithDescription($"[{args.Track.Title}]({args.Track.Uri.AbsoluteUri})")
+            .WithDescription(track.GetTrackTitle())
             .AddField(new DiscordEmbedField(name: Localization.RequestedBy, value: $"{track.User.Mention}", inline: true))
             .AddField(new DiscordEmbedField(name: Localization.Duration, value: track.LavaLinkTrack.Length.ToDuration(), inline: true));
 
@@ -310,7 +313,14 @@ public class MusicPlayer
 
             if (trackPair.Value != null)
             {
-                await Connection.PlayPartialAsync(trackPair.Value.LavaLinkTrack, trackPair.Value.TimeSpan, trackPair.Value.LavaLinkTrack.Length);
+                if (trackPair.Value is LongPlayTrack longPlayTrack)
+                {
+                    await Connection.PlayPartialAsync(longPlayTrack.LavaLinkTrack, longPlayTrack.TimeSpan, longPlayTrack.LavaLinkTrack.Length);
+                }
+                else
+                {
+                    await Connection.PlayAsync(trackPair.Value.LavaLinkTrack);
+                }
             }
             else
             {
