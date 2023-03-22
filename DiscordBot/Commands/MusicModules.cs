@@ -18,7 +18,7 @@ namespace DiscordBot.Commands
 
         private readonly Dictionary<DiscordGuild, MusicPlayer> _musicPlayers;
 
-        [Command, Aliases("p", "p1")]
+        [Command, Aliases("p")]
         public async Task Play(CommandContext ctx, [RemainingText] string search)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
