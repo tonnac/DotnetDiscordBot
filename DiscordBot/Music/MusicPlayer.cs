@@ -128,7 +128,7 @@ public class MusicPlayer
             DiscordEmbedBuilder EmbedBuilder(int index) =>
                 new DiscordEmbedBuilder().WithColor(DiscordColor.Orange)
                     .WithAuthor(Localization.Queue)
-                    .WithDescription($"{Localization.NowPlaying.Bold()}: {currentTrack.GetTrackTitle()} \n\n{Localization.UpNext.Bold()} \n {string.Join("\n", chunkedTracks[index].Select((track, i) => $"{Convert.ToString(QueuePagePerCount * index + i + 1).InlineCode()} {track.GetTrackTitle()} \n{track.LavaLinkTrack.Length.ToDuration()}"))}")
+                    .WithDescription($"{Localization.NowPlaying.Bold()}: {currentTrack.GetTrackTitle()} \n\n{Localization.UpNext.Bold()} \n {string.Join("\n", chunkedTracks[index].Select((track, i) => $"{Convert.ToString(QueuePagePerCount * index + i + 1).InlineCode()} {track.GetTrackTitle()} \n{track.LavaLinkTrack.Length.ToDuration()} | {Localization.RequestedBy.Bold()} {track.User.Mention}"))}")
                     .AddField(new DiscordEmbedField($"{Localization.TotalSongs}: \n", $"{copyTrack.Count}".InlineCode(), true))
                     .AddField(new DiscordEmbedField($"{Localization.TotalLength}: \n", $"{totalLength.ToDuration()}".InlineCode(), true));
 
