@@ -29,16 +29,6 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            var copyCommands =
-                (from pair in commandNext.RegisteredCommands
-                    where pair.Key == pair.Value.Name
-                    select pair.Value)
-                .OrderBy((command => command.Name)).ToList();
-
-            DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
-            embedBuilder.WithColor(DiscordColor.Azure);
-            embedBuilder.WithFooter("footer");
-
             string FindLocal(string name)
             {
                 TypeInfo typeinfo = typeof(Localization).GetTypeInfo();
@@ -52,9 +42,19 @@ namespace DiscordBot.Commands
 
                 return "";
             }
+            
+            var copyCommands =
+                (from pair in commandNext.RegisteredCommands
+                    where pair.Key == pair.Value.Name
+                    select pair.Value)
+                .OrderBy((command => command.Name)).ToList();
 
             var commandsString = string.Join("\n", copyCommands.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
-            embedBuilder.WithDescription(commandsString);
+            DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                .WithColor(DiscordColor.Azure)
+                .WithTimestamp(DateTime.Now)
+                .WithDescription(commandsString);
+            
             await ctx.Channel.SendMessageAsync(embedBuilder.Build());
         }
 
