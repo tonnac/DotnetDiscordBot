@@ -155,4 +155,7 @@
 	<data name="SaveTime" xml:space="preserve">
 		<value>저장시간</value>
 	</data>
+	<data name="CheckDm" xml:space="preserve">
+		<value>DM을 확인해보세요!</value>
+	</data>
 </root>

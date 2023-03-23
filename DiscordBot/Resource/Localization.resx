@@ -155,4 +155,7 @@
 	<data name="SaveTime" xml:space="preserve">
 		<value>SaveTime</value>
 	</data>
+	<data name="CheckDm" xml:space="preserve">
+		<value>Check Your DMs!</value>
+	</data>
 </root>
