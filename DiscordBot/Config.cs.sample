@@ -9,7 +9,7 @@ public static class Config
     
     // LavaLink
     public static readonly string LavaLinkHostname;
-    public static readonly string LavaLinkAuthorizatio;
+    public static readonly string LavaLinkAuthorization;
     public static readonly ushort LavaLinkPort;
     
     // OpenAi
