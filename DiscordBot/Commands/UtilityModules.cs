@@ -14,14 +14,16 @@ namespace DiscordBot.Commands
     {
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once IdentifierTypo
-        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI)
+        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI, DiscordBotDatabase database)
         {
             _client = client;
             _openAiApi = openAIAPI;
+            _database = database;
         }
 
         private readonly DiscordClient _client;
         private readonly OpenAIAPI _openAiApi;
+        private readonly DiscordBotDatabase _database;
         
         [Command, Aliases("h")]
         public async Task Help(CommandContext ctx)
@@ -82,10 +84,7 @@ namespace DiscordBot.Commands
         [Command]
         public async Task Register(CommandContext ctx)
         {
-            var db = new DiscordBotDatabase();
-            await db.Connect();
-
-            bool bSuccess = await db.UserRegister(ctx);
+            bool bSuccess = await _database.UserRegister(ctx);
                 
             if (bSuccess)
             {
@@ -98,10 +97,7 @@ namespace DiscordBot.Commands
         [Command]
         public async Task Delete(CommandContext ctx)
         {
-            var db = new DiscordBotDatabase();
-            await db.Connect();
-            
-            var bSuccess = await db.UserDelete(ctx);
+            var bSuccess = await _database.UserDelete(ctx);
             if (bSuccess)
             {
                 var embedBuilder = new DiscordEmbedBuilder();
@@ -110,14 +106,10 @@ namespace DiscordBot.Commands
             }
         }
         
-        [Command]
+        [Command, Cooldown(1, 20, CooldownBucketType.Guild)]
         public async Task Aram(CommandContext ctx)
         {
-            var db = new DiscordBotDatabase();
-            await db.Connect();
-            
-            var users = await db.GetDatabaseUsers(ctx);
-            List<DiscordUser> discordUsers = new List<DiscordUser>(users.Count);
+            var users = await _database.GetDatabaseUsers(ctx);
             
             foreach (var databaseUser in users)
             {
