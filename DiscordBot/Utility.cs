@@ -9,24 +9,24 @@ public static class Utility
 
     private static class DefaultOpts
     {
-        public static float HoursPerDay = 24;
-        public static float DaysPerWeek = 7;
-        public static float WeeksPerMonth = 4;
-        public static float MonthsPerYear = 12;
-        public static float DaysPerYear = 365.25f;
+        public static readonly float HoursPerDay = 24;
+        public static readonly float DaysPerWeek = 7;
+        // public static readonly float WeeksPerMonth = 4;
+        public static readonly float MonthsPerYear = 12;
+        public static readonly float DaysPerYear = 365.25f;
     }
 
-    private static readonly Dictionary<string, List<string>> UnitMap = new Dictionary<string, List<string>>()
-    {
-        { "ms", new List<string> {"ms", "milli", "millisecond", "milliseconds"} },
-        { "s", new List<string> {"s", "sec", "secs", "second", "seconds"} },
-        { "m", new List<string> {"m", "min", "mins", "minute", "minutes"} },
-        { "h", new List<string> {"h", "hr", "hrs", "hour", "hours"} },
-        { "d", new List<string> {"d", "day", "days"} },
-        { "w", new List<string> {"w", "week", "weeks"} },
-        { "mth", new List<string> {"mon", "mth", "mths", "month", "months"} },
-        { "y", new List<string> {"y", "yr", "yrs", "year", "years"} },
-    };
+    // private static readonly Dictionary<string, List<string>> UnitMap = new Dictionary<string, List<string>>()
+    // {
+    //     { "ms", new List<string> {"ms", "milli", "millisecond", "milliseconds"} },
+    //     { "s", new List<string> {"s", "sec", "secs", "second", "seconds"} },
+    //     { "m", new List<string> {"m", "min", "mins", "minute", "minutes"} },
+    //     { "h", new List<string> {"h", "hr", "hrs", "hour", "hours"} },
+    //     { "d", new List<string> {"d", "day", "days"} },
+    //     { "w", new List<string> {"w", "week", "weeks"} },
+    //     { "mth", new List<string> {"mon", "mth", "mths", "month", "months"} },
+    //     { "y", new List<string> {"y", "yr", "yrs", "year", "years"} },
+    // };
     
     public static string ToDuration(this TimeSpan time)
     {
@@ -67,15 +67,9 @@ public static class Utility
             throw new Exception("can't find unit value");
         }
 
-        Func<Dictionary<string, float>> getUnitValues = () =>
+        Dictionary<string, float> GetUnitValues()
         {
-            Dictionary<string, float> unitValues = new Dictionary<string, float>
-            {
-                { "ms", 0.001f },
-                { "s", 1 },
-                { "m", 60 },
-                { "h", 3600 }
-            };
+            Dictionary<string, float> unitValues = new Dictionary<string, float> { { "ms", 0.001f }, { "s", 1 }, { "m", 60 }, { "h", 3600 } };
 
             unitValues.Add("d", DefaultOpts.HoursPerDay * unitValues["h"]);
             unitValues.Add("w", DefaultOpts.DaysPerWeek * unitValues["d"]);
@@ -83,7 +77,7 @@ public static class Utility
             unitValues.Add("y", DefaultOpts.DaysPerYear * unitValues["d"]);
 
             return unitValues;
-        };
+        }
 
         int seconds = 0;
         foreach (Match match in mc)
@@ -94,7 +88,7 @@ public static class Utility
             var value = Convert.ToInt32(valueRegex.Match(match.Value).Value);
             var unit = unitRegex.Match(match.Value);
 
-            var unitValues = getUnitValues();
+            var unitValues = GetUnitValues();
 
             if (unitValues.TryGetValue(unit.Value, out float unitValue))
             {
@@ -121,7 +115,7 @@ public static class Utility
     }
     public static string MakeYouTubeThumbnailUrl(string uri)
     {
-        string youTubeKey = GetYouTubeKey(uri);
+        string? youTubeKey = GetYouTubeKey(uri);
         if (string.IsNullOrEmpty(youTubeKey))
             return String.Empty;
 
