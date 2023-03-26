@@ -31,7 +31,7 @@ public class Bot
             Intents = DiscordIntents.All,
         });
 
-        _client.UseInteractivity(new InteractivityConfiguration()
+        _client.UseInteractivity(new InteractivityConfiguration
         {
             PollBehaviour = PollBehaviour.DeleteEmojis,
             Timeout = TimeSpan.FromSeconds(5)
@@ -55,16 +55,21 @@ public class Bot
     public async Task MainAsync()
     {
         await _client.ConnectAsync();
-        
+        await ConnectLaveLink();
+        await Task.Delay(-1);
+    }
+
+    private async Task ConnectLaveLink()
+    {
         var endPoint = new ConnectionEndpoint
         {
-            Port = Config.Port,
-            Hostname = Config.Hostname
+            Port = Config.LavaLinkPort,
+            Hostname = Config.LavaLinkHostname
         };
         
         var lavaConfig = new LavalinkConfiguration
         {
-            Password = Config.Authorization,
+            Password = Config.LavaLinkAuthorization,
             RestEndpoint = endPoint,
             SocketEndpoint = endPoint
         };
@@ -75,6 +80,5 @@ public class Bot
         }
 
         await lavaLink.ConnectAsync(lavaConfig);
-        await Task.Delay(-1);
     }
 }

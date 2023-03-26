@@ -4,6 +4,7 @@ using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DiscordBot.Resource;
+using DiscordBot.Database;
 using OpenAI_API;
 using OpenAI_API.Chat;
 
@@ -11,6 +12,8 @@ namespace DiscordBot.Commands
 {
     public sealed class UtilityModules : BaseCommandModule
     {
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once IdentifierTypo
         public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI)
         {
             _client = client;
@@ -61,12 +64,12 @@ namespace DiscordBot.Commands
         [Command, Aliases("g")]
         public async Task Gpt(CommandContext ctx, [RemainingText] string chatMessage)
         {
-            var result = await _openAiApi.Chat.CreateChatCompletionAsync(new OpenAI_API.Chat.ChatRequest()
+            var result = await _openAiApi.Chat.CreateChatCompletionAsync(new ChatRequest
             {
                 Model = OpenAI_API.Models.Model.ChatGPTTurbo,
                 Temperature = 0.1,
                 MaxTokens = 2048,
-                Messages = new ChatMessage[]
+                Messages = new []
                 {
                     new ChatMessage(ChatMessageRole.User, chatMessage)
                 }
@@ -74,6 +77,55 @@ namespace DiscordBot.Commands
 
             var reply = result.Choices[0].Message;
             await ctx.RespondAsync($"{reply.Content.Trim()}");
+        }
+        
+        [Command]
+        public async Task Register(CommandContext ctx)
+        {
+            var db = new DiscordBotDatabase();
+            await db.Connect();
+
+            bool bSuccess = await db.UserRegister(ctx);
+                
+            if (bSuccess)
+            {
+                var embedBuilder = new DiscordEmbedBuilder();
+                embedBuilder.WithDescription("Success");
+                await ctx.RespondAsync(embedBuilder);
+            }
+        }
+        
+        [Command]
+        public async Task Delete(CommandContext ctx)
+        {
+            var db = new DiscordBotDatabase();
+            await db.Connect();
+            
+            var bSuccess = await db.UserDelete(ctx);
+            if (bSuccess)
+            {
+                var embedBuilder = new DiscordEmbedBuilder();
+                embedBuilder.WithDescription("Success");
+                await ctx.RespondAsync(embedBuilder);
+            }
+        }
+        
+        [Command]
+        public async Task Aram(CommandContext ctx)
+        {
+            var db = new DiscordBotDatabase();
+            await db.Connect();
+            
+            var users = await db.GetDatabaseUsers(ctx);
+            List<DiscordUser> discordUsers = new List<DiscordUser>(users.Count);
+            
+            foreach (var databaseUser in users)
+            {
+                if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
+                {
+                    await member.SendMessageAsync("111");
+                }
+            }
         }
     }
 }

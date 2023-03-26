@@ -2,11 +2,22 @@
 
 public static class Config
 {
+    // Discord Bot
     public static readonly string Token;
-    public static readonly string Hostname;
-    public static readonly string Authorization;
-    public static readonly ushort Port;
-    public static readonly string Locale;
     public static readonly string Prefix;
+    public static readonly string Locale;
+    
+    // LavaLink
+    public static readonly string LavaLinkHostname;
+    public static readonly string LavaLinkAuthorizatio;
+    public static readonly ushort LavaLinkPort;
+    
+    // OpenAi
     public static readonly string OpenAiApiKey;
+    
+    // Database
+    public static readonly string DatabaseServer;
+    public static readonly ushort DatabasePort;
+    public static readonly string DatabaseName;
+    public static readonly string DatabasePassword;
 }
