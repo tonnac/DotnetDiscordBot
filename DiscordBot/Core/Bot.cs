@@ -8,6 +8,7 @@ using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Net;
+using DiscordBot.Database;
 using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace DiscordBot.Core;
 public class Bot
 {
     private readonly DiscordClient _client;
+    private readonly DiscordBotDatabase _database;
 
     public Bot()
     {
@@ -37,9 +39,12 @@ public class Bot
             Timeout = TimeSpan.FromSeconds(5)
         });
 
+        _database = new DiscordBotDatabase();
+
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
             .AddSingleton(_client)
+            .AddSingleton(_database)
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
 
@@ -48,18 +53,19 @@ public class Bot
             StringPrefixes = new List<string>{ Config.Prefix },
             ServiceProvider = services
         });
-        commandNext.UnregisterCommands(commandNext.FindCommand("help", out string rawArguments));
+        commandNext.UnregisterCommands(commandNext.FindCommand("help", out string _));
         commandNext.RegisterCommands(Assembly.GetExecutingAssembly());
     }
     
     public async Task MainAsync()
     {
         await _client.ConnectAsync();
-        await ConnectLaveLink();
+        await ConnectLaveLinkASync();
+        await _database.ConnectASync();
         await Task.Delay(-1);
     }
 
-    private async Task ConnectLaveLink()
+    private async Task ConnectLaveLinkASync()
     {
         var endPoint = new ConnectionEndpoint
         {

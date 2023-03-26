@@ -8,8 +8,9 @@ namespace DiscordBot.Database;
 public partial class DiscordBotDatabase
 {
     private MySqlConnection? _connection = null;
+    private object _lockObject = new ();
 
-    public async Task Connect()
+    public async Task ConnectASync()
     {
         var builder = new MySqlConnectionStringBuilder
         {

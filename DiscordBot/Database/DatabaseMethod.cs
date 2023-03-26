@@ -23,9 +23,23 @@ public partial class DiscordBotDatabase
         MySqlCommand command = _connection.CreateCommand();
         command.CommandText = $"select userid FROM USER where {guild.Id}";
 
-        MySqlDataReader rdr = await command.ExecuteReaderAsync();
+        MySqlDataReader? rdr = null;
+        Monitor.Enter(_lockObject);
+        try
+        {
+            rdr = await command.ExecuteReaderAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+        
         DataTable dataTable = new DataTable();
-        dataTable.Load(rdr);
+        if (rdr != null) dataTable.Load(rdr);
         string jsonString = JsonConvert.SerializeObject(dataTable);
         List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
         return users ?? new List<DatabaseUser>();
@@ -49,7 +63,22 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@guildid", guild.Id);
         command.Parameters.AddWithValue("@userid", user.Id);
 
-        return await command.ExecuteNonQueryAsync() == 1;
+        bool result = false;
+        Monitor.Enter(_lockObject);
+        try
+        {
+            result = await command.ExecuteNonQueryAsync() == 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+
+        return result;
     }
     
     public async Task<bool> UserDelete(CommandContext ctx)
@@ -68,7 +97,22 @@ public partial class DiscordBotDatabase
         command.CommandText = @"delete from USER where id=@id";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
 
-        return await command.ExecuteNonQueryAsync() == 1;
+        bool result = false;
+        Monitor.Enter(_lockObject);
+        try
+        {
+            result = await command.ExecuteNonQueryAsync() == 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+
+        return result;
     }
     
 }
