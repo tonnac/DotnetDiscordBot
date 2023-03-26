@@ -271,6 +271,11 @@ public class MusicPlayer
             .AddField(new DiscordEmbedField(Localization.SaveTime, $"{current.ToDuration()}/{total.ToDuration()}"));
 
         await ctx.User.SendMessageAsync(embedBuilder);
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+        DiscordEmbedBuilder respondEmbed = new DiscordEmbedBuilder()
+            .WithColor(DiscordColor.PhthaloGreen)
+            .WithAuthor("✅" + Localization.CheckDm);
+        await ctx.RespondAsync(respondEmbed);
     }
 
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)

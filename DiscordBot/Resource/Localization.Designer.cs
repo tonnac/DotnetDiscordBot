@@ -69,6 +69,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check Your DMs!.
+        /// </summary>
+        internal static string CheckDm {
+            get {
+                return ResourceManager.GetString("CheckDm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnected.
         /// </summary>
         internal static string disconnected {
