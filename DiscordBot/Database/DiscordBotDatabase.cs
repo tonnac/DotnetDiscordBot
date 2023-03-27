@@ -7,10 +7,10 @@ namespace DiscordBot.Database;
 
 public partial class DiscordBotDatabase
 {
-    private MySqlConnection? _connection = null;
-    private object _lockObject = new ();
+    private readonly MySqlConnection _connection;
+    private readonly object _lockObject = new ();
 
-    public async Task ConnectASync()
+    public DiscordBotDatabase()
     {
         var builder = new MySqlConnectionStringBuilder
         {
@@ -22,15 +22,21 @@ public partial class DiscordBotDatabase
         };
 
         _connection = new MySqlConnection(builder.ConnectionString);
+    }
+
+    private async Task<bool> OpenASync()
+    {
         try
         {
             await _connection.OpenAsync();
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            _connection = null;
         }
+
+        return false;
     }
 
     // ReSharper disable once InconsistentNaming
