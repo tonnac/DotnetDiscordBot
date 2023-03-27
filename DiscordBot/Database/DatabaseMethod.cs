@@ -15,11 +15,7 @@ public partial class DiscordBotDatabase
     
     public async Task<List<DatabaseUser>> GetDatabaseUsers(DiscordGuild guild)
     {
-        if (null == _connection)
-        {
-            return new List<DatabaseUser>();
-        }
-
+        if (!await OpenASync()) return new List<DatabaseUser>();
         MySqlCommand command = _connection.CreateCommand();
         command.CommandText = $"select userid FROM USER where {guild.Id}";
 
@@ -37,12 +33,13 @@ public partial class DiscordBotDatabase
         {
             Monitor.Exit(_lockObject);
         }
-        
+
         DataTable dataTable = new DataTable();
         if (rdr != null) dataTable.Load(rdr);
         string jsonString = JsonConvert.SerializeObject(dataTable);
         List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
         return users ?? new List<DatabaseUser>();
+
     }
 
     public async Task<bool> UserRegister(CommandContext ctx)
@@ -52,10 +49,7 @@ public partial class DiscordBotDatabase
     
     public async Task<bool> UserRegister(DiscordGuild guild, DiscordUser user)
     {
-        if (null == _connection)
-        {
-            return false;
-        }
+        if (!await OpenASync()) return false;
 
         MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"insert into USER (id, guildid, userid) values (@id, @guildid, @userid)";
@@ -88,10 +82,8 @@ public partial class DiscordBotDatabase
 
     public async Task<bool> UserDelete(DiscordGuild guild, DiscordUser user)
     {
-        if (null == _connection)
-        {
-            return false;
-        }
+        if (!await OpenASync()) return false;
+        
         // ReSharper disable once StringLiteralTypo
         MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"delete from USER where id=@id";
