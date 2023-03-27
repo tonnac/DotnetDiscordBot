@@ -61,7 +61,6 @@ public class Bot
     {
         await _client.ConnectAsync();
         await ConnectLaveLinkASync();
-        await _database.ConnectASync();
         await Task.Delay(-1);
     }
 
