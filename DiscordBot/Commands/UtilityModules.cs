@@ -127,7 +127,7 @@ namespace DiscordBot.Commands
                     var embedBuilder = new DiscordEmbedBuilder()
                         .WithColor(DiscordColor.Azure)
                         .WithDescription($"{ctx.User.Mention}님의 칼바람나락 호출이 왔습니다!")
-                        .WithImageUrl("https://static.wikia.nocookie.net/leagueoflegends/images/0/07/Howling_Abyss_Minimap.png/revision/latest/scale-to-width-down/250?cb=20170222210644");
+                        .WithImageUrl("https://static.wikia.nocookie.net/leagueoflegends/images/5/5f/Howling_Abyss_Map_Preview.jpg/revision/latest?cb=20140612032106");
                     await member.SendMessageAsync(embedBuilder);
                 }
             }
