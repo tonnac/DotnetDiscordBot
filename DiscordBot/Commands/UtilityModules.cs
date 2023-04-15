@@ -89,7 +89,7 @@ namespace DiscordBot.Commands
             if (bSuccess)
             {
                 var embedBuilder = new DiscordEmbedBuilder();
-                embedBuilder.WithDescription("Success");
+                embedBuilder.WithDescription("Success!");
                 await ctx.RespondAsync(embedBuilder);
             }
         }
@@ -103,7 +103,7 @@ namespace DiscordBot.Commands
             if (bSuccess)
             {
                 var embedBuilder = new DiscordEmbedBuilder();
-                embedBuilder.WithDescription("Success");
+                embedBuilder.WithDescription("Success!");
                 await ctx.RespondAsync(embedBuilder);
             }
         }
