@@ -3,6 +3,7 @@ using System.Reflection;
 using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.Extensions;
@@ -19,9 +20,13 @@ namespace DiscordBot.Core;
 public class Bot
 {
     private readonly DiscordClient _client;
+    private readonly DiscordMessageHandler _messageHandler;
 
     public Bot()
     {
+#if RELEASE
+        Thread.Sleep(20000);
+#endif
         Localization.Culture = new CultureInfo(Config.Locale, false);
         
         _client = new DiscordClient(new DiscordConfiguration
@@ -32,6 +37,8 @@ public class Bot
             Intents = DiscordIntents.All,
         });
 
+        _messageHandler = new DiscordMessageHandler(_client);
+
         _client.UseInteractivity(new InteractivityConfiguration
         {
             PollBehaviour = PollBehaviour.DeleteEmojis,
@@ -41,6 +48,7 @@ public class Bot
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
             .AddSingleton(_client)
+            .AddSingleton(_messageHandler)
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
 
@@ -56,9 +64,7 @@ public class Bot
     public async Task MainAsync()
     {
         await _client.ConnectAsync();
-        #if RELEASE
-        Thread.Sleep(20000);
-        #endif
+        await _messageHandler.RunASync();
         await ConnectLaveLinkASync();
         await Task.Delay(-1);
     }
