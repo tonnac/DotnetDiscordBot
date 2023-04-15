@@ -2,9 +2,7 @@ version: "3"
 
 services:
   dotnetdiscordbot:
-    build: 
-      context: .
-      dockerfile: .
+    build: .
     container_name: discordbot
     restart: unless-stopped
     networks:
