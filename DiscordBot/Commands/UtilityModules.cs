@@ -3,6 +3,7 @@ using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
+using DiscordBot.Core;
 using DiscordBot.Resource;
 using DiscordBot.Database;
 using OpenAI_API;
@@ -14,13 +15,15 @@ namespace DiscordBot.Commands
     {
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once IdentifierTypo
-        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI)
+        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI, DiscordMessageHandler messageHandler)
         {
             _client = client;
             _openAiApi = openAIAPI;
+            _messageHandler = messageHandler;
         }
 
         private readonly DiscordClient _client;
+        private readonly DiscordMessageHandler _messageHandler;
         private readonly OpenAIAPI _openAiApi;
         
         [Command, Aliases("h")]
@@ -133,6 +136,12 @@ namespace DiscordBot.Commands
             {
                 await ctx.RespondAsync("메세지를 전송했습니다.");
             }
+        }
+        
+        [Command]
+        public async Task ImageOnly(CommandContext ctx)
+        {
+            await _messageHandler.ToggleChannel(ctx);
         }
     }
 }

@@ -8,6 +8,96 @@ namespace DiscordBot.Database;
 
 public partial class DiscordBotDatabase
 {
+    public async Task<List<ImageOnlyChannel>> GetImageOnlyChannels()
+    {
+        if (null == _connection)
+        {
+            return new List<ImageOnlyChannel>();
+        }
+
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = $"select * FROM IMAGEONLYCHANNEL";
+
+        Monitor.Enter(_lockObject);
+        try
+        {
+            await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
+            DataTable dataTable = new DataTable();
+            dataTable.Load(rdr);
+            string jsonString = JsonConvert.SerializeObject(dataTable);
+            List<ImageOnlyChannel>? channels = JsonConvert.DeserializeObject<List<ImageOnlyChannel>>(jsonString);
+            return channels ?? new List<ImageOnlyChannel>();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+        
+        return new List<ImageOnlyChannel>();
+    }
+    
+    public async Task<bool> RegisterImageOnlyChannels(DiscordChannel channel)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        // ReSharper disable once StringLiteralTypo
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = @"insert into IMAGEONLYCHANNEL (id) values (@id)";
+        command.Parameters.AddWithValue("@id", channel.Id);
+
+        bool result = false;
+        Monitor.Enter(_lockObject);
+        try
+        {
+            result = await command.ExecuteNonQueryAsync() == 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+
+        return result;
+    }
+    
+    public async Task<bool> UnRegisterImageOnlyChannels(DiscordChannel channel)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        // ReSharper disable once StringLiteralTypo
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = @"delete from IMAGEONLYCHANNEL where id=@id";
+        command.Parameters.AddWithValue("@id", channel.Id);
+
+        bool result = false;
+        Monitor.Enter(_lockObject);
+        try
+        {
+            result = await command.ExecuteNonQueryAsync() == 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Monitor.Exit(_lockObject);
+        }
+
+        return result;
+    }
+    
     public async Task<List<DatabaseUser>> GetDatabaseUsers(CommandContext ctx)
     {
         return await GetDatabaseUsers(ctx.Guild);
