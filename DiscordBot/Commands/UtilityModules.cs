@@ -114,13 +114,24 @@ namespace DiscordBot.Commands
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             var users = await database.GetDatabaseUsers(ctx);
+
+            users.RemoveAll((user => user.userid == ctx.User.Id));
             
             foreach (var databaseUser in users)
             {
                 if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
                 {
-                    await member.SendMessageAsync($"{ctx.User.Mention}님의 칼바람나락 호출이 왔습니다!");
+                    var embedBuilder = new DiscordEmbedBuilder()
+                        .WithColor(DiscordColor.Azure)
+                        .WithDescription($"{ctx.User.Mention}님의 칼바람나락 호출이 왔습니다!")
+                        .WithImageUrl("https://static.wikia.nocookie.net/leagueoflegends/images/0/07/Howling_Abyss_Minimap.png/revision/latest/scale-to-width-down/250?cb=20170222210644");
+                    await member.SendMessageAsync(embedBuilder);
                 }
+            }
+
+            if (users.Count > 0)
+            {
+                await ctx.RespondAsync("메세지를 전송했습니다.");
             }
         }
     }
