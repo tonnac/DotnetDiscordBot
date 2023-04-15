@@ -15,15 +15,23 @@ public partial class DiscordBotDatabase
     
     public async Task<List<DatabaseUser>> GetDatabaseUsers(DiscordGuild guild)
     {
-        if (!await OpenASync()) return new List<DatabaseUser>();
-        MySqlCommand command = _connection.CreateCommand();
+        if (null == _connection)
+        {
+            return new List<DatabaseUser>();
+        }
+
+        await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = $"select userid FROM USER where {guild.Id}";
 
-        MySqlDataReader? rdr = null;
         Monitor.Enter(_lockObject);
         try
         {
-            rdr = await command.ExecuteReaderAsync();
+            await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
+            DataTable dataTable = new DataTable();
+            dataTable.Load(rdr);
+            string jsonString = JsonConvert.SerializeObject(dataTable);
+            List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
+            return users ?? new List<DatabaseUser>();
         }
         catch (Exception e)
         {
@@ -33,13 +41,8 @@ public partial class DiscordBotDatabase
         {
             Monitor.Exit(_lockObject);
         }
-
-        DataTable dataTable = new DataTable();
-        if (rdr != null) dataTable.Load(rdr);
-        string jsonString = JsonConvert.SerializeObject(dataTable);
-        List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
-        return users ?? new List<DatabaseUser>();
-
+        
+        return new List<DatabaseUser>();
     }
 
     public async Task<bool> UserRegister(CommandContext ctx)
@@ -49,9 +52,12 @@ public partial class DiscordBotDatabase
     
     public async Task<bool> UserRegister(DiscordGuild guild, DiscordUser user)
     {
-        if (!await OpenASync()) return false;
+        if (null == _connection)
+        {
+            return false;
+        }
 
-        MySqlCommand command = _connection.CreateCommand();
+        await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"insert into USER (id, guildid, userid) values (@id, @guildid, @userid)";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
         command.Parameters.AddWithValue("@guildid", guild.Id);
@@ -82,10 +88,12 @@ public partial class DiscordBotDatabase
 
     public async Task<bool> UserDelete(DiscordGuild guild, DiscordUser user)
     {
-        if (!await OpenASync()) return false;
-        
+        if (null == _connection)
+        {
+            return false;
+        }
         // ReSharper disable once StringLiteralTypo
-        MySqlCommand command = _connection.CreateCommand();
+        await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"delete from USER where id=@id";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
 

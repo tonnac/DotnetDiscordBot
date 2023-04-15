@@ -14,16 +14,14 @@ namespace DiscordBot.Commands
     {
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once IdentifierTypo
-        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI, DiscordBotDatabase database)
+        public UtilityModules(DiscordClient client, OpenAIAPI openAIAPI)
         {
             _client = client;
             _openAiApi = openAIAPI;
-            _database = database;
         }
 
         private readonly DiscordClient _client;
         private readonly OpenAIAPI _openAiApi;
-        private readonly DiscordBotDatabase _database;
         
         [Command, Aliases("h")]
         public async Task Help(CommandContext ctx)
@@ -84,7 +82,9 @@ namespace DiscordBot.Commands
         [Command]
         public async Task Register(CommandContext ctx)
         {
-            bool bSuccess = await _database.UserRegister(ctx);
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            bool bSuccess = await database.UserRegister(ctx);
                 
             if (bSuccess)
             {
@@ -97,7 +97,9 @@ namespace DiscordBot.Commands
         [Command]
         public async Task Delete(CommandContext ctx)
         {
-            var bSuccess = await _database.UserDelete(ctx);
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            var bSuccess = await database.UserDelete(ctx);
             if (bSuccess)
             {
                 var embedBuilder = new DiscordEmbedBuilder();
@@ -109,7 +111,9 @@ namespace DiscordBot.Commands
         [Command, Cooldown(1, 20, CooldownBucketType.Guild)]
         public async Task Aram(CommandContext ctx)
         {
-            var users = await _database.GetDatabaseUsers(ctx);
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            var users = await database.GetDatabaseUsers(ctx);
             
             foreach (var databaseUser in users)
             {
