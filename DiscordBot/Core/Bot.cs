@@ -56,6 +56,9 @@ public class Bot
     public async Task MainAsync()
     {
         await _client.ConnectAsync();
+        #if RELEASE
+        Thread.Sleep(5000);
+        #endif
         await ConnectLaveLinkASync();
         await Task.Delay(-1);
     }
