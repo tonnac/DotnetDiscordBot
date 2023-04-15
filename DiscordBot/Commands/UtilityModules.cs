@@ -119,7 +119,7 @@ namespace DiscordBot.Commands
             {
                 if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
                 {
-                    await member.SendMessageAsync("111");
+                    await member.SendMessageAsync($"{ctx.User.Mention}님의 칼바람나락 호출이 왔습니다!");
                 }
             }
         }
