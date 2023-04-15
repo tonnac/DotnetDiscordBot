@@ -5,10 +5,18 @@ using MySqlConnector;
 
 namespace DiscordBot.Database;
 
-public partial class DiscordBotDatabase
+public partial class DiscordBotDatabase : IDisposable
 {
     private MySqlConnection? _connection = null;
     private object _lockObject = new ();
+
+    public void Dispose()
+    {
+        if (_connection != null)
+        {
+            _connection.Dispose();
+        }
+    }
 
     public async Task ConnectASync()
     {

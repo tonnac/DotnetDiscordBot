@@ -19,7 +19,6 @@ namespace DiscordBot.Core;
 public class Bot
 {
     private readonly DiscordClient _client;
-    private readonly DiscordBotDatabase _database;
 
     public Bot()
     {
@@ -39,12 +38,9 @@ public class Bot
             Timeout = TimeSpan.FromSeconds(5)
         });
 
-        _database = new DiscordBotDatabase();
-
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
             .AddSingleton(_client)
-            .AddSingleton(_database)
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
 
@@ -61,7 +57,6 @@ public class Bot
     {
         await _client.ConnectAsync();
         await ConnectLaveLinkASync();
-        await _database.ConnectASync();
         await Task.Delay(-1);
     }
 
