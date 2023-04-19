@@ -8,7 +8,6 @@ namespace DiscordBot.Database;
 public partial class DiscordBotDatabase : IDisposable
 {
     private MySqlConnection? _connection = null;
-    private object _lockObject = new ();
 
     public void Dispose()
     {

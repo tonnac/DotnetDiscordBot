@@ -18,7 +18,6 @@ public partial class DiscordBotDatabase
         await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = $"select * FROM IMAGEONLYCHANNEL";
 
-        Monitor.Enter(_lockObject);
         try
         {
             await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
@@ -31,10 +30,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
         
         return new List<ImageOnlyChannel>();
@@ -52,7 +47,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@id", channel.Id);
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -60,10 +54,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
@@ -81,7 +71,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@id", channel.Id);
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -89,10 +78,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
@@ -111,9 +96,9 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select userid FROM USER where {guild.Id}";
+        command.CommandText = $"select userid FROM USER where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", guild.Id);
 
-        Monitor.Enter(_lockObject);
         try
         {
             await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
@@ -127,12 +112,37 @@ public partial class DiscordBotDatabase
         {
             Console.WriteLine(e);
         }
-        finally
-        {
-            Monitor.Exit(_lockObject);
-        }
         
         return new List<DatabaseUser>();
+    }
+    
+    public async Task<DatabaseUser> GetDatabaseUser(DiscordGuild guild, DiscordUser user)
+    {
+        if (null == _connection)
+        {
+            return new DatabaseUser();
+        }
+
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = $"select userid FROM USER where guildid=@guildid and userid=@userid";
+        command.Parameters.AddWithValue("guildid", guild.Id);
+        command.Parameters.AddWithValue("userid", user.Id);
+
+        try
+        {
+            await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
+            DataTable dataTable = new DataTable();
+            dataTable.Load(rdr);
+            string jsonString = JsonConvert.SerializeObject(dataTable);
+            List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
+            return users != null ? users[0] : new DatabaseUser();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+        return new DatabaseUser();
     }
 
     public async Task<bool> UserRegister(CommandContext ctx)
@@ -147,28 +157,29 @@ public partial class DiscordBotDatabase
             return false;
         }
 
+        var member = await GetDatabaseUser(guild, user);
+        if (member.userid != 0)
+        {
+            return false;
+        }
+
         await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"insert into USER (id, guildid, userid) values (@id, @guildid, @userid)";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
         command.Parameters.AddWithValue("@guildid", guild.Id);
         command.Parameters.AddWithValue("@userid", user.Id);
 
-        bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
-            result = await command.ExecuteNonQueryAsync() == 1;
+            await command.ExecuteNonQueryAsync();
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
-        finally
-        {
-            Monitor.Exit(_lockObject);
-        }
 
-        return result;
+        return false;
     }
     
     public async Task<bool> UserDelete(CommandContext ctx)
@@ -187,22 +198,17 @@ public partial class DiscordBotDatabase
         command.CommandText = @"delete from USER where id=@id";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
 
-        bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
-            result = await command.ExecuteNonQueryAsync() == 1;
+            await command.ExecuteNonQueryAsync();
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
-        finally
-        {
-            Monitor.Exit(_lockObject);
-        }
 
-        return result;
+        return false;
     }
     
 }
