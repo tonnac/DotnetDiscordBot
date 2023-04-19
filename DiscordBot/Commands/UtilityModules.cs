@@ -73,6 +73,10 @@ namespace DiscordBot.Commands
                 {
                     embedBuilder.WithThumbnail("https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj");
                 }
+                else if (copyCommand.Key == "Utility")
+                {
+                    embedBuilder.WithThumbnail("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU");
+                }
             
                 await ctx.Channel.SendMessageAsync(embedBuilder.Build());
             }
