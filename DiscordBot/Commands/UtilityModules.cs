@@ -5,7 +5,6 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DiscordBot.Core;
 using DiscordBot.Resource;
-using DiscordBot.Database;
 using OpenAI_API;
 using OpenAI_API.Chat;
 
@@ -48,20 +47,36 @@ namespace DiscordBot.Commands
 
                 return "";
             }
-            
-            var copyCommands =
-                (from pair in commandNext.RegisteredCommands
-                    where pair.Key == pair.Value.Name
-                    select pair.Value)
-                .OrderBy((command => command.Name)).ToList();
 
-            var commandsString = string.Join("\n", copyCommands.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
-            DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                .WithColor(DiscordColor.Azure)
-                .WithTimestamp(DateTime.Now)
-                .WithDescription(commandsString);
+            var copyCommands =
+                from pair in commandNext.RegisteredCommands
+                where pair.Key == pair.Value.Name
+                orderby pair.Value.Name
+                group pair.Value by pair.Value.Module.ModuleType.Name.Split("Modules")[0]
+                into groupData
+                select groupData;
             
-            await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+            foreach (var copyCommand in copyCommands)
+            {
+                var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithAuthor(copyCommand.Key)
+                    .WithColor(DiscordColor.Azure)
+                    .WithTimestamp(DateTime.Now)
+                    .WithDescription(commandsString);
+
+                if (copyCommand.Key == "Music")
+                {
+                    embedBuilder.WithThumbnail("https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg");
+                }
+                else if (copyCommand.Key == "Lol")
+                {
+                    embedBuilder.WithThumbnail("https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj");
+                }
+            
+                await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+            }
+
         }
 
         [Command, Aliases("g")]
@@ -82,88 +97,6 @@ namespace DiscordBot.Commands
             await ctx.RespondAsync($"{reply.Content.Trim()}");
         }
         
-        [Command]
-        public async Task Register(CommandContext ctx)
-        {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            var embedBuilder = new DiscordEmbedBuilder();
-
-            if (user.userid != 0)
-            {
-                embedBuilder.WithDescription("Member already exist");
-            }
-            else
-            {
-                bool bSuccess = await database.UserRegister(ctx);
-
-                if (bSuccess)
-                {
-                    embedBuilder.WithDescription("Success!");
-                }
-                else
-                {
-                    return;
-                }
-            }
-            await ctx.RespondAsync(embedBuilder);
-        }
-        
-        [Command]
-        public async Task Delete(CommandContext ctx)
-        {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-
-            var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            var embedBuilder = new DiscordEmbedBuilder();
-            if (user.userid == 0)
-            {
-                embedBuilder.WithDescription("Member doesn't exist");
-            }
-            else
-            {
-                await database.UserDelete(ctx);
-                var bSuccess = await database.UserDelete(ctx);
-                if (bSuccess)
-                {
-                    embedBuilder.WithDescription("Success!");
-                }
-                else
-                {
-                    return;
-                }
-            }
-            await ctx.RespondAsync(embedBuilder);
-        }
-        
-        [Command, Cooldown(1, 20, CooldownBucketType.Guild)]
-        public async Task Aram(CommandContext ctx)
-        {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            var users = await database.GetDatabaseUsers(ctx);
-
-            users.RemoveAll((user => user.userid == ctx.User.Id));
-            
-            foreach (var databaseUser in users)
-            {
-                if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
-                {
-                    var embedBuilder = new DiscordEmbedBuilder()
-                        .WithColor(DiscordColor.Azure)
-                        .WithDescription($"{ctx.User.Mention}님의 칼바람나락 호출이 왔습니다!")
-                        .WithImageUrl("https://static.wikia.nocookie.net/leagueoflegends/images/5/5f/Howling_Abyss_Map_Preview.jpg/revision/latest?cb=20140612032106");
-                    await member.SendMessageAsync(embedBuilder);
-                }
-            }
-
-            if (users.Count > 0)
-            {
-                await ctx.RespondAsync("메세지를 전송했습니다.");
-            }
-        }
         
         [Command]
         public async Task ImageOnly(CommandContext ctx)
