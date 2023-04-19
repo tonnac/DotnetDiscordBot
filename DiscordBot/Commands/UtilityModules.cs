@@ -87,14 +87,27 @@ namespace DiscordBot.Commands
         {
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
-            bool bSuccess = await database.UserRegister(ctx);
-                
-            if (bSuccess)
+            var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            var embedBuilder = new DiscordEmbedBuilder();
+
+            if (user.userid != 0)
             {
-                var embedBuilder = new DiscordEmbedBuilder();
-                embedBuilder.WithDescription("Success!");
-                await ctx.RespondAsync(embedBuilder);
+                embedBuilder.WithDescription("Member already exist");
             }
+            else
+            {
+                bool bSuccess = await database.UserRegister(ctx);
+
+                if (bSuccess)
+                {
+                    embedBuilder.WithDescription("Success!");
+                }
+                else
+                {
+                    return;
+                }
+            }
+            await ctx.RespondAsync(embedBuilder);
         }
         
         [Command]
@@ -102,13 +115,27 @@ namespace DiscordBot.Commands
         {
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
-            var bSuccess = await database.UserDelete(ctx);
-            if (bSuccess)
+
+            var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            var embedBuilder = new DiscordEmbedBuilder();
+            if (user.userid == 0)
             {
-                var embedBuilder = new DiscordEmbedBuilder();
-                embedBuilder.WithDescription("Success!");
-                await ctx.RespondAsync(embedBuilder);
+                embedBuilder.WithDescription("Member doesn't exist");
             }
+            else
+            {
+                await database.UserDelete(ctx);
+                var bSuccess = await database.UserDelete(ctx);
+                if (bSuccess)
+                {
+                    embedBuilder.WithDescription("Success!");
+                }
+                else
+                {
+                    return;
+                }
+            }
+            await ctx.RespondAsync(embedBuilder);
         }
         
         [Command, Cooldown(1, 20, CooldownBucketType.Guild)]
