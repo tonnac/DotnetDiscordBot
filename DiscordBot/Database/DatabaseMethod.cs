@@ -96,7 +96,7 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select userid FROM USER where {1098168846222897214}";
+        command.CommandText = $"select userid FROM USER where {guild.Id}";
 
         try
         {
