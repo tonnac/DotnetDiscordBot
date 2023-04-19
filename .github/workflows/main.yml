@@ -18,6 +18,6 @@ jobs:
         script: | 
           cd DotnetDiscordBot
           git pull
-          docker compose stop
-          docker compose build
-          docker compose --env-file ./.env up -d
+          sudo docker compose stop
+          sudo docker compose build
+          sudo docker compose --env-file ./.env up -d
