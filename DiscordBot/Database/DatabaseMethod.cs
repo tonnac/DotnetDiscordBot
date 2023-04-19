@@ -18,7 +18,6 @@ public partial class DiscordBotDatabase
         await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = $"select * FROM IMAGEONLYCHANNEL";
 
-        Monitor.Enter(_lockObject);
         try
         {
             await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
@@ -31,10 +30,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
         
         return new List<ImageOnlyChannel>();
@@ -52,7 +47,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@id", channel.Id);
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -60,10 +54,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
@@ -81,7 +71,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@id", channel.Id);
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -89,10 +78,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
@@ -111,9 +96,8 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select userid FROM USER where {guild.Id}";
+        command.CommandText = $"select userid FROM USER where {1098168846222897214}";
 
-        Monitor.Enter(_lockObject);
         try
         {
             await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
@@ -126,10 +110,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
         
         return new List<DatabaseUser>();
@@ -154,7 +134,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@userid", user.Id);
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -162,10 +141,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
@@ -188,7 +163,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
 
         bool result = false;
-        Monitor.Enter(_lockObject);
         try
         {
             result = await command.ExecuteNonQueryAsync() == 1;
@@ -196,10 +170,6 @@ public partial class DiscordBotDatabase
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
-            Monitor.Exit(_lockObject);
         }
 
         return result;
