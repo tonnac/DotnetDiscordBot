@@ -18,7 +18,7 @@ services:
     container_name: music-lavalink
     hostname: lavalink
     ports:
-      - ${LAVALINK_PORT}
+      - ${LAVALINK_PORT}:${LAVALINK_PORT}
     restart: unless-stopped
     networks: 
       - discord
@@ -30,7 +30,7 @@ services:
     container_name: mysql
     hostname: mysql
     ports:
-      - ${SQL_PORT}
+      - ${SQL_PORT}:${SQL_PORT}
     environment:
       MYSQL_ROOT_PASSWORD: ${SQL_PASSWORD}
     restart: unless-stopped
