@@ -232,6 +232,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have permission..
+        /// </summary>
+        internal static string Permission {
+            get {
+                return ResourceManager.GetString("Permission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plays audio from YouTube.
         /// </summary>
         internal static string play_Description {

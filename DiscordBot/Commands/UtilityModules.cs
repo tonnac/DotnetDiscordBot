@@ -3,6 +3,7 @@ using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DiscordBot.Core;
 using DiscordBot.Resource;
 using OpenAI_API;
@@ -103,8 +104,14 @@ namespace DiscordBot.Commands
         
         
         [Command]
+        [RequireBotPermissions(Permissions.ManageMessages)]
         public async Task ImageOnly(CommandContext ctx)
         {
+            if ((ctx.Member.Permissions & Permissions.ManageMessages) != 0)
+            {
+                await ctx.RespondAsync(Localization.Permission);
+                return;
+            }
             await _messageHandler.ToggleChannel(ctx);
         }
     }
