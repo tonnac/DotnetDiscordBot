@@ -69,6 +69,33 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sends calls to registered members..
+        /// </summary>
+        internal static string aram_Description {
+            get {
+                return ResourceManager.GetString("aram_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted from the member..
+        /// </summary>
+        internal static string aramdelete_Description {
+            get {
+                return ResourceManager.GetString("aramdelete_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register as a member..
+        /// </summary>
+        internal static string aramregister_Description {
+            get {
+                return ResourceManager.GetString("aramregister_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
@@ -105,6 +132,61 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send a message to chatgpt..
+        /// </summary>
+        internal static string gpt_Description {
+            get {
+                return ResourceManager.GetString("gpt_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saves the current song to your Direct Messages.
+        /// </summary>
+        internal static string grab_Description {
+            get {
+                return ResourceManager.GetString("grab_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display all commands and descriptions.
+        /// </summary>
+        internal static string help_Description {
+            get {
+                return ResourceManager.GetString("help_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prohibit chat on the channel where the command was run..
+        /// </summary>
+        internal static string imageonly_Description {
+            get {
+                return ResourceManager.GetString("imageonly_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop the music and leave the voice channel.
+        /// </summary>
+        internal static string leave_Description {
+            get {
+                return ResourceManager.GetString("leave_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play music.
+        ///This has a lower priority than music added with play..
+        /// </summary>
+        internal static string longplay_Description {
+            get {
+                return ResourceManager.GetString("longplay_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to join a voice channel first!.
         /// </summary>
         internal static string NotInChannel {
@@ -128,6 +210,24 @@ namespace DiscordBot.Resource {
         internal static string NowPlaying {
             get {
                 return ResourceManager.GetString("NowPlaying", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See what song is currently playing.
+        /// </summary>
+        internal static string nowplaying_Description {
+            get {
+                return ResourceManager.GetString("nowplaying_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause the currently playing music.
+        /// </summary>
+        internal static string pause_Description {
+            get {
+                return ResourceManager.GetString("pause_Description", resourceCulture);
             }
         }
         
@@ -168,6 +268,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show the music queue and now playing..
+        /// </summary>
+        internal static string queue_Description {
+            get {
+                return ResourceManager.GetString("queue_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove song from the queue.
+        /// </summary>
+        internal static string remove_Description {
+            get {
+                return ResourceManager.GetString("remove_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usage: {0}remove &lt;Queue Number&gt;.
         /// </summary>
         internal static string remove_Usage {
@@ -182,6 +300,15 @@ namespace DiscordBot.Resource {
         internal static string RequestedBy {
             get {
                 return ResourceManager.GetString("RequestedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resume currently playing music.
+        /// </summary>
+        internal static string resume_Description {
+            get {
+                return ResourceManager.GetString("resume_Description", resourceCulture);
             }
         }
         
@@ -204,11 +331,29 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seek to a position in the song.
+        /// </summary>
+        internal static string seek_Description {
+            get {
+                return ResourceManager.GetString("seek_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usage: {0}seek &lt;number h/m/s&gt; Example - {0}seek 2m 10s.
         /// </summary>
         internal static string seek_Usage {
             get {
                 return ResourceManager.GetString("seek_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip the currently playing song.
+        /// </summary>
+        internal static string skip_Description {
+            get {
+                return ResourceManager.GetString("skip_Description", resourceCulture);
             }
         }
         

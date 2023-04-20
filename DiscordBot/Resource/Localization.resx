@@ -158,4 +158,53 @@
 	<data name="CheckDm" xml:space="preserve">
 		<value>Check Your DMs!</value>
 	</data>
+	<data name="help_Description" xml:space="preserve">
+		<value>Display all commands and descriptions</value>
+	</data>
+	<data name="pause_Description" xml:space="preserve">
+		<value>Pause the currently playing music</value>
+	</data>
+	<data name="grab_Description" xml:space="preserve">
+		<value>Saves the current song to your Direct Messages</value>
+	</data>
+	<data name="leave_Description" xml:space="preserve">
+		<value>Stop the music and leave the voice channel</value>
+	</data>
+	<data name="resume_Description" xml:space="preserve">
+		<value>Resume currently playing music</value>
+	</data>
+	<data name="nowplaying_Description" xml:space="preserve">
+		<value>See what song is currently playing</value>
+	</data>
+	<data name="queue_Description" xml:space="preserve">
+		<value>Show the music queue and now playing.</value>
+	</data>
+	<data name="remove_Description" xml:space="preserve">
+		<value>Remove song from the queue</value>
+	</data>
+	<data name="seek_Description" xml:space="preserve">
+		<value>Seek to a position in the song</value>
+	</data>
+	<data name="skip_Description" xml:space="preserve">
+		<value>Skip the currently playing song</value>
+	</data>
+	<data name="longplay_Description" xml:space="preserve">
+		<value>Play music.
+This has a lower priority than music added with play.</value>
+	</data>
+	<data name="imageonly_Description" xml:space="preserve">
+		<value>Prohibit chat on the channel where the command was run.</value>
+	</data>
+	<data name="gpt_Description" xml:space="preserve">
+		<value>Send a message to chatgpt.</value>
+	</data>
+	<data name="aram_Description" xml:space="preserve">
+		<value>Sends calls to registered members.</value>
+	</data>
+	<data name="aramregister_Description" xml:space="preserve">
+		<value>Register as a member.</value>
+	</data>
+	<data name="aramdelete_Description" xml:space="preserve">
+		<value>Deleted from the member.</value>
+	</data>
 </root>
