@@ -207,4 +207,7 @@
 	<data name="aramregister_Description" xml:space="preserve">
 		<value>멤버로 등록합니다.</value>
 	</data>
+	<data name="Permission" xml:space="preserve">
+		<value>권한이 없습니다.</value>
+	</data>
 </root>

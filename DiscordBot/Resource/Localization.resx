@@ -207,4 +207,7 @@ This has a lower priority than music added with play.</value>
 	<data name="aramdelete_Description" xml:space="preserve">
 		<value>Deleted from the member.</value>
 	</data>
+	<data name="Permission" xml:space="preserve">
+		<value>You don't have permission.</value>
+	</data>
 </root>
