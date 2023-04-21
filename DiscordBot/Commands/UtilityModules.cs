@@ -105,7 +105,7 @@ namespace DiscordBot.Commands
         [RequireBotPermissions(Permissions.ManageMessages)]
         public async Task ImageOnly(CommandContext ctx)
         {
-            if ((ctx.Member.Permissions & Permissions.ManageMessages) != 0)
+            if ((ctx.Member.Permissions & Permissions.Administrator) == 0)
             {
                 await ctx.RespondAsync(Localization.Permission);
                 return;
