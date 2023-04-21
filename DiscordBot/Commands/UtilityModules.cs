@@ -107,7 +107,15 @@ namespace DiscordBot.Commands
         {
             if ((ctx.Member.Permissions & Permissions.Administrator) == 0)
             {
-                await ctx.RespondAsync(Localization.Permission);
+                DiscordMessage? message = await ctx.RespondAsync(Localization.Permission);
+                if (message != null && _messageHandler.IsImageOnlyChannel(ctx.Channel))
+                {
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(5000);
+                        await message.DeleteAsync();
+                    });
+                }
                 return;
             }
             await _messageHandler.ToggleChannel(ctx);

@@ -46,17 +46,17 @@ public partial class DiscordBotDatabase
         command.CommandText = @"insert into IMAGEONLYCHANNEL (id) values (@id)";
         command.Parameters.AddWithValue("@id", channel.Id);
 
-        bool result = false;
         try
         {
-            result = await command.ExecuteNonQueryAsync() == 1;
+            await command.ExecuteNonQueryAsync();
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
 
-        return result;
+        return false;
     }
     
     public async Task<bool> UnRegisterImageOnlyChannels(DiscordChannel channel)
@@ -70,17 +70,17 @@ public partial class DiscordBotDatabase
         command.CommandText = @"delete from IMAGEONLYCHANNEL where id=@id";
         command.Parameters.AddWithValue("@id", channel.Id);
 
-        bool result = false;
         try
         {
-            result = await command.ExecuteNonQueryAsync() == 1;
+            await command.ExecuteNonQueryAsync();
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
 
-        return result;
+        return false;
     }
     
     public async Task<List<DatabaseUser>> GetDatabaseUsers(CommandContext ctx)
