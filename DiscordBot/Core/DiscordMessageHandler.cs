@@ -38,6 +38,11 @@ public class DiscordMessageHandler
         }
     }
 
+    public bool IsImageOnlyChannel(DiscordChannel discordChannel)
+    {
+        return _imageOnlyChannels.Contains(discordChannel.Id);
+    }
+
     public async Task RunASync()
     {
         using var database = new DiscordBotDatabase();
