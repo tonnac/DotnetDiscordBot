@@ -25,7 +25,13 @@ namespace DiscordBot.Commands
         private readonly DiscordClient _client;
         private readonly DiscordMessageHandler _messageHandler;
         private readonly OpenAIAPI _openAiApi;
-        
+        private readonly Dictionary<string, string?> _moduleThumbnail = new ()
+        {
+            { "Music", "https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg" }, 
+            { "Lol", "https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj" }, 
+            { "Utility", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU" }
+        };
+
         [Command, Aliases("h")]
         public async Task Help(CommandContext ctx)
         {
@@ -66,17 +72,9 @@ namespace DiscordBot.Commands
                     .WithTimestamp(DateTime.Now)
                     .WithDescription(commandsString);
 
-                if (copyCommand.Key == "Music")
+                if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
                 {
-                    embedBuilder.WithThumbnail("https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg");
-                }
-                else if (copyCommand.Key == "Lol")
-                {
-                    embedBuilder.WithThumbnail("https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj");
-                }
-                else if (copyCommand.Key == "Utility")
-                {
-                    embedBuilder.WithThumbnail("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU");
+                    embedBuilder.WithThumbnail(thumbnailUrl);
                 }
             
                 await ctx.Channel.SendMessageAsync(embedBuilder.Build());
@@ -107,7 +105,7 @@ namespace DiscordBot.Commands
         [RequireBotPermissions(Permissions.ManageMessages)]
         public async Task ImageOnly(CommandContext ctx)
         {
-            if ((ctx.Member.Permissions & Permissions.ManageMessages) != 0)
+            if ((ctx.Member.Permissions & Permissions.Administrator) == 0)
             {
                 await ctx.RespondAsync(Localization.Permission);
                 return;
