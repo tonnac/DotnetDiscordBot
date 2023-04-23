@@ -105,6 +105,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} rolls {1} ({2}).
+        /// </summary>
+        internal static string Dice {
+            get {
+                return ResourceManager.GetString("Dice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnected.
         /// </summary>
         internal static string disconnected {
@@ -390,6 +399,15 @@ namespace DiscordBot.Resource {
         internal static string UpNext {
             get {
                 return ResourceManager.GetString("UpNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Parameter.
+        /// </summary>
+        internal static string wrongDice {
+            get {
+                return ResourceManager.GetString("wrongDice", resourceCulture);
             }
         }
     }
