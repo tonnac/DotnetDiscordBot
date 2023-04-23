@@ -210,4 +210,10 @@
 	<data name="Permission" xml:space="preserve">
 		<value>권한이 없습니다.</value>
 	</data>
+	<data name="Dice" xml:space="preserve">
+		<value>{0}가 주사위를 굴려 {1}이(가) 나왔습니다. ({2})</value>
+	</data>
+	<data name="wrongDice" xml:space="preserve">
+		<value>잘못된 값을 입력했습니다.</value>
+	</data>
 </root>

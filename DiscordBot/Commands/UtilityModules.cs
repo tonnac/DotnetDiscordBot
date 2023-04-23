@@ -120,5 +120,34 @@ namespace DiscordBot.Commands
             }
             await _messageHandler.ToggleChannel(ctx);
         }
+
+        [Command]
+        public async Task Dice(CommandContext ctx, [RemainingText] string? diceCommand)
+        {
+            var rand = new Random();
+            if (string.IsNullOrEmpty(diceCommand))
+            {
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(101)}",100));
+                return;
+            }
+            string[] diceNums = diceCommand.Split(' ');
+            int? result = null;
+            if (diceNums.Length == 1)
+            {
+                if (Int32.TryParse(diceNums[0], out int num))
+                    result = rand.Next(num);
+            }
+            else if (diceNums.Length == 2)
+            {
+                if (Int32.TryParse(diceNums[0], out int minNum) && Int32.TryParse(diceNums[1], out int maxNum))
+                    if (minNum <= maxNum)
+                        result = rand.Next(minNum, maxNum);
+            }
+
+            if (result.HasValue)
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
+            else
+                await ctx.RespondAsync(Localization.wrongDice);
+        }
     }
 }
