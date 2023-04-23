@@ -127,7 +127,7 @@ namespace DiscordBot.Commands
             var rand = new Random();
             if (string.IsNullOrEmpty(diceCommand))
             {
-                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(101)}",100));
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(101) + 1}", 100));
                 return;
             }
             string[] diceNums = diceCommand.Split(' ');
@@ -145,7 +145,7 @@ namespace DiscordBot.Commands
             }
 
             if (result.HasValue)
-                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result + 1, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
             else
                 await ctx.RespondAsync(Localization.wrongDice);
         }
