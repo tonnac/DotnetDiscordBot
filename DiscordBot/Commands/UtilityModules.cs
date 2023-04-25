@@ -127,7 +127,7 @@ namespace DiscordBot.Commands
             var rand = new Random();
             if (string.IsNullOrEmpty(diceCommand))
             {
-                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(101) + 1}", 100));
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(1,101)}", 100));
                 return;
             }
             string[] diceNums = diceCommand.Split(' ');
@@ -135,17 +135,17 @@ namespace DiscordBot.Commands
             if (diceNums.Length == 1)
             {
                 if (Int32.TryParse(diceNums[0], out int num))
-                    result = rand.Next(num);
+                    result = rand.Next(1,num+1);
             }
             else if (diceNums.Length == 2)
             {
                 if (Int32.TryParse(diceNums[0], out int minNum) && Int32.TryParse(diceNums[1], out int maxNum))
-                    if (minNum <= maxNum)
-                        result = rand.Next(minNum, maxNum);
+                    if (minNum < maxNum)
+                        result = rand.Next(minNum, maxNum+1);
             }
 
             if (result.HasValue)
-                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result + 1, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
             else
                 await ctx.RespondAsync(Localization.wrongDice);
         }
