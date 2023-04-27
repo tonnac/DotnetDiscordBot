@@ -216,4 +216,16 @@
 	<data name="wrongDice" xml:space="preserve">
 		<value>잘못된 값을 입력했습니다.</value>
 	</data>
+	<data name="Roller" xml:space="preserve">
+		<value>굴린 사람</value>
+	</data>
+	<data name="DiceValue" xml:space="preserve">
+		<value>주사위 값</value>
+	</data>
+	<data name="wowdice_Description" xml:space="preserve">
+		<value>주사위를 굴립니다.(WOW Type)</value>
+	</data>
+	<data name="dice_Description" xml:space="preserve">
+		<value>주사위를 굴립니다.</value>
+	</data>
 </root>

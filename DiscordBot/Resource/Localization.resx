@@ -216,4 +216,16 @@ This has a lower priority than music added with play.</value>
 	<data name="wrongDice" xml:space="preserve">
 		<value>Wrong Parameter</value>
 	</data>
+	<data name="Roller" xml:space="preserve">
+		<value>Roller</value>
+	</data>
+	<data name="DiceValue" xml:space="preserve">
+		<value>DiceValue</value>
+	</data>
+	<data name="wowdice_Description" xml:space="preserve">
+		<value>Roll the WOW type dice.</value>
+	</data>
+	<data name="dice_Description" xml:space="preserve">
+		<value>Roll the dice.</value>
+	</data>
 </root>
