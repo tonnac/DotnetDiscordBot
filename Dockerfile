@@ -5,6 +5,9 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+COPY ["DiscordBot/DisCatSharp.Lavalink.dll", "DiscordBot/"]
+COPY ["DiscordBot/DisCatSharp.dll", "DiscordBot/"]
+COPY ["DiscordBot/DisCatSharp.Common.dll", "DiscordBot/"]
 COPY ["DiscordBot/DiscordBot.csproj", "DiscordBot/"]
 RUN dotnet restore "DiscordBot/DiscordBot.csproj"
 COPY . .

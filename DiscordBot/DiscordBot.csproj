@@ -23,8 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj" />
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    <Reference Include="DisCatSharp">
+      <HintPath>DisCatSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="DisCatSharp.Common">
+      <HintPath>DisCatSharp.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="DisCatSharp.Lavalink">
+      <HintPath>DisCatSharp.Lavalink.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

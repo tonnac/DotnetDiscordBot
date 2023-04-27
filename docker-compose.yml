@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  dotnetdiscordbot:
+    build: .
+    container_name: discordbot
+    restart: unless-stopped
+    networks:
+      - discord
+    depends_on:
+      - lavalink
+      - mysql
+    volumes:
+      - ./DiscordBot/Config.cs:/app/Config.cs:ro
+  
+  lavalink:
+    image: fredboat/lavalink:dev
+    container_name: music-lavalink
+    hostname: lavalink
+    ports:
+      - ${LAVALINK_PORT}:${LAVALINK_PORT}
+    restart: unless-stopped
+    networks: 
+      - discord
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    hostname: mysql
+    ports:
+      - ${SQL_PORT}:${SQL_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SQL_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - discord
+        
+networks:
+  discord:
