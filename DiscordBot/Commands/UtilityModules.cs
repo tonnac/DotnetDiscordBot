@@ -160,8 +160,6 @@ namespace DiscordBot.Commands
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
                     .WithAuthor("[" + $"{1}~{100}" + "]")
-                    //.WithDescription(currTrack.GetTrackTitle())
-                    //.AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention, true))
                     .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(rand.Next(1,101)), true));
                 
                 await ctx.RespondAsync(embedBuilder);
