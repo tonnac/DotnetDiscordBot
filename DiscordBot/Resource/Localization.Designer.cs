@@ -114,6 +114,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roll the dice..
+        /// </summary>
+        internal static string dice_Description {
+            get {
+                return ResourceManager.GetString("dice_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DiceValue.
+        /// </summary>
+        internal static string DiceValue {
+            get {
+                return ResourceManager.GetString("DiceValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnected.
         /// </summary>
         internal static string disconnected {
@@ -331,6 +349,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roller.
+        /// </summary>
+        internal static string Roller {
+            get {
+                return ResourceManager.GetString("Roller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SaveMusic.
         /// </summary>
         internal static string SaveMusic {
@@ -399,6 +426,15 @@ namespace DiscordBot.Resource {
         internal static string UpNext {
             get {
                 return ResourceManager.GetString("UpNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roll the WOW type dice..
+        /// </summary>
+        internal static string wowdice_Description {
+            get {
+                return ResourceManager.GetString("wowdice_Description", resourceCulture);
             }
         }
         

@@ -121,8 +121,8 @@ namespace DiscordBot.Commands
             await _messageHandler.ToggleChannel(ctx);
         }
 
-        [Command]
-        public async Task Dice(CommandContext ctx, [RemainingText] string? diceCommand)
+        [Command, Aliases("wd")]
+        public async Task WOWDice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
             if (string.IsNullOrEmpty(diceCommand))
@@ -146,6 +146,53 @@ namespace DiscordBot.Commands
 
             if (result.HasValue)
                 await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, result, diceNums.Length == 1 ? $"{diceNums[0]}" : $"{diceNums[0]}~{diceNums[1]}"));
+            else
+                await ctx.RespondAsync(Localization.wrongDice);
+        }
+        
+        [Command, Aliases("d")]
+        public async Task Dice(CommandContext ctx, [RemainingText] string? diceCommand)
+        {
+            var rand = new Random();
+            if (string.IsNullOrEmpty(diceCommand))
+            {
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithThumbnail("https://i1.sndcdn.com/artworks-DU13kwd4X2yPk3j4-YhD6yg-t500x500.jpg")
+                    .WithColor(DiscordColor.DarkGreen)
+                    .WithAuthor("범위 : [" + $"{1}~{100}" + "]")
+                    //.WithDescription(currTrack.GetTrackTitle())
+                    .AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
+                    .AddField(new DiscordEmbedField(Localization.DiceValue, Convert.ToString(rand.Next(1,101))));
+                
+                await ctx.RespondAsync(embedBuilder);
+                return;
+            }
+            string[] diceNums = diceCommand.Split(' ');
+            int? result = null;
+            if (diceNums.Length == 1)
+            {
+                if (Int32.TryParse(diceNums[0], out int num))
+                    result = rand.Next(1,num+1);
+            }
+            else if (diceNums.Length == 2)
+            {
+                if (Int32.TryParse(diceNums[0], out int minNum) && Int32.TryParse(diceNums[1], out int maxNum))
+                    if (minNum < maxNum)
+                        result = rand.Next(minNum, maxNum+1);
+            }
+
+            if (result.HasValue)
+            {
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithThumbnail("https://i1.sndcdn.com/artworks-DU13kwd4X2yPk3j4-YhD6yg-t500x500.jpg")
+                    .WithColor(DiscordColor.DarkGreen)
+                    .WithAuthor(diceNums.Length == 1 ? "범위 : [" + $"{diceNums[0]}~{diceNums[0]}" + "]" : "범위 : [" + $"{diceNums[0]}~{diceNums[1]}" + "]")
+                    //.WithDescription(currTrack.GetTrackTitle())
+                    .AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
+                    .AddField(new DiscordEmbedField(Localization.DiceValue, Convert.ToString(result + 1)));
+                
+                await ctx.RespondAsync(embedBuilder);
+            }
             else
                 await ctx.RespondAsync(Localization.wrongDice);
         }
