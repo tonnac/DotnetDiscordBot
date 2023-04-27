@@ -157,12 +157,12 @@ namespace DiscordBot.Commands
             if (string.IsNullOrEmpty(diceCommand))
             {
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                    .WithThumbnail("https://i1.sndcdn.com/artworks-DU13kwd4X2yPk3j4-YhD6yg-t500x500.jpg")
+                    .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
-                    .WithAuthor("범위 : [" + $"{1}~{100}" + "]")
+                    .WithAuthor("[" + $"{1}~{100}" + "]")
                     //.WithDescription(currTrack.GetTrackTitle())
-                    .AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
-                    .AddField(new DiscordEmbedField(Localization.DiceValue, Convert.ToString(rand.Next(1,101))));
+                    //.AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention, true))
+                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(rand.Next(1,101)), true));
                 
                 await ctx.RespondAsync(embedBuilder);
                 return;
@@ -184,12 +184,12 @@ namespace DiscordBot.Commands
             if (result.HasValue)
             {
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                    .WithThumbnail("https://i1.sndcdn.com/artworks-DU13kwd4X2yPk3j4-YhD6yg-t500x500.jpg")
+                    .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
-                    .WithAuthor(diceNums.Length == 1 ? "범위 : [" + $"{diceNums[0]}~{diceNums[0]}" + "]" : "범위 : [" + $"{diceNums[0]}~{diceNums[1]}" + "]")
+                    .WithAuthor(diceNums.Length == 1 ? "[1" + $"~{diceNums[0]}" + "]" : "[" + $"{diceNums[0]}~{diceNums[1]}" + "]")
                     //.WithDescription(currTrack.GetTrackTitle())
-                    .AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
-                    .AddField(new DiscordEmbedField(Localization.DiceValue, Convert.ToString(result + 1)));
+                    //.AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
+                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(result)));
                 
                 await ctx.RespondAsync(embedBuilder);
             }
