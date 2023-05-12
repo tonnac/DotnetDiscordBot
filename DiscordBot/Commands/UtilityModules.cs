@@ -196,6 +196,7 @@ namespace DiscordBot.Commands
         }
 
         [Command]
+        [RequireBotPermissions(Permissions.KickMembers)]
         public async Task Exit(CommandContext ctx)
         {
             if (ctx.Member.VoiceState == null)
