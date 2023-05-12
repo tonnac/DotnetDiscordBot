@@ -194,5 +194,17 @@ namespace DiscordBot.Commands
             else
                 await ctx.RespondAsync(Localization.wrongDice);
         }
+
+        [Command]
+        public async Task Exit(CommandContext ctx)
+        {
+            if (ctx.Member.VoiceState == null)
+            {
+                await ctx.RespondAsync(Localization.NotInChannel);
+                return;
+            }
+            
+            await ctx.Member.DisconnectFromVoiceAsync();
+        }
     }
 }
