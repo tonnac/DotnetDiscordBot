@@ -159,6 +159,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
+        /// </summary>
+        internal static string exit_Description {
+            get {
+                return ResourceManager.GetString("exit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send a message to chatgpt..
         /// </summary>
         internal static string gpt_Description {

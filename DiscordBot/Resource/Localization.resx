@@ -228,4 +228,7 @@ This has a lower priority than music added with play.</value>
 	<data name="dice_Description" xml:space="preserve">
 		<value>Roll the dice.</value>
 	</data>
+	<data name="exit_Description" xml:space="preserve">
+		<value>Leave voice channel you are currently participating in.</value>
+	</data>
 </root>

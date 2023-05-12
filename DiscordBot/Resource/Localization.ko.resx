@@ -228,4 +228,7 @@
 	<data name="dice_Description" xml:space="preserve">
 		<value>주사위를 굴립니다.</value>
 	</data>
+	<data name="exit_Description" xml:space="preserve">
+		<value>현재 참여중인 음성채널 연결을 종료합니다.</value>
+	</data>
 </root>
