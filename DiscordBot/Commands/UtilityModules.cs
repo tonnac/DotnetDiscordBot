@@ -127,7 +127,13 @@ namespace DiscordBot.Commands
             var rand = new Random();
             if (string.IsNullOrEmpty(diceCommand))
             {
-                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, $"{rand.Next(1,101)}", 100));
+                int value = rand.Next(1, 101);
+                
+                var message = await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, Convert.ToString(value), 100));
+                if (message != null && value is 1 or 100)
+                {
+                    await message.PinAsync();
+                }
                 return;
             }
             string[] diceNums = diceCommand.Split(' ');
@@ -156,13 +162,21 @@ namespace DiscordBot.Commands
             var rand = new Random();
             if (string.IsNullOrEmpty(diceCommand))
             {
+                int value = rand.Next(1, 101);
+                
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
                     .WithAuthor("[" + $"{1}~{100}" + "]")
-                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(rand.Next(1,101)), true));
+                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(value), true));
                 
-                await ctx.RespondAsync(embedBuilder);
+                var message = await ctx.RespondAsync(embedBuilder);
+
+                if (message != null && value is 1 or 100)
+                {
+                    await message.PinAsync();
+                }
+                
                 return;
             }
             string[] diceNums = diceCommand.Split(' ');
@@ -196,6 +210,7 @@ namespace DiscordBot.Commands
         }
 
         [Command]
+        [RequireBotPermissions(Permissions.KickMembers)]
         public async Task Exit(CommandContext ctx)
         {
             if (ctx.Member.VoiceState == null)
