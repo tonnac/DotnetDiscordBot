@@ -121,7 +121,7 @@ namespace DiscordBot.Commands
             await _messageHandler.ToggleChannel(ctx);
         }
 
-        [Command, Aliases("wd")]
+        [Command, Aliases("wd"), Cooldown(1, 300, CooldownBucketType.User)]
         public async Task WOWDice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
@@ -156,7 +156,7 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync(Localization.wrongDice);
         }
         
-        [Command, Aliases("d")]
+        [Command, Aliases("d"), Cooldown(1, 300, CooldownBucketType.User)]
         public async Task Dice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
