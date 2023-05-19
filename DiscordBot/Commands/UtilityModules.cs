@@ -121,7 +121,7 @@ namespace DiscordBot.Commands
             await _messageHandler.ToggleChannel(ctx);
         }
 
-        [Command, Aliases("wd"), Cooldown(1, 300, CooldownBucketType.User)]
+        [Command, Aliases("wd")]
         public async Task WOWDice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
@@ -129,11 +129,7 @@ namespace DiscordBot.Commands
             {
                 int value = rand.Next(1, 101);
                 
-                var message = await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, Convert.ToString(value), 100));
-                if (message != null && value is 1 or 100)
-                {
-                    await message.PinAsync();
-                }
+                await ctx.RespondAsync(string.Format(Localization.Dice, ctx.Member.Mention, Convert.ToString(value), 100));
                 return;
             }
             string[] diceNums = diceCommand.Split(' ');
