@@ -12,6 +12,7 @@ public enum BossType : int
     Devil = 5,
     Vampire = 6,
     Dragon = 7,
+    Alien = 8,
     End,
 }
 
@@ -21,9 +22,11 @@ public class BossMonster
     public int CurrentHp { get; set; }
     public int CurrentMaxHp { get; set; }
     public int HitCount { get; set; }
-    
+    private Dictionary<string, int> TotalDamage { get; set; }
+
     public BossMonster(BossType type)
     {
+        TotalDamage = new Dictionary<string, int>();
         SetBossMonsterInfo(type);
     }
 
@@ -33,10 +36,41 @@ public class BossMonster
         CurrentHp = GetBossMaxHp(type);
         CurrentMaxHp = CurrentHp;
         HitCount = 0;
+        TotalDamage.Clear();
     }
 
-    public bool IsKilledByDamage(int damage)
+    public KeyValuePair<string, int> GetBestDealer()
     {
+        Dictionary<string, int> sortDict = TotalDamage.OrderByDescending(item => item.Value).ToDictionary(x => x.Key, x => x.Value);
+
+        KeyValuePair<string, int> bestDealer = new KeyValuePair<string, int>();
+        foreach (var item in sortDict)
+        {
+            bestDealer = item;
+            break;
+        }
+
+        return bestDealer;
+    }
+
+    public bool IsKilledByDamage(string attacker, int damage)
+    {
+        if (CurrentHp <= damage)
+        {
+            damage = CurrentHp;
+        }
+        
+        if (!TotalDamage.ContainsKey(attacker))
+        {
+            TotalDamage.Add(attacker, damage);
+        }
+        else
+        {
+            int totalDamage = TotalDamage[attacker] + damage;
+            TotalDamage.Remove(attacker);
+            TotalDamage.Add(attacker, totalDamage);
+        }
+        
         HitCount++;
         CurrentHp -= damage;
 
@@ -77,6 +111,8 @@ public class BossMonster
                 return 700;
             case BossType.Dragon:
                 return 1000;
+            case BossType.Alien:
+                return 1234;
         }
     }
     
@@ -101,6 +137,8 @@ public class BossMonster
                 return "\uD83E\uDDDB";
             case BossType.Dragon:
                 return "\uD83D\uDC09";
+            case BossType.Alien:
+                return "\uD83D\uDC7D";
         }
     }
 }
