@@ -24,12 +24,12 @@ public class BossModules : BaseCommandModule
         string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string CritAddText = "";
         int lastDamage = rand.Next(1, 101);
-        if (7 >= AttackChance)
+        if (10 >= AttackChance)
         {
             lastDamage = 0;
             DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
         }
-        else if (95 <= AttackChance)
+        else if (85 <= AttackChance)
         {
             lastDamage = lastDamage * 2 + 100;
             CritAddText = " !";
@@ -55,13 +55,23 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (ctx.Member.Username != BestDealerInfo.Key)
+            string BestDealer = "";
+            int BestDealerTotalDamage = 0;
+            
+            if (string.IsNullOrEmpty(BestDealerInfo.Key))
             {
-                lastDamage = 0;
+                BestDealer = ctx.Member.Username;
+                BestDealerTotalDamage = _bossMonster.CurrentMaxHp;
             }
             else
             {
-                lastDamage = lastCurrentHp;
+                BestDealer = BestDealerInfo.Key;
+                BestDealerTotalDamage = BestDealerInfo.Value;
+                
+                if (ctx.Member.Username == BestDealerInfo.Key)
+                {
+                    BestDealerTotalDamage += lastCurrentHp;
+                }
             }
 
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -69,7 +79,7 @@ public class BossModules : BaseCommandModule
                 .WithColor(DiscordColor.Gold)
                 .WithAuthor("\uD83C\uDF8A " + ctx.Member.Username)
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
-                    "\uD83E\uDD47 " + BestDealerInfo.Key + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value + lastDamage),
+                    "\uD83E\uDD47 " + BestDealer + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerTotalDamage),
                     false));
         
             var message = await ctx.RespondAsync(embedBuilder);
@@ -84,13 +94,21 @@ public class BossModules : BaseCommandModule
     public async Task BossInfo(CommandContext ctx)
     {
         KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
+        string BestDealer = BestDealerInfo.Key;
+        int BestDealerTotalDamage = BestDealerInfo.Value;
+        
+        if (string.IsNullOrEmpty(BestDealerInfo.Key))
+        {
+            BestDealer = "X";
+            BestDealerTotalDamage = 0;
+        }
         
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://i.pinimg.com/originals/22/ef/7e/22ef7eba94bc378be084e59e72eb7b25.jpg")
             .WithColor(DiscordColor.Orange)
             //.WithAuthor(_bossMonster.BossEmojiCode)
             .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47 " + BestDealerInfo.Key + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value),
+            .AddField(new DiscordEmbedField("\uD83E\uDD47 " + BestDealer + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerTotalDamage),
                 "\u2694\uFE0F " + _bossMonster.HitCount, false));
         
         await ctx.RespondAsync(embedBuilder);
