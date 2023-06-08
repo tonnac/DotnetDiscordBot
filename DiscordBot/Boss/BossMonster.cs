@@ -53,7 +53,7 @@ public class BossMonster
         return bestDealer;
     }
 
-    public bool IsKilledByDamage(string attacker, int damage)
+    public bool IsKilledByDamage(string attacker, int damage, out KeyValuePair<string, int> bestDealerInfo)
     {
         if (CurrentHp <= damage)
         {
@@ -70,6 +70,8 @@ public class BossMonster
             TotalDamage.Remove(attacker);
             TotalDamage.Add(attacker, totalDamage);
         }
+        
+        bestDealerInfo = GetBestDealer();
         
         HitCount++;
         CurrentHp -= damage;

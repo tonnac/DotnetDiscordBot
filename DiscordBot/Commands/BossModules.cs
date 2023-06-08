@@ -38,9 +38,9 @@ public class BossModules : BaseCommandModule
         
         int hitCount = _bossMonster.HitCount;
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
-        KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
+        KeyValuePair<string, int> BestDealerInfo;// = _bossMonster.GetBestDealer();
         int lastCurrentHp = _bossMonster.CurrentHp;
-        bool bIsKilled = _bossMonster.IsKilledByDamage(ctx.Member.Username, lastDamage);
+        bool bIsKilled = _bossMonster.IsKilledByDamage(ctx.Member.Username, lastDamage, out BestDealerInfo);
 
         if (!bIsKilled)
         {
