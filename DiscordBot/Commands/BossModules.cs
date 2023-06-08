@@ -23,29 +23,32 @@ public class BossModules : BaseCommandModule
         int AttackChance = rand.Next(1, 101);
         string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string CritAddText = "";
+        string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
+        
         int lastDamage = rand.Next(1, 101);
         if (10 >= AttackChance)
         {
             lastDamage = 0;
             DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
+            AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
         }
         else if (85 <= AttackChance)
         {
             lastDamage = lastDamage * 2 + 100;
             CritAddText = " !";
             DamageTypeEmojiCode = "\uD83D\uDD25 ";
+            AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
         }
         
         int hitCount = _bossMonster.HitCount;
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<string, int> BestDealerInfo;// = _bossMonster.GetBestDealer();
-        int lastCurrentHp = _bossMonster.CurrentHp;
         bool bIsKilled = _bossMonster.IsKilledByDamage(ctx.Member.Username, lastDamage, out BestDealerInfo);
 
         if (!bIsKilled)
         {
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                .WithThumbnail("https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif")
+                .WithThumbnail(AttackGifurl)
                 .WithColor(DiscordColor.HotPink)
                 .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
                 .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(lastDamage) + CritAddText,
@@ -55,31 +58,12 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            string BestDealer = "";
-            int BestDealerTotalDamage = 0;
-            
-            if (string.IsNullOrEmpty(BestDealerInfo.Key))
-            {
-                BestDealer = ctx.Member.Username;
-                BestDealerTotalDamage = _bossMonster.CurrentMaxHp;
-            }
-            else
-            {
-                BestDealer = BestDealerInfo.Key;
-                BestDealerTotalDamage = BestDealerInfo.Value;
-                
-                if (ctx.Member.Username == BestDealerInfo.Key)
-                {
-                    BestDealerTotalDamage += lastCurrentHp;
-                }
-            }
-
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
                 .WithAuthor("\uD83C\uDF8A " + ctx.Member.Username)
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
-                    "\uD83E\uDD47 " + BestDealer + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerTotalDamage),
+                    "\uD83E\uDD47 " + BestDealerInfo.Key + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value),
                     false));
         
             var message = await ctx.RespondAsync(embedBuilder);
