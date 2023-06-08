@@ -231,4 +231,10 @@
 	<data name="exit_Description" xml:space="preserve">
 		<value>현재 참여중인 음성채널 연결을 종료합니다.</value>
 	</data>
+	<data name="bossattack_Description" xml:space="preserve">
+		<value>보스에게 공격을 시도합니다. (데미지 1~100)</value>
+	</data>
+	<data name="bossinfo_Description" xml:space="preserve">
+		<value>현재 보스 정보를 표시합니다.</value>
+	</data>
 </root>

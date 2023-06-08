@@ -231,4 +231,10 @@ This has a lower priority than music added with play.</value>
 	<data name="exit_Description" xml:space="preserve">
 		<value>Leave voice channel you are currently participating in.</value>
 	</data>
+	<data name="bossattack_Description" xml:space="preserve">
+		<value>Attempt to attack the boss. (Damage 1-100)</value>
+	</data>
+	<data name="bossinfo_Description" xml:space="preserve">
+		<value>Displays current boss information.</value>
+	</data>
 </root>

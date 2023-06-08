@@ -96,6 +96,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100).
+        /// </summary>
+        internal static string bossattack_Description {
+            get {
+                return ResourceManager.GetString("bossattack_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays current boss information..
+        /// </summary>
+        internal static string bossinfo_Description {
+            get {
+                return ResourceManager.GetString("bossinfo_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
