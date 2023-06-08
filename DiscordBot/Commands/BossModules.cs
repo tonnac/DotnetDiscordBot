@@ -23,17 +23,21 @@ public class BossModules : BaseCommandModule
         int AttackChance = rand.Next(1, 101);
         string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string CritAddText = "";
+        string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
+        
         int lastDamage = rand.Next(1, 101);
         if (10 >= AttackChance)
         {
             lastDamage = 0;
             DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
+            AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
         }
         else if (85 <= AttackChance)
         {
             lastDamage = lastDamage * 2 + 100;
             CritAddText = " !";
             DamageTypeEmojiCode = "\uD83D\uDD25 ";
+            AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
         }
         
         int hitCount = _bossMonster.HitCount;
@@ -44,7 +48,7 @@ public class BossModules : BaseCommandModule
         if (!bIsKilled)
         {
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                .WithThumbnail("https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif")
+                .WithThumbnail(AttackGifurl)
                 .WithColor(DiscordColor.HotPink)
                 .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
                 .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(lastDamage) + CritAddText,
