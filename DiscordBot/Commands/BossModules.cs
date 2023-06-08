@@ -20,10 +20,27 @@ public class BossModules : BaseCommandModule
     {
         var rand = new Random();
 
-        int damage = rand.Next(1, 101);
+        int AttackChance = rand.Next(1, 101);
+        string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
+        string CritAddText = "";
+        int lastDamage = rand.Next(1, 101);
+        if (7 >= AttackChance)
+        {
+            lastDamage = 0;
+            DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
+        }
+        else if (95 <= AttackChance)
+        {
+            lastDamage = lastDamage * 2 + 100;
+            CritAddText = " !";
+            DamageTypeEmojiCode = "\uD83D\uDD25 ";
+        }
+        
         int hitCount = _bossMonster.HitCount;
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
-        bool bIsKilled = _bossMonster.IsKilledByDamage(damage);
+        KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
+        int lastCurrentHp = _bossMonster.CurrentHp;
+        bool bIsKilled = _bossMonster.IsKilledByDamage(ctx.Member.Username, lastDamage);
 
         if (!bIsKilled)
         {
@@ -31,18 +48,27 @@ public class BossModules : BaseCommandModule
                 .WithThumbnail("https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif")
                 .WithColor(DiscordColor.HotPink)
                 .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
-                .AddField(new DiscordEmbedField("\uD83D\uDCA5 " + Convert.ToString(damage),
+                .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(lastDamage) + CritAddText,
                     _bossMonster.BossEmojiCode + " " + Convert.ToString(_bossMonster.CurrentHp) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         
             await ctx.RespondAsync(embedBuilder);
         }
         else
         {
+            if (ctx.Member.Username != BestDealerInfo.Key)
+            {
+                lastDamage = 0;
+            }
+            else
+            {
+                lastDamage = lastCurrentHp;
+            }
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
                 .WithAuthor("\uD83C\uDF8A " + ctx.Member.Username)
-                .AddField(new DiscordEmbedField("\u2620\uFE0F " + deadBossEmojiCode + " \u2620\uFE0F", "\u2694\uFE0F " + Convert.ToString(hitCount+1), false));
+                .AddField(new DiscordEmbedField(deadBossEmojiCode + " = \u2620\uFE0F", "\u2694\uFE0F " + Convert.ToString(hitCount+1), false))
+                .AddField(new DiscordEmbedField("\uD83E\uDD47 " + BestDealerInfo.Key, "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value + lastDamage), false));
         
             var message = await ctx.RespondAsync(embedBuilder);
 
