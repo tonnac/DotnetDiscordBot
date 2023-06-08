@@ -63,12 +63,14 @@ public class BossModules : BaseCommandModule
             {
                 lastDamage = lastCurrentHp;
             }
+
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
                 .WithAuthor("\uD83C\uDF8A " + ctx.Member.Username)
-                .AddField(new DiscordEmbedField(deadBossEmojiCode + " = \u2620\uFE0F", "\u2694\uFE0F " + Convert.ToString(hitCount+1), false))
-                .AddField(new DiscordEmbedField("\uD83E\uDD47 " + BestDealerInfo.Key, "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value + lastDamage), false));
+                .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
+                    "\uD83E\uDD47 " + BestDealerInfo.Key + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value + lastDamage),
+                    false));
         
             var message = await ctx.RespondAsync(embedBuilder);
 
@@ -81,12 +83,15 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("bi")]
     public async Task BossInfo(CommandContext ctx)
     {
+        KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
+        
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://i.pinimg.com/originals/22/ef/7e/22ef7eba94bc378be084e59e72eb7b25.jpg")
             .WithColor(DiscordColor.Orange)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "----", false))
-            .AddField(new DiscordEmbedField("\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, "\u2694\uFE0F " + _bossMonster.HitCount, false));
+            .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
+            .AddField(new DiscordEmbedField("\uD83E\uDD47 " + BestDealerInfo.Key + "   " + "\uD83D\uDCA5 " + Convert.ToString(BestDealerInfo.Value),
+                "\u2694\uFE0F " + _bossMonster.HitCount, false));
         
         await ctx.RespondAsync(embedBuilder);
     }
