@@ -88,7 +88,7 @@ public class BossModules : BaseCommandModule
         }
         
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-            .WithThumbnail("https://i.pinimg.com/originals/22/ef/7e/22ef7eba94bc378be084e59e72eb7b25.jpg")
+            .WithThumbnail("https://upload2.inven.co.kr/upload/2018/11/09/bbs/i15705696321.jpg?MW=800")
             .WithColor(DiscordColor.Orange)
             //.WithAuthor(_bossMonster.BossEmojiCode)
             .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
