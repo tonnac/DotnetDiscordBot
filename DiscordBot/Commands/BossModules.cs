@@ -162,18 +162,18 @@ public class BossModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1440/1440998.png")
             .WithColor(DiscordColor.White)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Ant), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Ant), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Bat), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Bat), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Octopus), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Shark), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Shark), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Unicorn), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Unicorn), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Mammoth), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Mammoth), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Devil), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Devil), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.SlotMachine), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.SlotMachine), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Alien), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Alien), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Trex), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Trex), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Dragon), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.Dragon), false))
-            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.TheOffice), "\u2665\uFE0F " + _bossMonster.GetBossMaxHp(BossType.TheOffice), false));
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Ant), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Ant) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Ant), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Bat), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Bat) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Bat), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Octopus), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Octopus) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Shark), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Shark) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Shark), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Unicorn), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Unicorn) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Unicorn), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Mammoth), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Mammoth) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Mammoth), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Devil), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Devil) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Devil), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.SlotMachine), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.SlotMachine) + ", \uD83D\uDCB0" + Convert.ToString(7777), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Alien), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Alien) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Alien), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Trex), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Trex) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Trex), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.Dragon), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Dragon) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Dragon), false))
+            .AddField(new DiscordEmbedField(_bossMonster.GetBossEmojiCode(BossType.TheOffice), "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.TheOffice) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.TheOffice), false));
         
         await ctx.RespondAsync(embedBuilder);
     }
