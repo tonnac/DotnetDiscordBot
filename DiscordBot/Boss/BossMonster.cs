@@ -4,15 +4,19 @@ namespace DiscordBot.Boss;
 
 public enum BossType : int
 {
-    Bat = 0,
-    Octopus = 1,
-    Shark = 2,
-    Unicorn = 3,
-    Mammoth = 4,   
-    Devil = 5,
-    Vampire = 6,
-    Dragon = 7,
-    Alien = 8,
+    Start = 0,
+    Ant = 1,
+    Bat = 2,
+    Octopus = 3,
+    Shark = 4,
+    Unicorn = 5,
+    Mammoth = 6,   
+    Devil = 7,
+    SlotMachine = 8,
+    Alien = 9,
+    Trex = 10,
+    Dragon = 11,
+    TheOffice = 12,
     End,
 }
 
@@ -88,7 +92,7 @@ public class BossMonster
     private void ResetBossMonster()
     {
         var rand = new Random();
-        int bossType = rand.Next((int) BossType.Bat, (int) BossType.End);
+        int bossType = rand.Next((int)BossType.Start + 1, (int)BossType.End);
         SetBossMonsterInfo( (BossType)bossType );
     }
 
@@ -97,6 +101,8 @@ public class BossMonster
         switch (type)
         {
             default:
+            case BossType.Ant:
+                return 10;
             case BossType.Bat:
                 return 100;
             case BossType.Octopus:
@@ -109,12 +115,16 @@ public class BossMonster
                 return 500;
             case BossType.Devil:
                 return 666;
-            case BossType.Vampire:
-                return 700;
-            case BossType.Dragon:
-                return 1000;
+            case BossType.SlotMachine:
+                return 777;
             case BossType.Alien:
-                return 1234;
+                return 800;
+            case BossType.Trex:
+                return 1000;
+            case BossType.Dragon:
+                return 1500;
+            case BossType.TheOffice:
+                return 1818;
         }
     }
     
@@ -123,6 +133,8 @@ public class BossMonster
         switch (type)
         {
             default:
+            case BossType.Ant:
+                return "\uD83D\uDC1C";
             case BossType.Bat:
                 return "\uD83E\uDD87";
             case BossType.Octopus:
@@ -135,12 +147,16 @@ public class BossMonster
                 return "\uD83E\uDDA3";
             case BossType.Devil:
                 return "\uD83D\uDE08";
-            case BossType.Vampire:
-                return "\uD83E\uDDDB";
-            case BossType.Dragon:
-                return "\uD83D\uDC09";
+            case BossType.SlotMachine:
+                return "\uD83C\uDFB0";
             case BossType.Alien:
                 return "\uD83D\uDC7D";
+            case BossType.Trex:
+                return "\uD83E\uDD96";
+            case BossType.Dragon:
+                return "\uD83D\uDC09";
+            case BossType.TheOffice:
+                return "\uD83C\uDFEC";
         }
     }
 }

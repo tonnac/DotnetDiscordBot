@@ -12,9 +12,10 @@ public class BossModules : BaseCommandModule
     public BossModules()
     {
         var rand = new Random();
-        int bossType = rand.Next((int) BossType.Bat, (int) BossType.End);
-        _bossMonster = new BossMonster((BossType) bossType);
+        int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
+        _bossMonster = new BossMonster((BossType)bossType);
     }
+    //[Command, Aliases("ba")]
     [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User)]
     public async Task BossAttack(CommandContext ctx)
     {
