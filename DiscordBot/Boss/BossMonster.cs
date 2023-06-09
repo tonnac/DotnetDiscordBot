@@ -96,7 +96,7 @@ public class BossMonster
         SetBossMonsterInfo( (BossType)bossType );
     }
 
-    private int GetBossMaxHp(BossType type)
+    public int GetBossMaxHp(BossType type)
     {
         switch (type)
         {
@@ -128,7 +128,7 @@ public class BossMonster
         }
     }
     
-    private string GetBossEmojiCode(BossType type)
+    public string GetBossEmojiCode(BossType type)
     {
         switch (type)
         {

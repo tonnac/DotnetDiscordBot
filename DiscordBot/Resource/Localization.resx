@@ -237,4 +237,13 @@ This has a lower priority than music added with play.</value>
 	<data name="bossinfo_Description" xml:space="preserve">
 		<value>Displays current boss information.</value>
 	</data>
+	<data name="bossrank_Description" xml:space="preserve">
+		<value>Shows the boss rank board.</value>
+	</data>
+	<data name="bosslist_Description" xml:space="preserve">
+		<value>Shows the boss list.</value>
+	</data>
+	<data name="bossrankreset_Description" xml:space="preserve">
+		<value>Reset the boss rank board.(Permission required)</value>
+	</data>
 </root>

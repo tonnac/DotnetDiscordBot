@@ -114,6 +114,33 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows the boss list..
+        /// </summary>
+        internal static string bosslist_Description {
+            get {
+                return ResourceManager.GetString("bosslist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the boss rank board..
+        /// </summary>
+        internal static string bossrank_Description {
+            get {
+                return ResourceManager.GetString("bossrank_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the boss rank board.(Permission required).
+        /// </summary>
+        internal static string bossrankreset_Description {
+            get {
+                return ResourceManager.GetString("bossrankreset_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
