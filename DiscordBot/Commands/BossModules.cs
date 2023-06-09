@@ -181,7 +181,7 @@ public class BossModules : BaseCommandModule
     [Command]
     public async Task BossRankReset(CommandContext ctx)
     {
-        if (0 == (ctx.Member.Permissions & Permissions.Administrator))
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             _bossParser.ResetBossParser();
             await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
