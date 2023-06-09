@@ -34,7 +34,7 @@ namespace DiscordBot.Commands
             
         };
 
-        [Command, Aliases("h")]
+        [Command, Aliases("h"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task Help(CommandContext ctx)
         {
             CommandsNextExtension? commandNext = _client.GetCommandsNext();
