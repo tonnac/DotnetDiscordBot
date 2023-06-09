@@ -48,6 +48,7 @@ public class BossModules : BaseCommandModule
         
         int hitCount = _bossMonster.HitCount;
         int killedBossGetGold = 777 == _bossMonster.CurrentMaxHp ? 7777 : _bossMonster.CurrentMaxHp;
+        int lastCurrentHp = _bossMonster.CurrentHp;
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<string, int> BestDealerInfo;
         bool bIsKilled = _bossMonster.IsKilledByDamage(ctx.Member.Username, FinalDamage, out BestDealerInfo);
@@ -76,6 +77,7 @@ public class BossModules : BaseCommandModule
                     false));
 
             _bossParser.AddKillCount(ctx.Member.Username, 1);
+            _bossParser.AddTotalDeal(ctx.Member.Username, lastCurrentHp);
             _bossParser.AddTotalGold(ctx.Member.Username, killedBossGetGold);
         
             var message = await ctx.RespondAsync(embedBuilder);
