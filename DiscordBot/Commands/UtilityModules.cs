@@ -162,11 +162,13 @@ namespace DiscordBot.Commands
             {
                 int value = rand.Next(1, 101);
                 
+                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+                
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
                     .WithAuthor("[" + $"{1}~{100}" + "]")
-                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(value), true));
+                    .AddField(new DiscordEmbedField("👋 " + name, "🎲 " + Convert.ToString(value), true));
                 
                 var message = await ctx.RespondAsync(embedBuilder);
 
@@ -193,13 +195,15 @@ namespace DiscordBot.Commands
 
             if (result.HasValue)
             {
+                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+                
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
                     .WithColor(DiscordColor.DarkGreen)
                     .WithAuthor(diceNums.Length == 1 ? "[1" + $"~{diceNums[0]}" + "]" : "[" + $"{diceNums[0]}~{diceNums[1]}" + "]")
                     //.WithDescription(currTrack.GetTrackTitle())
                     //.AddField(new DiscordEmbedField(Localization.Roller, ctx.Member.Mention))
-                    .AddField(new DiscordEmbedField("👋 " + ctx.Member.Username, "🎲 " + Convert.ToString(result)));
+                    .AddField(new DiscordEmbedField("👋 " + name, "🎲 " + Convert.ToString(result)));
                 
                 await ctx.RespondAsync(embedBuilder);
             }
