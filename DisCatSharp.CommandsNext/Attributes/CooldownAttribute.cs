@@ -144,7 +144,8 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         {
             TimeSpan remainingCooldown = GetRemainingCooldown(ctx);
             int totalSeconds = (int)remainingCooldown.TotalSeconds;
-            var message = await ctx.RespondAsync($"[ {ctx.Member.Username} ] ─ \u23F2\uFE0F {totalSeconds} s");
+            string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+            var message = await ctx.RespondAsync($"[ {name} ] ─ \u23F2\uFE0F {totalSeconds} s");
             Task.Run(async () =>
             {
                 await Task.Delay(5000);

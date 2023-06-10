@@ -50,17 +50,19 @@ public class BossModules : BaseCommandModule
         
         bool bIsOverKill = FinalDamage >= _bossMonster.CurrentHp;
 
+        string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname; 
+
         // hit embed
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
+            .WithAuthor("\u2694\uFE0F " + name)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
-        _bossParser.AddTotalDeal(ctx.Member.Username, bIsOverKill ? _bossMonster.CurrentHp : FinalDamage);
+        _bossParser.AddTotalDeal(name, bIsOverKill ? _bossMonster.CurrentHp : FinalDamage);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -68,18 +70,18 @@ public class BossModules : BaseCommandModule
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<string, int> bestDealerInfo;
         
-        if( _bossMonster.IsKilledByDamage(ctx.Member.Username, FinalDamage, out bestDealerInfo) )
+        if( _bossMonster.IsKilledByDamage(name, FinalDamage, out bestDealerInfo) )
         {
             DiscordEmbedBuilder killEmbedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
-                .WithAuthor("[ \uD83C\uDF8A" + ctx.Member.Username + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
+                .WithAuthor("[ \uD83C\uDF8A" + name + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
                     "\uD83E\uDD47" + bestDealerInfo.Key + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value),
                     false));
 
-            _bossParser.AddKillCount(ctx.Member.Username, 1);
-            _bossParser.AddTotalGold(ctx.Member.Username, killedBossGetGold);
+            _bossParser.AddKillCount(name, 1);
+            _bossParser.AddTotalGold(name, killedBossGetGold);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
 

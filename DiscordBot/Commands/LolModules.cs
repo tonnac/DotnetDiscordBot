@@ -76,9 +76,10 @@ public class LolModules : BaseCommandModule
         {
             if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
             {
+                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
                 var embedBuilder = new DiscordEmbedBuilder()
                     .WithColor(DiscordColor.Azure)
-                    .WithDescription($"{ctx.Member.Username}님의 칼바람나락 호출이 왔습니다!")
+                    .WithDescription($"{name}님의 칼바람나락 호출이 왔습니다!")
                     .WithImageUrl("https://static.wikia.nocookie.net/leagueoflegends/images/5/5f/Howling_Abyss_Map_Preview.jpg/revision/latest?cb=20140612032106");
                 await member.SendMessageAsync(embedBuilder);
             }
