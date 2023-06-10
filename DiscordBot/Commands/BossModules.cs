@@ -20,8 +20,8 @@ public class BossModules : BaseCommandModule
         _bossParser = new BossParser();
     }
     
-    //[Command, Aliases("ba")]
-    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
+    [Command, Aliases("ba")]
+    //[Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
     public async Task BossAttack(CommandContext ctx)
     {
         var rand = new Random();
