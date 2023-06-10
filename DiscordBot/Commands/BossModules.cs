@@ -54,13 +54,13 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
+            .WithAuthor("\u2694\uFE0F " + ctx.Member.PreferredDisplayName)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
-        _bossParser.AddTotalDeal(ctx.Member.Username, bIsOverKill ? _bossMonster.CurrentHp : FinalDamage);
+        _bossParser.AddTotalDeal(ctx.Member.PreferredDisplayName, bIsOverKill ? _bossMonster.CurrentHp : FinalDamage);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -68,18 +68,18 @@ public class BossModules : BaseCommandModule
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<string, int> bestDealerInfo;
         
-        if( _bossMonster.IsKilledByDamage(ctx.Member.Username, FinalDamage, out bestDealerInfo) )
+        if( _bossMonster.IsKilledByDamage(ctx.Member.PreferredDisplayName, FinalDamage, out bestDealerInfo) )
         {
             DiscordEmbedBuilder killEmbedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
-                .WithAuthor("[ \uD83C\uDF8A" + ctx.Member.Username + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
+                .WithAuthor("[ \uD83C\uDF8A" + ctx.Member.PreferredDisplayName + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
                     "\uD83E\uDD47" + bestDealerInfo.Key + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value),
                     false));
 
-            _bossParser.AddKillCount(ctx.Member.Username, 1);
-            _bossParser.AddTotalGold(ctx.Member.Username, killedBossGetGold);
+            _bossParser.AddKillCount(ctx.Member.PreferredDisplayName, 1);
+            _bossParser.AddTotalGold(ctx.Member.PreferredDisplayName, killedBossGetGold);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
 
@@ -89,7 +89,7 @@ public class BossModules : BaseCommandModule
             // }
         }
         
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
     }
     
     [Command, Aliases("bi"), Cooldown(1, 3, CooldownBucketType.User)]
@@ -115,7 +115,7 @@ public class BossModules : BaseCommandModule
         
         await ctx.RespondAsync(embedBuilder);
         
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
     }
     
     [Command, Aliases("br"), Cooldown(1, 10, CooldownBucketType.User)]
@@ -160,7 +160,7 @@ public class BossModules : BaseCommandModule
         
         await ctx.RespondAsync(embedBuilder);
         
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🏆"));
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🏆"));
     }
     
     [Command, Aliases("bl"), Cooldown(1, 10, CooldownBucketType.User)]
@@ -186,7 +186,7 @@ public class BossModules : BaseCommandModule
         
         await ctx.RespondAsync(embedBuilder);
         
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
     [Command]
