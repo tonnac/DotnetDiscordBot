@@ -54,7 +54,7 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
+            .WithAuthor("\u2694\uFE0F " + ctx.Member.PreferredDisplayName)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
