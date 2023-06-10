@@ -143,7 +143,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         if (result == false && IsNotifyRemainingCooldown)
         {
             TimeSpan remainingCooldown = GetRemainingCooldown(ctx);
-            var message = await ctx.Channel.SendMessageAsync($"Remain Cooltime {remainingCooldown}");
+            var message = await ctx.RespondAsync($"Remain Cooltime {remainingCooldown}");
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
