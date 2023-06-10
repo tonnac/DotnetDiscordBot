@@ -56,7 +56,7 @@ public class BossModules : BaseCommandModule
             .WithColor(DiscordColor.HotPink)
             .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
-                _bossMonster.BossEmojiCode + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
+                _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
