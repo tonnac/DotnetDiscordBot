@@ -20,8 +20,8 @@ public class BossModules : BaseCommandModule
         _bossParser = new BossParser();
     }
     
-    [Command, Aliases("ba")]
-    //[Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
+    //[Command, Aliases("ba")]
+    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
     public async Task BossAttack(CommandContext ctx)
     {
         var rand = new Random();
@@ -54,7 +54,7 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + ctx.Member.PreferredDisplayName)
+            .WithAuthor("\u2694\uFE0F " + ctx.Member.Username)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
