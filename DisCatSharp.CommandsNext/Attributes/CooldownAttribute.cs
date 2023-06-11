@@ -53,7 +53,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 
     public bool IsLockSystem { get; }
 
-    public int LockCount { get; }
+    public int LockWarningCount { get; }
 
     /// <summary>
     /// Gets the cooldown buckets for this command.
@@ -68,15 +68,15 @@ public sealed class CooldownAttribute : CheckBaseAttribute
     /// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
     /// <param name="isNotifyRemainingCooldown"></param>
     /// <param name="isLockSystem"></param>
-    /// <param name="lockCount"></param>
-    public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, bool isNotifyRemainingCooldown = false, bool isLockSystem = false, int lockCount = 10)
+    /// <param name="lockWarningCount"></param>
+    public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, bool isNotifyRemainingCooldown = false, bool isLockSystem = false, int lockWarningCount = 10)
     {
         this.MaxUses = maxUses;
         this.Reset = TimeSpan.FromSeconds(resetAfter);
         this.BucketType = bucketType;
         this.IsNotifyRemainingCooldown = isNotifyRemainingCooldown;
         this.IsLockSystem = isLockSystem;
-        this.LockCount = lockCount;
+        this.LockWarningCount = lockWarningCount;
         this._buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
     }
 
@@ -141,7 +141,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         if (help)
             return true;
 
-        int lockCount = LockCount;
+        int lockWarningCount = LockWarningCount;
 
         var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
         if (!this._buckets.TryGetValue(bid, out var bucket))
@@ -157,7 +157,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         if (result == false && IsNotifyRemainingCooldown)
         {
             bucket.WarningCount++;
-            string lockText = IsLockSystem ? bucket.WarningCount >= lockCount ? "─ \uD83D\uDD12" : "─ \u26A0\uFE0F" + Convert.ToString(bucket.WarningCount) + "/" + Convert.ToString(lockCount) : "";
+            string lockText = IsLockSystem ? bucket.WarningCount >= lockWarningCount ? "─ \uD83D\uDD12" : "─ \u26A0\uFE0F" + Convert.ToString(bucket.WarningCount) + "/" + Convert.ToString(lockWarningCount) : "";
             var message = await ctx.RespondAsync($"[ {name} ] ─ \u23F2\uFE0F {totalSeconds} s {lockText}");
             Task.Run(async () =>
             {
@@ -167,9 +167,9 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         }
         else if (result && IsLockSystem)
         {
-            if (lockCount <= bucket.WarningCount)
+            if (lockWarningCount <= bucket.WarningCount)
             {
-                var message = await ctx.RespondAsync($"[ {name} ] ─ \u23F2\uFE0F {totalSeconds} s ─ \uD83D\uDD13\uD83D\uDD11");
+                var message = await ctx.RespondAsync($"[ {name} ] ─ \uD83D\uDD13\uD83D\uDD11");
                 Task.Run(async () =>
                 {
                     await Task.Delay(3000);
