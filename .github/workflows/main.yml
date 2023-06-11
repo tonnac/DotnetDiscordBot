@@ -1,23 +1,24 @@
-# name: release build
-# on: 
-#   push:
-#     branches: ['release']
-# jobs:
+name: release build
+on: 
+  push:
+    branches: ['release']
+jobs:
 
-#   build:
-#     name: Build
-#     runs-on: ubuntu-latest
-#     timeout-minutes: 30
-#     steps:
-#     - name: build bot
-#       uses: appleboy/ssh-action@master
-#       with:
-#         host: ${{ secrets.HOSTNAME }}
-#         username: ${{ secrets.USER }}
-#         key: ${{ secrets.KEY }}
-#         script: | 
-#           cd DotnetDiscordBot
-#           git pull
-#           sudo docker compose stop
-#           sudo docker compose build
-#           sudo docker compose --env-file ./.env up -d
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - name: build bot
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOSTNAME }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: | 
+          cd DotnetDiscordBot
+          git pull
+          sudo docker compose stop
+          sudo docker compose build
+          sudo docker compose --env-file ./.env up -d
