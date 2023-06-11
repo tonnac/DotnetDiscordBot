@@ -15,6 +15,7 @@ jobs:
         host: ${{ secrets.HOSTNAME }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
         script: | 
           cd DotnetDiscordBot
           git pull
