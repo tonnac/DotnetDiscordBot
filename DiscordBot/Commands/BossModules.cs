@@ -22,7 +22,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba")]
+    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
     public async Task BossAttack(CommandContext ctx)
     {
         var rand = new Random();
@@ -137,14 +137,14 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
     }
     
-    [Command, Aliases("br")]
+    [Command, Aliases("br"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task BossRank(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         List<DatabaseUser> users= await database.GetDatabaseUsers(ctx);
 
-        Dictionary<string, int> killCountRankDictionary = users.Where(user => user.bosskillcount > 0).OrderBy((user => user.bosskillcount)).ToDictionary(user =>
+        Dictionary<string, int> killCountRankDictionary = users.Where(user => user.bosskillcount > 0).OrderByDescending(user => user.bosskillcount).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
@@ -153,7 +153,7 @@ public class BossModules : BaseCommandModule
             return "X";
         }, user => user.bosskillcount);
         
-        Dictionary<string, int> goldRankDictionary = users.Where(user => user.bossgold > 0).OrderBy(user => user.bossgold).ToDictionary(user =>
+        Dictionary<string, int> goldRankDictionary = users.Where(user => user.bossgold > 0).OrderByDescending(user => user.bossgold).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
@@ -162,7 +162,7 @@ public class BossModules : BaseCommandModule
             return "X";
         }, user => user.bossgold);
 
-        Dictionary<string, ulong> dealRankDictionary = users.Where(user => user.bosstotaldamage > 0).OrderBy(user => user.bosstotaldamage).ToDictionary(user =>
+        Dictionary<string, ulong> dealRankDictionary = users.Where(user => user.bosstotaldamage > 0).OrderByDescending(user => user.bosstotaldamage).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
