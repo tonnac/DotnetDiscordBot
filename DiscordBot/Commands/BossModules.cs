@@ -87,6 +87,7 @@ public class BossModules : BaseCommandModule
             
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
+            await database.GetDatabaseUser(ctx.Guild, ctx.User);
             BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold);
             await database.UpdateBossRaid(ctx, query);
         
@@ -103,6 +104,7 @@ public class BossModules : BaseCommandModule
             {
                 using var database = new DiscordBotDatabase();
                 await database.ConnectASync();
+                await database.GetDatabaseUser(ctx.Guild, ctx.User);
                 BossQuery query = new BossQuery((ulong)validDamage, 0, 0);
                 await database.UpdateBossRaid(ctx, query);
             }
