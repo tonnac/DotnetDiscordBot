@@ -213,7 +213,7 @@ public partial class DiscordBotDatabase
         
         await using MySqlCommand command = _connection.CreateCommand();
         
-        command.CommandText = $"update USER set bosskillcount = null, bosstotaldamage = null, bossgold = null where guildid=@guildid";
+        command.CommandText = $"update USER set bosskillcount = 0, bosstotaldamage = 0, bossgold = 0 where guildid=@guildid";
         command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
         
         try
