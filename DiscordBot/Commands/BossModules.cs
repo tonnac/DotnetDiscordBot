@@ -187,8 +187,6 @@ public class BossModules : BaseCommandModule
             dealRankUser.Add(index+1 <= dealRankDictionary.Keys.ToList().Count ? dealRankDictionary.Keys.ToList()[index] : "X");
             dealRankCount.Add(index+1 <= dealRankDictionary.Values.ToList().Count ? dealRankDictionary.Values.ToList()[index] : 0);
         }
-        
-        
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1021/1021100.png")

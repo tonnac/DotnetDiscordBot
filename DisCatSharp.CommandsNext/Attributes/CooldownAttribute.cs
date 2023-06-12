@@ -51,6 +51,10 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 
     public bool IsNotifyRemainingCooldown { get; }
 
+    public bool IsLockSystem { get; }
+
+    public int LockWarningCount { get; }
+
     /// <summary>
     /// Gets the cooldown buckets for this command.
     /// </summary>
@@ -63,12 +67,16 @@ public sealed class CooldownAttribute : CheckBaseAttribute
     /// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
     /// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
     /// <param name="isNotifyRemainingCooldown"></param>
-    public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, bool isNotifyRemainingCooldown = false)
+    /// <param name="isLockSystem"></param>
+    /// <param name="lockWarningCount"></param>
+    public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, bool isNotifyRemainingCooldown = false, bool isLockSystem = false, int lockWarningCount = 10)
     {
         this.MaxUses = maxUses;
         this.Reset = TimeSpan.FromSeconds(resetAfter);
         this.BucketType = bucketType;
         this.IsNotifyRemainingCooldown = isNotifyRemainingCooldown;
+        this.IsLockSystem = isLockSystem;
+        this.LockWarningCount = lockWarningCount;
         this._buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
     }
 
@@ -133,24 +141,47 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         if (help)
             return true;
 
+        int lockWarningCount = LockWarningCount;
+
         var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
         if (!this._buckets.TryGetValue(bid, out var bucket))
         {
             bucket = new CommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
             this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
         }
+        
+        TimeSpan remainingCooldown = GetRemainingCooldown(ctx);
+        int totalSeconds = (int)remainingCooldown.TotalSeconds;
+        string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
         bool result = await bucket.DecrementUseAsync().ConfigureAwait(false);
         if (result == false && IsNotifyRemainingCooldown)
         {
-            TimeSpan remainingCooldown = GetRemainingCooldown(ctx);
-            int totalSeconds = (int)remainingCooldown.TotalSeconds;
-            string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
-            var message = await ctx.RespondAsync($"[ {name} ] ─ \u23F2\uFE0F {totalSeconds} s");
+            bucket.WarningCount++;
+            string lockText = IsLockSystem ? bucket.WarningCount >= lockWarningCount ? "─ \uD83D\uDD12" : "─ \u26A0\uFE0F" + Convert.ToString(bucket.WarningCount) + "/" + Convert.ToString(lockWarningCount) : "";
+            var message = await ctx.RespondAsync($"[ {name} ] ─ \u23F2\uFE0F {totalSeconds} s {lockText}");
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
                 await message.DeleteAsync();
             });
+        }
+        else if (result && IsLockSystem)
+        {
+            if (lockWarningCount <= bucket.WarningCount)
+            {
+                var message = await ctx.RespondAsync($"[ {name} ] ─ \uD83D\uDD13\uD83D\uDD11");
+                Task.Run(async () =>
+                {
+                    await Task.Delay(3000);
+                    await message.DeleteAsync();
+                });
+                bucket.WarningCount = 0;
+                result = false;
+            }
+            else
+            {
+                bucket.WarningCount = 0;
+            }
         }
 
         return result;
@@ -236,6 +267,8 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
     /// </summary>
     private readonly SemaphoreSlim _usageSemaphore;
 
+    public int WarningCount { get; set; }
+
     /// <summary>
     /// Creates a new command cooldown bucket.
     /// </summary>
@@ -255,6 +288,7 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
         this.GuildId = guildId;
         this.BucketId = MakeId(userId, channelId, guildId);
         this._usageSemaphore = new SemaphoreSlim(1, 1);
+        this.WarningCount = 0;
     }
 
     /// <summary>
