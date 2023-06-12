@@ -3,6 +3,7 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
+using DiscordBot.Database;
 
 namespace DiscordBot.Commands;
 
@@ -21,7 +22,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
+    [Command, Aliases("ba")]
     public async Task BossAttack(CommandContext ctx)
     {
         var rand = new Random();
@@ -62,7 +63,8 @@ public class BossModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
-        _bossParser.AddTotalDeal(name, bIsOverKill ? _bossMonster.CurrentHp : FinalDamage);
+        int validDamage = bIsOverKill ? _bossMonster.CurrentHp : FinalDamage;
+        _bossParser.AddTotalDeal(name, validDamage);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -82,6 +84,11 @@ public class BossModules : BaseCommandModule
 
             _bossParser.AddKillCount(name, 1);
             _bossParser.AddTotalGold(name, killedBossGetGold);
+            
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold);
+            await database.UpdateBossRaid(ctx, query);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
 
@@ -89,6 +96,16 @@ public class BossModules : BaseCommandModule
             // {
             //     await message.PinAsync();
             // }
+        }
+        else
+        {
+            if (validDamage != 0)
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                BossQuery query = new BossQuery((ulong)validDamage, 0, 0);
+                await database.UpdateBossRaid(ctx, query);
+            }
         }
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
@@ -120,19 +137,46 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
     }
     
-    [Command, Aliases("br"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("br")]
     public async Task BossRank(CommandContext ctx)
     {
-        Dictionary<string, int> killCountRankDictionary = _bossParser.GetKillCountRankDictionary();
-        Dictionary<string, int> goldRankDictionary = _bossParser.GetTotalGoldRankDictionary();
-        Dictionary<string, int> dealRankDictionary = _bossParser.GetTotalDealRankDictionary();
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        List<DatabaseUser> users= await database.GetDatabaseUsers(ctx);
 
+        Dictionary<string, int> killCountRankDictionary = users.Where(user => user.bosskillcount > 0).OrderBy((user => user.bosskillcount)).ToDictionary(user =>
+        {
+            if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
+            {
+                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+            }
+            return "X";
+        }, user => user.bosskillcount);
+        
+        Dictionary<string, int> goldRankDictionary = users.Where(user => user.bossgold > 0).OrderBy(user => user.bossgold).ToDictionary(user =>
+        {
+            if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
+            {
+                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+            }
+            return "X";
+        }, user => user.bossgold);
+
+        Dictionary<string, ulong> dealRankDictionary = users.Where(user => user.bosstotaldamage > 0).OrderBy(user => user.bosstotaldamage).ToDictionary(user =>
+        {
+            if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
+            {
+                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+            }
+            return "X";
+        }, user => user.bosstotaldamage);
+        
         List<string> killRankUser = new List<string>();
         List<int> killRankCount = new List<int>();
         List<string> goldRankUser = new List<string>();
         List<int> goldRankCount = new List<int>();
         List<string> dealRankUser = new List<string>();
-        List<int> dealRankCount = new List<int>();
+        List<ulong> dealRankCount = new List<ulong>();
 
         for (int index = 0; index < 3; ++index)
         {
@@ -143,6 +187,8 @@ public class BossModules : BaseCommandModule
             dealRankUser.Add(index+1 <= dealRankDictionary.Keys.ToList().Count ? dealRankDictionary.Keys.ToList()[index] : "X");
             dealRankCount.Add(index+1 <= dealRankDictionary.Values.ToList().Count ? dealRankDictionary.Values.ToList()[index] : 0);
         }
+        
+        
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1021/1021100.png")
@@ -198,7 +244,13 @@ public class BossModules : BaseCommandModule
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             _bossParser.ResetBossParser();
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            bool result = await database.ResetBossRaid(ctx);
+            if (result)
+            {
+                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            }
         }
     }
 }
