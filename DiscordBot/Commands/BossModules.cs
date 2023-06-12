@@ -22,7 +22,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true)]
+    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
     public async Task BossAttack(CommandContext ctx)
     {
         var rand = new Random();
@@ -243,6 +243,7 @@ public class BossModules : BaseCommandModule
     {
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
+            _bossMonster.ResetBossMonster();
             _bossParser.ResetBossParser();
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
