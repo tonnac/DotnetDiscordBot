@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
+using DiscordBot.Boss;
 using MySqlConnector;
 using Newtonsoft.Json;
 
@@ -82,13 +83,7 @@ public partial class DiscordBotDatabase
 
         return false;
     }
-    
-    public async Task<List<DatabaseUser>> GetDatabaseUsers(CommandContext ctx)
-    {
-        return await GetDatabaseUsers(ctx.Guild);
-    }
-    
-    public async Task<List<DatabaseUser>> GetDatabaseUsers(DiscordGuild guild)
+    public async Task<List<DatabaseUser>> GetAramUser(CommandContext ctx)
     {
         if (null == _connection)
         {
@@ -96,9 +91,29 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select userid FROM USER where guildid=@guildid";
-        command.Parameters.AddWithValue("@guildid", guild.Id);
+        command.CommandText = $"select userid FROM USER where guildid=@guildid and aram=@aram";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        command.Parameters.AddWithValue("@aram", 1);
+        
+        return await GetDatabaseUsers(command);
+    }
+    
+    public async Task<List<DatabaseUser>> GetDatabaseUsers(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return new List<DatabaseUser>();
+        }
 
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = $"select * FROM USER where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        return await GetDatabaseUsers(command);
+    }
+    
+    private async Task<List<DatabaseUser>> GetDatabaseUsers(MySqlCommand command)
+    {
         try
         {
             await using MySqlDataReader rdr = await command.ExecuteReaderAsync();
@@ -115,8 +130,26 @@ public partial class DiscordBotDatabase
         
         return new List<DatabaseUser>();
     }
-    
     public async Task<DatabaseUser> GetDatabaseUser(DiscordGuild guild, DiscordUser user)
+    {
+        DatabaseUser? foundUser = await GetDatabaseUser_Private(guild, user);
+
+        if (foundUser != null)
+        {
+            return foundUser;
+        }
+        else
+        {
+            bool result = await UserRegister(guild, user);
+            if (result)
+            {
+                foundUser = await GetDatabaseUser_Private(guild, user);
+            }
+            return foundUser ?? new DatabaseUser();
+        }
+    }
+    
+    private async Task<DatabaseUser?> GetDatabaseUser_Private(DiscordGuild guild, DiscordUser user)
     {
         if (null == _connection)
         {
@@ -124,9 +157,8 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select userid FROM USER where guildid=@guildid and userid=@userid";
-        command.Parameters.AddWithValue("guildid", guild.Id);
-        command.Parameters.AddWithValue("userid", user.Id);
+        command.CommandText = $"select * FROM USER where id=@id";
+        command.Parameters.AddWithValue("id", GetSHA256(guild, user));
 
         try
         {
@@ -135,34 +167,100 @@ public partial class DiscordBotDatabase
             dataTable.Load(rdr);
             string jsonString = JsonConvert.SerializeObject(dataTable);
             List<DatabaseUser>? users = JsonConvert.DeserializeObject<List<DatabaseUser>>(jsonString);
-            return users != null ? users[0] : new DatabaseUser();
+            return users?[0];
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
         
-        return new DatabaseUser();
-    }
-
-    public async Task<bool> UserRegister(CommandContext ctx)
-    {
-        return await UserRegister(ctx.Guild, ctx.User);
+        return null;
     }
     
-    public async Task<bool> UserRegister(DiscordGuild guild, DiscordUser user)
+    public async Task<bool> UpdateBossRaid(CommandContext ctx, BossQuery query)
     {
         if (null == _connection)
         {
             return false;
         }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set bosskillcount = bosskillcount+{query.KillCount}, bosstotaldamage = bosstotaldamage+{query.Damage}, bossgold = bossgold+{query.Gold} where id=@id";
+        command.Parameters.AddWithValue("@id", GetSHA256(ctx.Guild, ctx.User));
+        command.Parameters.AddWithValue("@bosskillcount", query.KillCount);
+        command.Parameters.AddWithValue("@bosstotaldamage", query.Damage);
+        command.Parameters.AddWithValue("@bossgold", query.Gold);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
-        var member = await GetDatabaseUser(guild, user);
-        if (member.userid != 0)
+        return false;
+    }
+    public async Task<bool> ResetBossRaid(CommandContext ctx)
+    {
+        if (null == _connection)
         {
             return false;
         }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set bosskillcount = null, bosstotaldamage = null, bossgold = null where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
+        return false;
+    }
+    
+    public async Task<bool> ActiveAram(CommandContext ctx, bool isActive)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText = @"update USER set aram=@aram where id=@id";
+        command.Parameters.AddWithValue("@aram", isActive ? 1 : 0);
+        command.Parameters.AddWithValue("@id", GetSHA256(ctx.Guild, ctx.User));
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+    
+    private async Task<bool> UserRegister(DiscordGuild guild, DiscordUser user)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
         await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText = @"insert into USER (id, guildid, userid) values (@id, @guildid, @userid)";
         command.Parameters.AddWithValue("@id", GetSHA256(guild, user));
@@ -187,7 +285,7 @@ public partial class DiscordBotDatabase
         return await UserDelete(ctx.Guild, ctx.User);
     }
 
-    public async Task<bool> UserDelete(DiscordGuild guild, DiscordUser user)
+    private async Task<bool> UserDelete(DiscordGuild guild, DiscordUser user)
     {
         if (null == _connection)
         {

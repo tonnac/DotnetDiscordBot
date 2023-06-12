@@ -15,13 +15,13 @@ public class LolModules : BaseCommandModule
         var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
         var embedBuilder = new DiscordEmbedBuilder();
 
-        if (user.userid != 0)
+        if (user.userid != 0 && user.aram == true)
         {
-            embedBuilder.WithDescription("Member already exist");
+            embedBuilder.WithDescription("Already Active");
         }
         else
         {
-            bool bSuccess = await database.UserRegister(ctx);
+            bool bSuccess = await database.ActiveAram(ctx, true);
 
             if (bSuccess)
             {
@@ -43,14 +43,13 @@ public class LolModules : BaseCommandModule
 
         var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
         var embedBuilder = new DiscordEmbedBuilder();
-        if (user.userid == 0)
+        if (user.aram == false)
         {
-            embedBuilder.WithDescription("Member doesn't exist");
+            embedBuilder.WithDescription("Already InActive");
         }
         else
         {
-            await database.UserDelete(ctx);
-            var bSuccess = await database.UserDelete(ctx);
+            var bSuccess = await database.ActiveAram(ctx, false);
             if (bSuccess)
             {
                 embedBuilder.WithDescription("Success!");
@@ -68,9 +67,9 @@ public class LolModules : BaseCommandModule
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        var users = await database.GetDatabaseUsers(ctx);
+        var users = await database.GetAramUser(ctx);
 
-        users.RemoveAll((user => user.userid == ctx.User.Id));
+        users.RemoveAll(user => user.userid == ctx.User.Id);
             
         foreach (var databaseUser in users)
         {
