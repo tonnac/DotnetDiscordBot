@@ -89,7 +89,7 @@ public class BossMonster
         return false;
     }
 
-    private void ResetBossMonster()
+    public void ResetBossMonster()
     {
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int)BossType.End);

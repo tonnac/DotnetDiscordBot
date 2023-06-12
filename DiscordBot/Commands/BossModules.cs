@@ -21,8 +21,8 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
-    public async Task BossAttack(CommandContext ctx)
+    [Command, Aliases("ba"), Cooldown(1, 1, CooldownBucketType.User, true, true, 10)]
+    public async Task BossAttack(CommandContext ctx, [RemainingText] string? diceCommand)
     {
         var rand = new Random();
 
@@ -197,6 +197,7 @@ public class BossModules : BaseCommandModule
     {
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
+            _bossMonster.ResetBossMonster();
             _bossParser.ResetBossParser();
             await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
         }
