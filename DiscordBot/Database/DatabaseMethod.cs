@@ -299,6 +299,30 @@ public partial class DiscordBotDatabase
 
         return false;
     }
+    public async Task<bool> ResetCombatCount(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set combatcount = 0 where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
     
     public async Task<bool> ActiveAram(CommandContext ctx, bool isActive)
     {

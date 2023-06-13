@@ -123,15 +123,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows the boss rank board..
-        /// </summary>
-        internal static string bossrank_Description {
-            get {
-                return ResourceManager.GetString("bossrank_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
@@ -218,6 +209,15 @@ namespace DiscordBot.Resource {
         internal static string fishing_Description {
             get {
                 return ResourceManager.GetString("fishing_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the Game Ranking board..
+        /// </summary>
+        internal static string gameranking_Description {
+            get {
+                return ResourceManager.GetString("gameranking_Description", resourceCulture);
             }
         }
         

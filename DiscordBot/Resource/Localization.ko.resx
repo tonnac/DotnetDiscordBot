@@ -237,8 +237,8 @@
 	<data name="bossinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
 	</data>
-	<data name="bossrank_Description" xml:space="preserve">
-		<value>보스 랭크보드를 표시합니다.</value>
+	<data name="gameranking_Description" xml:space="preserve">
+		<value>게임 랭킹보드를 표시합니다.</value>
 	</data>
 	<data name="bosslist_Description" xml:space="preserve">
 		<value>보스 리스트를 표시합니다.</value>

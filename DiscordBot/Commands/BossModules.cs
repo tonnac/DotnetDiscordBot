@@ -130,8 +130,8 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
     }
     
-    [Command, Aliases("br"), Cooldown(1, 10, CooldownBucketType.User)]
-    public async Task BossRank(CommandContext ctx)
+    [Command, Aliases("gr"), Cooldown(1, 10, CooldownBucketType.User)]
+    public async Task GameRanking(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -164,12 +164,23 @@ public class BossModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
+        Dictionary<string, int> combatCountRankDictionary = users.Where(user => user.combatcount > 0).OrderByDescending(user => user.combatcount).ToDictionary(user =>
+        {
+            if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
+            {
+                return Utility.GetMemberDisplayName(member);
+            }
+            return "X";
+        }, user => user.combatcount);
+        
         List<string> killRankUser = new List<string>();
         List<int> killRankCount = new List<int>();
         List<string> goldRankUser = new List<string>();
         List<int> goldRankCount = new List<int>();
         List<string> dealRankUser = new List<string>();
         List<ulong> dealRankCount = new List<ulong>();
+        List<string> combatCountRankUser = new List<string>();
+        List<int> combatCountRankCount = new List<int>();
 
         for (int index = 0; index < 3; ++index)
         {
@@ -179,6 +190,8 @@ public class BossModules : BaseCommandModule
             goldRankCount.Add(index+1 <= goldRankDictionary.Values.ToList().Count ? goldRankDictionary.Values.ToList()[index] : 0);
             dealRankUser.Add(index+1 <= dealRankDictionary.Keys.ToList().Count ? dealRankDictionary.Keys.ToList()[index] : "X");
             dealRankCount.Add(index+1 <= dealRankDictionary.Values.ToList().Count ? dealRankDictionary.Values.ToList()[index] : 0);
+            combatCountRankUser.Add(index+1 <= combatCountRankDictionary.Keys.ToList().Count ? combatCountRankDictionary.Keys.ToList()[index] : "X");
+            combatCountRankCount.Add(index+1 <= combatCountRankDictionary.Values.ToList().Count ? combatCountRankDictionary.Values.ToList()[index] : 0);
         }
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -188,6 +201,10 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField("\uD83E\uDD47" + killRankUser[0], Convert.ToString(killRankCount[0]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + killRankUser[1], Convert.ToString(killRankCount[1]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD49" + killRankUser[2], Convert.ToString(killRankCount[2]), true))
+            .AddField(new DiscordEmbedField("──────────", "[  \u2694\uFE0F  ]", false))
+            .AddField(new DiscordEmbedField("\uD83E\uDD47" + combatCountRankUser[0], Convert.ToString(combatCountRankCount[0]), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD48" + combatCountRankUser[1], Convert.ToString(combatCountRankCount[1]), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD49" + combatCountRankUser[2], Convert.ToString(combatCountRankCount[2]), true))
             .AddField(new DiscordEmbedField("──────────", "[  \uD83D\uDCB0  ]", false))
             .AddField(new DiscordEmbedField("\uD83E\uDD47" + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
@@ -259,6 +276,10 @@ public class BossModules : BaseCommandModule
             else if ("totaldamage" == resetCommand)
             {
                 result = await database.ResetBossTotalDamage(ctx);
+            }
+            else if ("combatcount" == resetCommand)
+            {
+                result = await database.ResetCombatCount(ctx);
             }
             else if ("boss" == resetCommand)
             {

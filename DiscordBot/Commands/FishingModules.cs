@@ -25,7 +25,7 @@ public class FishingModules : BaseCommandModule
         int fishGold_legendary = 1000; // 5
         int fishGold_Result = fishGold_common;
         
-        string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+        string name = Utility.GetMemberDisplayName(ctx.Member);
         
         var rand = new Random();
         int fishingRandom = rand.Next(1, 101);

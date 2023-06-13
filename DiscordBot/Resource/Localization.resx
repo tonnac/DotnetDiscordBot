@@ -237,8 +237,8 @@ This has a lower priority than music added with play.</value>
 	<data name="bossinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>
 	</data>
-	<data name="bossrank_Description" xml:space="preserve">
-		<value>Shows the boss rank board.</value>
+	<data name="gameranking_Description" xml:space="preserve">
+		<value>Shows the Game Ranking board.</value>
 	</data>
 	<data name="bosslist_Description" xml:space="preserve">
 		<value>Shows the boss list.</value>
