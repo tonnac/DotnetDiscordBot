@@ -186,11 +186,11 @@ public partial class DiscordBotDatabase
         
         await using MySqlCommand command = _connection.CreateCommand();
         
-        command.CommandText = $"update USER set bosskillcount = bosskillcount+{query.KillCount}, bosstotaldamage = bosstotaldamage+{query.Damage}, bossgold = bossgold+{query.Gold} where id=@id";
+        command.CommandText = $"update USER set bosskillcount = bosskillcount+{query.KillCount}, bosstotaldamage = bosstotaldamage+{query.Damage}, gold = gold+{query.Gold} where id=@id";
         command.Parameters.AddWithValue("@id", GetSHA256(ctx.Guild, ctx.User));
         command.Parameters.AddWithValue("@bosskillcount", query.KillCount);
         command.Parameters.AddWithValue("@bosstotaldamage", query.Damage);
-        command.Parameters.AddWithValue("@bossgold", query.Gold);
+        command.Parameters.AddWithValue("@gold", query.Gold);
         
         try
         {
@@ -213,7 +213,7 @@ public partial class DiscordBotDatabase
         
         await using MySqlCommand command = _connection.CreateCommand();
         
-        command.CommandText = $"update USER set bosskillcount = 0, bosstotaldamage = 0, bossgold = 0 where guildid=@guildid";
+        command.CommandText = $"update USER set bosskillcount = 0, bosstotaldamage = 0, gold = 0 where guildid=@guildid";
         command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
         
         try

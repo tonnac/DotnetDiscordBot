@@ -155,14 +155,14 @@ public class BossModules : BaseCommandModule
             return "X";
         }, user => user.bosskillcount);
         
-        Dictionary<string, int> goldRankDictionary = users.Where(user => user.bossgold > 0).OrderByDescending(user => user.bossgold).ToDictionary(user =>
+        Dictionary<string, int> goldRankDictionary = users.Where(user => user.gold > 0).OrderByDescending(user => user.gold).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
                 return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
             }
             return "X";
-        }, user => user.bossgold);
+        }, user => user.gold);
 
         Dictionary<string, ulong> dealRankDictionary = users.Where(user => user.bosstotaldamage > 0).OrderByDescending(user => user.bosstotaldamage).ToDictionary(user =>
         {
