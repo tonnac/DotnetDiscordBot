@@ -12,7 +12,7 @@ public class UserGameInfoModules : BaseCommandModule
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        DatabaseUser MyUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        DatabaseUser myUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         
         string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
 
@@ -20,9 +20,9 @@ public class UserGameInfoModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
             .AddField(new DiscordEmbedField("\uD83D\uDD0D " + name, "──────────", false))
-            .AddField(new DiscordEmbedField("[  \u2620\uFE0F  ]", Convert.ToString(MyUserDatabase.bosskillcount), true))
-            .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(MyUserDatabase.gold), true))
-            .AddField(new DiscordEmbedField("[  \uD83D\uDCA5  ]", Convert.ToString(MyUserDatabase.bosstotaldamage), true));
+            .AddField(new DiscordEmbedField("[  \u2620\uFE0F  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
+            .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(myUserDatabase.gold), true))
+            .AddField(new DiscordEmbedField("[  \uD83D\uDCA5  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
         
         await ctx.RespondAsync(embedBuilder);
     }
