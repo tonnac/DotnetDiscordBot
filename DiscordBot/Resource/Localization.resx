@@ -243,10 +243,13 @@ This has a lower priority than music added with play.</value>
 	<data name="bosslist_Description" xml:space="preserve">
 		<value>Shows the boss list.</value>
 	</data>
-	<data name="bossrankreset_Description" xml:space="preserve">
-		<value>Reset the boss rank board.(Permission required)</value>
+	<data name="datareset_Description" xml:space="preserve">
+		<value>Reset the data.(Permission required)</value>
 	</data>
 	<data name="myinfo_Description" xml:space="preserve">
 		<value>Shows my game information.</value>
+	</data>
+	<data name="fishing_Description" xml:space="preserve">
+		<value>Do Fishing.</value>
 	</data>
 </root>

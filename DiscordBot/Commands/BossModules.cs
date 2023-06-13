@@ -233,14 +233,42 @@ public class BossModules : BaseCommandModule
     }
     
     [Command]
-    public async Task BossRankReset(CommandContext ctx)
+    public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
     {
+        bool result = false;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            _bossMonster.ResetBossMonster();
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
-            bool result = await database.ResetBossRaid(ctx);
+            
+            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand)
+            {
+                _bossMonster.ResetBossMonster();
+                
+                bool killResult = await database.ResetBossKillCount(ctx);
+                bool totalDamageResult = await database.ResetBossTotalDamage(ctx);
+                bool goldResult = await database.ResetGold(ctx);
+
+                result = killResult && totalDamageResult && goldResult;
+            }
+            else if ("gold" == resetCommand)
+            {
+                result = await database.ResetGold(ctx);
+            }
+            else if ("kill" == resetCommand)
+            {
+                result = await database.ResetBossKillCount(ctx);
+            }
+            else if ("totaldamage" == resetCommand)
+            {
+                result = await database.ResetBossTotalDamage(ctx);
+            }
+            else if ("boss" == resetCommand)
+            {
+                _bossMonster.ResetBossMonster();
+                result = true;
+            }
+            
             if (result)
             {
                 await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
