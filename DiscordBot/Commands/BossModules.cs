@@ -23,7 +23,7 @@ public class BossModules : BaseCommandModule
     
     //[Command, Aliases("ba")]
     [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
-    public async Task BossAttack(CommandContext ctx)
+    public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         var rand = new Random();
 
