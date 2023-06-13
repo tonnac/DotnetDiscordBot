@@ -213,6 +213,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows the fish list..
+        /// </summary>
+        internal static string fishlist_Description {
+            get {
+                return ResourceManager.GetString("fishlist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the Game Ranking board..
         /// </summary>
         internal static string gameranking_Description {

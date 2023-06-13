@@ -252,4 +252,7 @@ This has a lower priority than music added with play.</value>
 	<data name="fishing_Description" xml:space="preserve">
 		<value>Do Fishing.</value>
 	</data>
+	<data name="fishlist_Description" xml:space="preserve">
+		<value>Shows the fish list.</value>
+	</data>
 </root>
