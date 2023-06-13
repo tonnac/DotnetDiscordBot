@@ -9,4 +9,5 @@ public class DatabaseUser
     [JsonProperty] public int bosskillcount;
     [JsonProperty] public ulong bosstotaldamage;
     [JsonProperty] public int gold;
+    [JsonProperty] public int combatcount;
 }

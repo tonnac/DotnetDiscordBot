@@ -82,7 +82,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold);
+            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold, 1);
             await database.UpdateBossRaid(ctx, query);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
@@ -94,14 +94,11 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (validDamage != 0)
-            {
-                using var database = new DiscordBotDatabase();
-                await database.ConnectASync();
-                await database.GetDatabaseUser(ctx.Guild, ctx.User);
-                BossQuery query = new BossQuery((ulong)validDamage, 0, 0);
-                await database.UpdateBossRaid(ctx, query);
-            }
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            BossQuery query = new BossQuery((ulong)validDamage, 0, 0, 1);
+            await database.UpdateBossRaid(ctx, query);
         }
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
