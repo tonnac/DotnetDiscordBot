@@ -11,7 +11,7 @@ public class FishingModules : BaseCommandModule
 {
     //[Command, Aliases("f")]
     [Command, Aliases("f"), Cooldown(1, 600, CooldownBucketType.User, true, true, 10)]
-    public async Task Fishing(CommandContext ctx)
+    public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         string fishEmoji_common = "\uD83D\uDC1F";
         string fishEmoji_rare = "\uD83D\uDC21";
@@ -19,28 +19,33 @@ public class FishingModules : BaseCommandModule
         string fishEmoji_legendary = "\uD83E\uDDDC";
         string fishEmoji_Result = fishEmoji_common;
 
-        int fishGold_common = 50; // 50
-        int fishGold_rare = 100; // 30
-        int fishGold_epic = 200; // 15
-        int fishGold_legendary = 1000; // 5
+        int fishGold_common = 50;
+        int fishGold_rare = 100;
+        int fishGold_epic = 200;
+        int fishGold_legendary = 1000;
         int fishGold_Result = fishGold_common;
+
+        int commonPer = 50;
+        int rarePer = 30;
+        int epicPer = 15;
+        int legendaryPer = 5;
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
         var rand = new Random();
         int fishingRandom = rand.Next(1, 101);
 
-        if (50 < fishingRandom)
+        if (commonPer < fishingRandom)
         {
             fishEmoji_Result = fishEmoji_rare;
             fishGold_Result = fishGold_rare;
         }
-        if (80 < fishingRandom)
+        if (commonPer+rarePer < fishingRandom)
         {
             fishEmoji_Result = fishEmoji_epic;
             fishGold_Result = fishGold_epic;
         }
-        if (95 < fishingRandom)
+        if (commonPer+rarePer+epicPer < fishingRandom)
         {
             fishEmoji_Result = fishEmoji_legendary;
             fishGold_Result = fishGold_legendary;
@@ -59,5 +64,36 @@ public class FishingModules : BaseCommandModule
         await database.UpdateFishingGold(ctx, query);
         
         await ctx.RespondAsync(embedBuilder);
+    }
+    
+    [Command, Aliases("fl"), Cooldown(1, 10, CooldownBucketType.User)]
+    public async Task FishList(CommandContext ctx)
+    {
+        string fishEmoji_common = "\uD83D\uDC1F";
+        string fishEmoji_rare = "\uD83D\uDC21";
+        string fishEmoji_epic = "\uD83D\uDC20";
+        string fishEmoji_legendary = "\uD83E\uDDDC";
+        
+        int fishGold_common = 50;
+        int fishGold_rare = 100;
+        int fishGold_epic = 200;
+        int fishGold_legendary = 1000;
+        
+        int commonPer = 50;
+        int rarePer = 30;
+        int epicPer = 15;
+        int legendaryPer = 5;
+        
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://image.yes24.com/goods/99358015/XL")
+            .WithColor(DiscordColor.White)
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_common + " ]", Convert.ToString(commonPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_common), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_rare + " ]", Convert.ToString(rarePer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_rare), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_epic + " ]", Convert.ToString(epicPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_epic), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_legendary + " ]", Convert.ToString(legendaryPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_legendary), false));
+        
+        await ctx.RespondAsync(embedBuilder);
+        
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
 }

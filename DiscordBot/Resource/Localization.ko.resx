@@ -252,4 +252,7 @@
 	<data name="fishing_Description" xml:space="preserve">
 		<value>낚시를 합니다.</value>
 	</data>
+	<data name="fishlist_Description" xml:space="preserve">
+		<value>물고기 리스트를 표시합니다.</value>
+	</data>
 </root>
