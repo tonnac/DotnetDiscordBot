@@ -223,8 +223,8 @@ namespace DiscordBot.Commands
             if (string.IsNullOrEmpty(diceCommand))
             {
                 int value = rand.Next(1, 101);
-                
-                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+
+                string name = Utility.GetMemberDisplayName(ctx.Member);
                 
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
@@ -257,7 +257,7 @@ namespace DiscordBot.Commands
 
             if (result.HasValue)
             {
-                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+                string name = Utility.GetMemberDisplayName(ctx.Member);
                 
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")

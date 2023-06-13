@@ -13,8 +13,8 @@ public class UserGameInfoModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser myUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        
-        string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
