@@ -21,7 +21,7 @@ public class UserGameInfoModules : BaseCommandModule
             .WithColor(DiscordColor.Black)
             .AddField(new DiscordEmbedField("\uD83D\uDD0D " + name, "──────────", false))
             .AddField(new DiscordEmbedField("[  \u2620\uFE0F  ]", Convert.ToString(MyUserDatabase.bosskillcount), true))
-            .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(MyUserDatabase.bossgold), true))
+            .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(MyUserDatabase.gold), true))
             .AddField(new DiscordEmbedField("[  \uD83D\uDCA5  ]", Convert.ToString(MyUserDatabase.bosstotaldamage), true));
         
         await ctx.RespondAsync(embedBuilder);
