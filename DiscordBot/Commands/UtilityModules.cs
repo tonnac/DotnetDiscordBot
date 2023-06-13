@@ -30,6 +30,7 @@ namespace DiscordBot.Commands
             { "Music", "https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg" }, 
             { "Lol", "https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj" }, 
             { "Boss", "https://oldschoolroleplaying.com/wp-content/uploads/2020/01/Skull-Cave-Entrance.jpg" },
+            { "Fishing", "https://i.pinimg.com/550x/ec/4f/da/ec4fda8ea3d3a52ba561e9e54d3c81fc.jpg" },
             { "UserGameInfo", "https://cdn-icons-png.flaticon.com/512/943/943579.png" },
             { "Utility", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU" }
             
@@ -125,7 +126,8 @@ namespace DiscordBot.Commands
             foreach (var copyCommand in copyCommands)
             {
                 if ("Boss" == copyCommand.Key ||
-                    "UserGameInfo" == copyCommand.Key)
+                    "UserGameInfo" == copyCommand.Key ||
+                    "Fishing" == copyCommand.Key)
                 {
                     var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
                     DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -223,8 +225,8 @@ namespace DiscordBot.Commands
             if (string.IsNullOrEmpty(diceCommand))
             {
                 int value = rand.Next(1, 101);
-                
-                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+
+                string name = Utility.GetMemberDisplayName(ctx.Member);
                 
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")
@@ -257,7 +259,7 @@ namespace DiscordBot.Commands
 
             if (result.HasValue)
             {
-                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+                string name = Utility.GetMemberDisplayName(ctx.Member);
                 
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.tenor.com/zk3sVpc7OGkAAAAi/dice-roll-the-dice.gif")

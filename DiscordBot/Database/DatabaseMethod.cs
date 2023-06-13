@@ -201,7 +201,7 @@ public partial class DiscordBotDatabase
 
         return false;
     }
-    public async Task<bool> ResetBossRaid(CommandContext ctx)
+    public async Task<bool> UpdateFishingGold(CommandContext ctx, FishingQuery query)
     {
         if (null == _connection)
         {
@@ -210,7 +210,105 @@ public partial class DiscordBotDatabase
         
         await using MySqlCommand command = _connection.CreateCommand();
         
-        command.CommandText = $"update USER set bosskillcount = 0, bosstotaldamage = 0, gold = 0 where guildid=@guildid";
+        command.CommandText = $"update USER set gold = gold+{query.Gold} where id=@id";
+        command.Parameters.AddWithValue("@id", GetSHA256(ctx.Guild, ctx.User));
+        command.Parameters.AddWithValue("@gold", query.Gold);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+    
+    public async Task<bool> ResetBossKillCount(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set bosskillcount = 0 where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+    public async Task<bool> ResetBossTotalDamage(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set bosstotaldamage = 0 where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+    public async Task<bool> ResetGold(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set gold = 0 where guildid=@guildid";
+        command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
+        
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+    public async Task<bool> ResetCombatCount(CommandContext ctx)
+    {
+        if (null == _connection)
+        {
+            return false;
+        }
+        
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText = $"update USER set combatcount = 0 where guildid=@guildid";
         command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
         
         try

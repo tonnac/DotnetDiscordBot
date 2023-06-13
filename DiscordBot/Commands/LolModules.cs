@@ -75,7 +75,7 @@ public class LolModules : BaseCommandModule
         {
             if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
             {
-                string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname;
+                string name = Utility.GetMemberDisplayName(member);
                 var embedBuilder = new DiscordEmbedBuilder()
                     .WithColor(DiscordColor.Azure)
                     .WithDescription($"{name}님의 칼바람나락 호출이 왔습니다!")

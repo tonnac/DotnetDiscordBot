@@ -123,29 +123,20 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows the boss rank board..
-        /// </summary>
-        internal static string bossrank_Description {
-            get {
-                return ResourceManager.GetString("bossrank_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reset the boss rank board.(Permission required).
-        /// </summary>
-        internal static string bossrankreset_Description {
-            get {
-                return ResourceManager.GetString("bossrankreset_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
             get {
                 return ResourceManager.GetString("CheckDm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the data.(Permission required).
+        /// </summary>
+        internal static string datareset_Description {
+            get {
+                return ResourceManager.GetString("datareset_Description", resourceCulture);
             }
         }
         
@@ -209,6 +200,24 @@ namespace DiscordBot.Resource {
         internal static string exit_Description {
             get {
                 return ResourceManager.GetString("exit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do Fishing..
+        /// </summary>
+        internal static string fishing_Description {
+            get {
+                return ResourceManager.GetString("fishing_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the Game Ranking board..
+        /// </summary>
+        internal static string gameranking_Description {
+            get {
+                return ResourceManager.GetString("gameranking_Description", resourceCulture);
             }
         }
         
