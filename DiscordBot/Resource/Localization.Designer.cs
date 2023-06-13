@@ -105,7 +105,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Displays current boss information..
+        ///   Looks up a localized string similar to Shows current boss information..
         /// </summary>
         internal static string bossinfo_Description {
             get {
@@ -264,6 +264,15 @@ namespace DiscordBot.Resource {
         internal static string longplay_Description {
             get {
                 return ResourceManager.GetString("longplay_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows my game information..
+        /// </summary>
+        internal static string myinfo_Description {
+            get {
+                return ResourceManager.GetString("myinfo_Description", resourceCulture);
             }
         }
         

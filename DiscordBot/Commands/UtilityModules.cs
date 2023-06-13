@@ -30,6 +30,7 @@ namespace DiscordBot.Commands
             { "Music", "https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg" }, 
             { "Lol", "https://yt3.googleusercontent.com/_nlyMx8RWF3h2aG8PslnqMobecnco8XjOBki7dL_nayZYfNxxFdPSp2PpxUytjN4VmHqb4XPtA=s900-c-k-c0x00ffffff-no-rj" }, 
             { "Boss", "https://oldschoolroleplaying.com/wp-content/uploads/2020/01/Skull-Cave-Entrance.jpg" },
+            { "UserGameInfo", "https://cdn-icons-png.flaticon.com/512/943/943579.png" },
             { "Utility", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU" }
             
         };
@@ -67,19 +68,80 @@ namespace DiscordBot.Commands
             
             foreach (var copyCommand in copyCommands)
             {
-                var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
-                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                    .WithAuthor(copyCommand.Key)
-                    .WithColor(DiscordColor.Azure)
-                    .WithTimestamp(DateTime.Now)
-                    .WithDescription(commandsString);
-
-                if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
+                if ("Music" == copyCommand.Key ||
+                    "Lol" == copyCommand.Key ||
+                    "Utility" == copyCommand.Key)
                 {
-                    embedBuilder.WithThumbnail(thumbnailUrl);
-                }
+                    var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                        .WithAuthor(copyCommand.Key)
+                        .WithColor(DiscordColor.Azure)
+                        .WithTimestamp(DateTime.Now)
+                        .WithDescription(commandsString);
+
+                    if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
+                    {
+                        embedBuilder.WithThumbnail(thumbnailUrl);
+                    }
             
-                await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+                    await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+                }
+                
+            }
+
+        }
+        
+        [Command, Aliases("gh"), Cooldown(1, 60, CooldownBucketType.User)]
+        public async Task GameHelp(CommandContext ctx)
+        {
+            CommandsNextExtension? commandNext = _client.GetCommandsNext();
+            if (commandNext == null)
+            {
+                return;
+            }
+
+            string FindLocal(string name)
+            {
+                TypeInfo typeinfo = typeof(Localization).GetTypeInfo();
+                foreach (PropertyInfo propertyInfo in typeinfo.DeclaredProperties)
+                {
+                    if (propertyInfo.Name == name && propertyInfo.GetValue(typeinfo) is string)
+                    {
+                        return (string)propertyInfo.GetValue(typeinfo)!;
+                    }
+                }
+
+                return "";
+            }
+
+            var copyCommands =
+                from pair in commandNext.RegisteredCommands
+                where pair.Key == pair.Value.Name
+                orderby pair.Value.Name
+                group pair.Value by pair.Value.Module.ModuleType.Name.Split("Modules")[0]
+                into groupData
+                select groupData;
+            
+            foreach (var copyCommand in copyCommands)
+            {
+                if ("Boss" == copyCommand.Key ||
+                    "UserGameInfo" == copyCommand.Key)
+                {
+                    var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                        .WithAuthor(copyCommand.Key)
+                        .WithColor(DiscordColor.Azure)
+                        .WithTimestamp(DateTime.Now)
+                        .WithDescription(commandsString);
+
+                    if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
+                    {
+                        embedBuilder.WithThumbnail(thumbnailUrl);
+                    }
+            
+                    await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+                }
+
             }
 
         }

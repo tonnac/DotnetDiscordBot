@@ -8,5 +8,6 @@ public class DatabaseUser
     [JsonProperty] public bool aram;
     [JsonProperty] public int bosskillcount;
     [JsonProperty] public ulong bosstotaldamage;
-    [JsonProperty] public int bossgold;
+    [JsonProperty] public int gold;
+    [JsonProperty] public int combatcount;
 }

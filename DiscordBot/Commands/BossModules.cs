@@ -10,20 +10,17 @@ namespace DiscordBot.Commands;
 public class BossModules : BaseCommandModule
 {
     private readonly BossMonster _bossMonster;
-    private readonly BossParser _bossParser;
 
     public BossModules()
     {
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
         _bossMonster = new BossMonster((BossType)bossType);
-
-        _bossParser = new BossParser();
     }
     
     //[Command, Aliases("ba")]
     [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
-    public async Task BossAttack(CommandContext ctx)
+    public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         var rand = new Random();
 
@@ -64,7 +61,6 @@ public class BossModules : BaseCommandModule
 
         // add parser
         int validDamage = bIsOverKill ? _bossMonster.CurrentHp : FinalDamage;
-        _bossParser.AddTotalDeal(name, validDamage);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -82,13 +78,11 @@ public class BossModules : BaseCommandModule
                     "\uD83E\uDD47" + bestDealerInfo.Key + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value),
                     false));
 
-            _bossParser.AddKillCount(name, 1);
-            _bossParser.AddTotalGold(name, killedBossGetGold);
             
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold);
+            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold, 1);
             await database.UpdateBossRaid(ctx, query);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
@@ -100,14 +94,11 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (validDamage != 0)
-            {
-                using var database = new DiscordBotDatabase();
-                await database.ConnectASync();
-                await database.GetDatabaseUser(ctx.Guild, ctx.User);
-                BossQuery query = new BossQuery((ulong)validDamage, 0, 0);
-                await database.UpdateBossRaid(ctx, query);
-            }
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            BossQuery query = new BossQuery((ulong)validDamage, 0, 0, 1);
+            await database.UpdateBossRaid(ctx, query);
         }
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
@@ -155,14 +146,14 @@ public class BossModules : BaseCommandModule
             return "X";
         }, user => user.bosskillcount);
         
-        Dictionary<string, int> goldRankDictionary = users.Where(user => user.bossgold > 0).OrderByDescending(user => user.bossgold).ToDictionary(user =>
+        Dictionary<string, int> goldRankDictionary = users.Where(user => user.gold > 0).OrderByDescending(user => user.gold).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
                 return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
             }
             return "X";
-        }, user => user.bossgold);
+        }, user => user.gold);
 
         Dictionary<string, ulong> dealRankDictionary = users.Where(user => user.bosstotaldamage > 0).OrderByDescending(user => user.bosstotaldamage).ToDictionary(user =>
         {
@@ -244,7 +235,6 @@ public class BossModules : BaseCommandModule
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             _bossMonster.ResetBossMonster();
-            _bossParser.ResetBossParser();
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             bool result = await database.ResetBossRaid(ctx);
