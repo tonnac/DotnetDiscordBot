@@ -246,4 +246,7 @@
 	<data name="bossrankreset_Description" xml:space="preserve">
 		<value>보스 랭크보드를 초기화합니다.(권한필요)</value>
 	</data>
+	<data name="myinfo_Description" xml:space="preserve">
+		<value>내 게임 정보를 표시합니다.</value>
+	</data>
 </root>

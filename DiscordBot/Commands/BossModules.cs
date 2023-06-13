@@ -10,15 +10,12 @@ namespace DiscordBot.Commands;
 public class BossModules : BaseCommandModule
 {
     private readonly BossMonster _bossMonster;
-    private readonly BossParser _bossParser;
 
     public BossModules()
     {
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
         _bossMonster = new BossMonster((BossType)bossType);
-
-        _bossParser = new BossParser();
     }
     
     //[Command, Aliases("ba")]
@@ -64,7 +61,6 @@ public class BossModules : BaseCommandModule
 
         // add parser
         int validDamage = bIsOverKill ? _bossMonster.CurrentHp : FinalDamage;
-        _bossParser.AddTotalDeal(name, validDamage);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -82,8 +78,6 @@ public class BossModules : BaseCommandModule
                     "\uD83E\uDD47" + bestDealerInfo.Key + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value),
                     false));
 
-            _bossParser.AddKillCount(name, 1);
-            _bossParser.AddTotalGold(name, killedBossGetGold);
             
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
@@ -244,7 +238,6 @@ public class BossModules : BaseCommandModule
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             _bossMonster.ResetBossMonster();
-            _bossParser.ResetBossParser();
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             bool result = await database.ResetBossRaid(ctx);

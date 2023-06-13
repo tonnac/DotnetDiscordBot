@@ -235,7 +235,7 @@ This has a lower priority than music added with play.</value>
 		<value>Attempt to attack the boss. (Damage 1-100)</value>
 	</data>
 	<data name="bossinfo_Description" xml:space="preserve">
-		<value>Displays current boss information.</value>
+		<value>Shows current boss information.</value>
 	</data>
 	<data name="bossrank_Description" xml:space="preserve">
 		<value>Shows the boss rank board.</value>
@@ -245,5 +245,8 @@ This has a lower priority than music added with play.</value>
 	</data>
 	<data name="bossrankreset_Description" xml:space="preserve">
 		<value>Reset the boss rank board.(Permission required)</value>
+	</data>
+	<data name="myinfo_Description" xml:space="preserve">
+		<value>Shows my game information.</value>
 	</data>
 </root>
