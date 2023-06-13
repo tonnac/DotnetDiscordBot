@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using DisCatSharp;
+using DisCatSharp.Entities;
 
 namespace DiscordBot;
 
@@ -133,5 +134,10 @@ public static class Utility
         }
 
         return null;
+    }
+
+    public static string GetMemberDisplayName(DiscordMember member)
+    {
+        return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
     }
 }

@@ -48,7 +48,7 @@ public class BossModules : BaseCommandModule
         
         bool bIsOverKill = FinalDamage >= _bossMonster.CurrentHp;
 
-        string name = string.IsNullOrEmpty(ctx.Member.Nickname) ? ctx.Member.Username : ctx.Member.Nickname; 
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         // hit embed
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -82,7 +82,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold);
+            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold, 1);
             await database.UpdateBossRaid(ctx, query);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
@@ -94,14 +94,11 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (validDamage != 0)
-            {
-                using var database = new DiscordBotDatabase();
-                await database.ConnectASync();
-                await database.GetDatabaseUser(ctx.Guild, ctx.User);
-                BossQuery query = new BossQuery((ulong)validDamage, 0, 0);
-                await database.UpdateBossRaid(ctx, query);
-            }
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            BossQuery query = new BossQuery((ulong)validDamage, 0, 0, 1);
+            await database.UpdateBossRaid(ctx, query);
         }
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
@@ -144,7 +141,7 @@ public class BossModules : BaseCommandModule
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
-                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+                return Utility.GetMemberDisplayName(member);
             }
             return "X";
         }, user => user.bosskillcount);
@@ -153,7 +150,7 @@ public class BossModules : BaseCommandModule
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
-                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+                return Utility.GetMemberDisplayName(member);
             }
             return "X";
         }, user => user.gold);
@@ -162,7 +159,7 @@ public class BossModules : BaseCommandModule
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
-                return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
+                return Utility.GetMemberDisplayName(member);
             }
             return "X";
         }, user => user.bosstotaldamage);
