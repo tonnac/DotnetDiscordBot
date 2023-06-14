@@ -73,6 +73,7 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dgg"), Cooldown(1, 2, CooldownBucketType.User)]
     public async Task DoGambleGame(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
+        bool bDo = false;
         string gambleEmoji = "\uD83C\uDFB0";
         int gameAnte = 0;
         GambleGame gamble = new GambleGame();
@@ -80,18 +81,22 @@ public class GambleModules : BaseCommandModule
         
         if (string.IsNullOrEmpty(gambleCommand) || "s" == gambleCommand)
         {
+            bDo = true;
             gamble = _gambleGame_SlotMachine;
             gameAnte = _gambleGame_SlotMachine.GameAnte;
             gambleEmoji = "\uD83C\uDFB0";
         }
         else if ("r" == gambleCommand)
         {
+            bDo = true;
             gamble = _gambleGame_Roulette;
             gameAnte = _gambleGame_Roulette.GameAnte;
             gambleEmoji = "\uD83E\uDDFF";
+            bDo = true;
         }
         else if ("g" == gambleCommand)
         {
+            bDo = true;
             gamble = _gambleGame_Gacha;
             gameAnte = _gambleGame_Gacha.GameAnte;
             gambleEmoji = "\uD83D\uDDF3\uFE0F";
@@ -101,38 +106,45 @@ public class GambleModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
 
-        if (gambleUserDatabase.gold >= gameAnte)
+        if (bDo)
         {
-            int gambleReward = gamble.DoGamble();
+            if (gambleUserDatabase.gold >= gameAnte)
+            {
+                int gambleReward = gamble.DoGamble();
 
-            string resultEmoji = "\uD83D\uDE2D";
-            if (gambleReward == gamble.Reward_GoldPrize)
-            {
-                resultEmoji = "\uD83E\uDD47";
-            }
-            else if (gambleReward == gamble.Reward_SilverPrize)
-            {
-                resultEmoji = "\uD83E\uDD48";
-            }
-            else if (gambleReward == gamble.Reward_BronzePrize)
-            {
-                resultEmoji = "\uD83E\uDD49";
-            }
+                string resultEmoji = "\uD83D\uDE2D";
+                if (gambleReward == gamble.Reward_GoldPrize)
+                {
+                    resultEmoji = "\uD83E\uDD47";
+                }
+                else if (gambleReward == gamble.Reward_SilverPrize)
+                {
+                    resultEmoji = "\uD83E\uDD48";
+                }
+                else if (gambleReward == gamble.Reward_BronzePrize)
+                {
+                    resultEmoji = "\uD83E\uDD49";
+                }
                 
-            GoldQuery query = new GoldQuery(gambleReward - gameAnte);
-            await database.UpdateUserGold(ctx, query);
+                GoldQuery query = new GoldQuery(gambleReward - gameAnte);
+                await database.UpdateUserGold(ctx, query);
             
-            DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                .WithThumbnail("https://i.gifer.com/E3xX.gif")
-                .WithColor(DiscordColor.Gold)
-                .AddField(new DiscordEmbedField(gambleEmoji + " " + name, "[ - \uD83D\uDCB0" + Convert.ToString(gameAnte) + " ]", false))
-                .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(gambleReward) + " ]", false));
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithThumbnail("https://i.gifer.com/E3xX.gif")
+                    .WithColor(DiscordColor.Gold)
+                    .AddField(new DiscordEmbedField(gambleEmoji + " " + name, "[ - \uD83D\uDCB0" + Convert.ToString(gameAnte) + " ]", false))
+                    .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(gambleReward) + " ]", false));
         
-            await ctx.RespondAsync(embedBuilder);
+                await ctx.RespondAsync(embedBuilder);
+            }
+            else
+            {
+                await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+            }
         }
         else
         {
-            await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+            await ctx.RespondAsync("..\u2753");
         }
     }
 }
