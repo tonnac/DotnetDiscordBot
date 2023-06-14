@@ -19,6 +19,8 @@ using DiscordBot.Database;
     
     [10000]
     -%	0
+    5%	1       ?
+    3%	10	    ?
     1%	100000	x10
  */
 namespace DiscordBot.Commands;
@@ -43,8 +45,8 @@ public class GambleModules : BaseCommandModule
         
         _gambleGame_Gacha = new GambleGame();
         _gambleGame_Gacha.GameAnte = 10000;
-        _gambleGame_Gacha.SetPercentage(1, 0, 0);
-        _gambleGame_Gacha.SetReward(100000, 0, 0);
+        _gambleGame_Gacha.SetPercentage(1, 3, 5);
+        _gambleGame_Gacha.SetReward(100000, 10, 1);
     }
 
     [Command, Aliases("ggl"), Cooldown(1, 10, CooldownBucketType.User)]
