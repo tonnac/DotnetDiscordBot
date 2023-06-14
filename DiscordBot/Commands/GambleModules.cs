@@ -233,7 +233,7 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/3815/3815861.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    - \uD83D\uDCB0" + Convert.ToString(donationValue), "[ \uD83D\uDC5B " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    - \uD83D\uDCB0" + Convert.ToString(donationValue), "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }
@@ -249,7 +249,7 @@ public class GambleModules : BaseCommandModule
         
         if (0 >= _donationMoney)
         {
-            await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+            await ctx.RespondAsync("\uD83C\uDF81.. \u2753");
             return;
         }
 
@@ -263,7 +263,7 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/2913/2913091.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    + \uD83D\uDCB0" + Convert.ToString(tempDonationMoney), "[ \uD83D\uDC5B " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    + \uD83D\uDCB0" + Convert.ToString(tempDonationMoney), "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }
