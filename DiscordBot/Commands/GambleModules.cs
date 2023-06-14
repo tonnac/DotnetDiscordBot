@@ -30,6 +30,10 @@ public class GambleModules : BaseCommandModule
     private readonly GambleGame _gambleGame_SlotMachine;
     private readonly GambleGame _gambleGame_Roulette;
     private readonly GambleGame _gambleGame_Gacha;
+
+    private int _fundsGambleMoney;
+    private readonly int _fundsGambleWinPer = 1;
+    private readonly int _fundsGambleAnte = 100;
     
     public GambleModules()
     {
@@ -47,14 +51,18 @@ public class GambleModules : BaseCommandModule
         _gambleGame_Gacha.GameAnte = 10000;
         _gambleGame_Gacha.SetPercentage(1, 3, 5);
         _gambleGame_Gacha.SetReward(100000, 10, 1);
+
+        _fundsGambleMoney = _fundsGambleAnte*20;
     }
 
-    [Command, Aliases("ggl"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("ggl", "도박리스트"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task GambleGameList(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://img.freepik.com/premium-photo/classic-casino-roulette_103577-4040.jpg")
             .WithColor(DiscordColor.White)
+            .AddField(new DiscordEmbedField("──────────", "[  \uD83D\uDDC3\uFE0F  ]" + " \uD83D\uDCB0" + Convert.ToString(_fundsGambleAnte), false))
+            .AddField(new DiscordEmbedField("\uD83C\uDFC6 " + Convert.ToString(_fundsGambleWinPer) + "%", "\uD83D\uDCB0" + Convert.ToString(_fundsGambleMoney), true))
             .AddField(new DiscordEmbedField("──────────", "[  \uD83C\uDFB0  ]" + " \uD83D\uDCB0" + Convert.ToString(_gambleGame_SlotMachine.GameAnte) + " ─── (s)lotMachine", false))
             .AddField(new DiscordEmbedField("\uD83E\uDD47 " + Convert.ToString(_gambleGame_SlotMachine.Percentage_GoldPrize) + "%", "\uD83D\uDCB0" + Convert.ToString(_gambleGame_SlotMachine.Reward_GoldPrize), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48 " + Convert.ToString(_gambleGame_SlotMachine.Percentage_SilverPrize) + "%", "\uD83D\uDCB0" + Convert.ToString(_gambleGame_SlotMachine.Reward_SilverPrize), true))
@@ -72,7 +80,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("dgg"), Cooldown(1, 2, CooldownBucketType.User)]
+    [Command, Aliases("dgg", "도박"), Cooldown(1, 2, CooldownBucketType.User)]
     public async Task DoGambleGame(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool bDo = false;
@@ -81,14 +89,14 @@ public class GambleModules : BaseCommandModule
         GambleGame gamble = new GambleGame();
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
-        if (string.IsNullOrEmpty(gambleCommand) || "s" == gambleCommand)
+        if (string.IsNullOrEmpty(gambleCommand) || "s" == gambleCommand || "슬롯머신" == gambleCommand)
         {
             bDo = true;
             gamble = _gambleGame_SlotMachine;
             gameAnte = _gambleGame_SlotMachine.GameAnte;
             gambleEmoji = "\uD83C\uDFB0";
         }
-        else if ("r" == gambleCommand)
+        else if ("r" == gambleCommand || "룰렛" == gambleCommand)
         {
             bDo = true;
             gamble = _gambleGame_Roulette;
@@ -96,7 +104,7 @@ public class GambleModules : BaseCommandModule
             gambleEmoji = "\uD83E\uDDFF";
             bDo = true;
         }
-        else if ("g" == gambleCommand)
+        else if ("g" == gambleCommand || "가챠" == gambleCommand)
         {
             bDo = true;
             gamble = _gambleGame_Gacha;
@@ -148,5 +156,47 @@ public class GambleModules : BaseCommandModule
         {
             await ctx.RespondAsync("..\u2753");
         }
+    }
+
+    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 2, CooldownBucketType.User)]
+    public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+        if (100 > gambleUserDatabase.gold)
+        {
+            await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+            return;
+        }
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+        string resultEmoji = "\uD83D\uDE2D";
+        int finalGold = -_fundsGambleAnte;
+        _fundsGambleMoney += _fundsGambleAnte;
+        
+        var rand = new Random();
+        int gambleRandom = rand.Next(1, 101);
+        
+        if (100 - _fundsGambleWinPer < gambleRandom)
+        {
+            resultEmoji = "\uD83C\uDFC6";
+            finalGold = _fundsGambleMoney;
+            _fundsGambleMoney = _fundsGambleAnte*20;
+        }
+        
+        GoldQuery query = new GoldQuery(finalGold);
+        await database.UpdateUserGold(ctx, query);
+        
+        finalGold = 0 > finalGold ? 0 : finalGold;  
+            
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://i.gifer.com/E3xX.gif")
+            .WithColor(DiscordColor.Gold)
+            .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name, "[ - \uD83D\uDCB0100 ]", false))
+            .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(finalGold) + " ]", false));
+        
+        await ctx.RespondAsync(embedBuilder);
     }
 }

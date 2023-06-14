@@ -19,7 +19,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
+    [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         var rand = new Random();
@@ -120,7 +120,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
     }
     
-    [Command, Aliases("bi"), Cooldown(1, 3, CooldownBucketType.User)]
+    [Command, Aliases("bi", "보스정보"), Cooldown(1, 3, CooldownBucketType.User)]
     public async Task BossInfo(CommandContext ctx)
     {
         KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
@@ -146,7 +146,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("📊"));
     }
     
-    [Command, Aliases("gr"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("gr", "랭킹"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task GameRanking(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
@@ -235,7 +235,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🏆"));
     }
     
-    [Command, Aliases("bl"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("bl", "보스리스트"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task BossList(CommandContext ctx)
     {
 
@@ -261,7 +261,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
-    [Command]
+    [Command, Aliases("데이터리셋")]
     public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
     {
         bool result = false;
@@ -270,7 +270,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             
-            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand)
+            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand || "전부" == resetCommand)
             {
                 _bossMonster.ResetBossMonster();
                 
@@ -280,19 +280,19 @@ public class BossModules : BaseCommandModule
 
                 result = killResult && totalDamageResult && goldResult;
             }
-            else if ("gold" == resetCommand)
+            else if ("gold" == resetCommand || "골드" == resetCommand)
             {
                 result = await database.ResetGold(ctx);
             }
-            else if ("kill" == resetCommand)
+            else if ("kill" == resetCommand || "킬" == resetCommand)
             {
                 result = await database.ResetBossKillCount(ctx);
             }
-            else if ("totaldamage" == resetCommand)
+            else if ("totaldamage" == resetCommand || "누적데미지" == resetCommand)
             {
                 result = await database.ResetBossTotalDamage(ctx);
             }
-            else if ("combatcount" == resetCommand)
+            else if ("combatcount" == resetCommand || "전투횟수" == resetCommand)
             {
                 result = await database.ResetCombatCount(ctx);
             }

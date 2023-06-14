@@ -261,4 +261,7 @@ This has a lower priority than music added with play.</value>
 	<data name="dogamblegame_Description" xml:space="preserve">
 		<value>Gambling. Additional commands can be input (ex. dgg s). Commands can be checked on the Gamble List.</value>
 	</data>
+	<data name="dofundsgamble_Description" xml:space="preserve">
+		<value>Gamble Funds. If you win, you take all the money collected.</value>
+	</data>
 </root>

@@ -28,7 +28,7 @@ public class FishingModules : BaseCommandModule
     public int legendaryPer = 5;
     
     //[Command, Aliases("f")]
-    [Command, Aliases("f"), Cooldown(1, 900, CooldownBucketType.User, true, true, 10)]
+    [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.User, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         string fishEmoji_Result = fishEmoji_none;
@@ -75,7 +75,7 @@ public class FishingModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("fl"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("fl", "물고기리스트"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task FishList(CommandContext ctx)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()

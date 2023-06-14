@@ -7,7 +7,7 @@ namespace DiscordBot.Commands;
 
 public class UserGameInfoModules : BaseCommandModule
 {
-    [Command, Aliases("mi"), Cooldown(1, 10, CooldownBucketType.User)]
+    [Command, Aliases("mi", "내정보"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task MyInfo(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();

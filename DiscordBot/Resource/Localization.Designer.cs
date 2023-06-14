@@ -177,6 +177,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gamble Funds. If you win, you take all the money collected..
+        /// </summary>
+        internal static string dofundsgamble_Description {
+            get {
+                return ResourceManager.GetString("dofundsgamble_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gambling. Additional commands can be input (ex. dgg s). Commands can be checked on the Gamble List..
         /// </summary>
         internal static string dogamblegame_Description {

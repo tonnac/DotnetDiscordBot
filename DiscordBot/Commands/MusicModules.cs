@@ -18,7 +18,7 @@ namespace DiscordBot.Commands
 
         private readonly Dictionary<DiscordGuild, MusicPlayer> _musicPlayers;
 
-        [Command, Aliases("p")]
+        [Command, Aliases("p", "재생")]
         public async Task Play(CommandContext ctx, [RemainingText] string search)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -30,7 +30,7 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search);
         }
         
-        [Command, Aliases("lp")]
+        [Command, Aliases("lp", "긴재생")]
         public async Task LongPlay(CommandContext ctx, [RemainingText] string search)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -42,7 +42,7 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search, true);
         }
 
-        [Command, Aliases("l")]
+        [Command, Aliases("l", "내보내기")]
         public async Task Leave(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -54,7 +54,7 @@ namespace DiscordBot.Commands
             await player.Leave(ctx);
         }
 
-        [Command, Aliases("q")]
+        [Command, Aliases("q", "노래리스트")]
         public async Task Queue(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -66,7 +66,7 @@ namespace DiscordBot.Commands
             await player.Queue(ctx);
         }
 
-        [Command, Aliases("np")]
+        [Command, Aliases("np", "현재곡")]
         public async Task NowPlaying(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -114,7 +114,7 @@ namespace DiscordBot.Commands
             await player.Seek(ctx, positionString);
         }
         
-        [Command, Aliases("s")]
+        [Command, Aliases("s", "스킵")]
         public async Task Skip(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx, false);
@@ -127,7 +127,7 @@ namespace DiscordBot.Commands
         }
 
 
-        [Command, Aliases("r")]
+        [Command, Aliases("r", "삭제")]
         public async Task Remove(CommandContext ctx, string indexString)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx, false);
