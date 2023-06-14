@@ -37,13 +37,13 @@ namespace DiscordBot.Commands
             
         };
 
-        [Command, Aliases("h"), Cooldown(1, 60, CooldownBucketType.User)]
+        [Command, Aliases("h", "도움말"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task Help(CommandContext ctx)
         {
             await Help_Private(ctx, new List<string>{ "Music", "Lol", "Utility" });
         }
         
-        [Command, Aliases("gh"), Cooldown(1, 60, CooldownBucketType.User)]
+        [Command, Aliases("gh", "게임도움말"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task GameHelp(CommandContext ctx)
         {
             await Help_Private(ctx, new List<string>{ "Boss", "UserGameInfo", "Fishing", "Gamble" });
@@ -138,7 +138,7 @@ namespace DiscordBot.Commands
             await _messageHandler.ToggleChannel(ctx);
         }
 
-        [Command, Aliases("wd")]
+        [Command, Aliases("wd", "와우주사위")]
         public async Task WOWDice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
@@ -169,7 +169,7 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync(Localization.wrongDice);
         }
         
-        [Command, Aliases("d"), Cooldown(1, 300, CooldownBucketType.User)]
+        [Command, Aliases("d", "주사위"), Cooldown(1, 300, CooldownBucketType.User)]
         public async Task Dice(CommandContext ctx, [RemainingText] string? diceCommand)
         {
             var rand = new Random();
