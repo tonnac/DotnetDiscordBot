@@ -39,61 +39,16 @@ namespace DiscordBot.Commands
         [Command, Aliases("h"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task Help(CommandContext ctx)
         {
-            CommandsNextExtension? commandNext = _client.GetCommandsNext();
-            if (commandNext == null)
-            {
-                return;
-            }
-
-            string FindLocal(string name)
-            {
-                TypeInfo typeinfo = typeof(Localization).GetTypeInfo();
-                foreach (PropertyInfo propertyInfo in typeinfo.DeclaredProperties)
-                {
-                    if (propertyInfo.Name == name && propertyInfo.GetValue(typeinfo) is string)
-                    {
-                        return (string)propertyInfo.GetValue(typeinfo)!;
-                    }
-                }
-
-                return "";
-            }
-
-            var copyCommands =
-                from pair in commandNext.RegisteredCommands
-                where pair.Key == pair.Value.Name
-                orderby pair.Value.Name
-                group pair.Value by pair.Value.Module.ModuleType.Name.Split("Modules")[0]
-                into groupData
-                select groupData;
-            
-            foreach (var copyCommand in copyCommands)
-            {
-                if ("Music" == copyCommand.Key ||
-                    "Lol" == copyCommand.Key ||
-                    "Utility" == copyCommand.Key)
-                {
-                    var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
-                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                        .WithAuthor(copyCommand.Key)
-                        .WithColor(DiscordColor.Azure)
-                        .WithTimestamp(DateTime.Now)
-                        .WithDescription(commandsString);
-
-                    if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
-                    {
-                        embedBuilder.WithThumbnail(thumbnailUrl);
-                    }
-            
-                    await ctx.Channel.SendMessageAsync(embedBuilder.Build());
-                }
-                
-            }
-
+            await Help_Private(ctx, new List<string>{ "Music", "Lol", "Utility" });
         }
         
         [Command, Aliases("gh"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task GameHelp(CommandContext ctx)
+        {
+            await Help_Private(ctx, new List<string>{ "Boss", "UserGameInfo", "Fishing" });
+        }
+
+        private async Task Help_Private(CommandContext ctx, List<string> category)
         {
             CommandsNextExtension? commandNext = _client.GetCommandsNext();
             if (commandNext == null)
@@ -121,31 +76,26 @@ namespace DiscordBot.Commands
                 orderby pair.Value.Name
                 group pair.Value by pair.Value.Module.ModuleType.Name.Split("Modules")[0]
                 into groupData
+                where category.Contains(groupData.Key)
                 select groupData;
             
             foreach (var copyCommand in copyCommands)
             {
-                if ("Boss" == copyCommand.Key ||
-                    "UserGameInfo" == copyCommand.Key ||
-                    "Fishing" == copyCommand.Key)
+                var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithAuthor(copyCommand.Key)
+                    .WithColor(DiscordColor.Azure)
+                    .WithTimestamp(DateTime.Now)
+                    .WithDescription(commandsString);
+
+                if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
                 {
-                    var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
-                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-                        .WithAuthor(copyCommand.Key)
-                        .WithColor(DiscordColor.Azure)
-                        .WithTimestamp(DateTime.Now)
-                        .WithDescription(commandsString);
-
-                    if (_moduleThumbnail.TryGetValue(copyCommand.Key, out string? thumbnailUrl))
-                    {
-                        embedBuilder.WithThumbnail(thumbnailUrl);
-                    }
-            
-                    await ctx.Channel.SendMessageAsync(embedBuilder.Build());
+                    embedBuilder.WithThumbnail(thumbnailUrl);
                 }
-
+        
+                await ctx.Channel.SendMessageAsync(embedBuilder.Build());
             }
-
+            
         }
 
         [Command, Aliases("g")]
