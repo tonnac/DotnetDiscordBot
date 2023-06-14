@@ -1,8 +1,8 @@
 ﻿namespace DiscordBot.Boss;
 
-public class FishingQuery
+public class GoldQuery
 {
-    public FishingQuery(int gold)
+    public GoldQuery(int gold)
     {
         Gold = gold;
     }

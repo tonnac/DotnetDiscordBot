@@ -68,8 +68,8 @@ public class FishingModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        FishingQuery query = new FishingQuery(fishGold_Result);
-        await database.UpdateFishingGold(ctx, query);
+        GoldQuery query = new GoldQuery(fishGold_Result);
+        await database.UpdateUserGold(ctx, query);
         
         await ctx.RespondAsync(embedBuilder);
     }
