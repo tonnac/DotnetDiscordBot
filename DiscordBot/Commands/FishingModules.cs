@@ -9,29 +9,30 @@ namespace DiscordBot.Commands;
 
 public class FishingModules : BaseCommandModule
 {
+    public string fishEmoji_none = "\uD83D\uDC5F";
+    public string fishEmoji_common = "\uD83D\uDC1F";
+    public string fishEmoji_rare = "\uD83D\uDC21";
+    public string fishEmoji_epic = "\uD83D\uDC20";
+    public string fishEmoji_legendary = "\uD83E\uDDDC";
+
+    public int fishGold_none = 0;
+    public int fishGold_common = 100;
+    public int fishGold_rare = 300;
+    public int fishGold_epic = 500;
+    public int fishGold_legendary = 2000;
+
+    public int nonePer = 5;
+    public int commonPer = 50;
+    public int rarePer = 30;
+    public int epicPer = 10;
+    public int legendaryPer = 5;
+    
     //[Command, Aliases("f")]
     [Command, Aliases("f"), Cooldown(1, 900, CooldownBucketType.User, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        string fishEmoji_none = "\uD83D\uDC5F";
-        string fishEmoji_common = "\uD83D\uDC1F";
-        string fishEmoji_rare = "\uD83D\uDC21";
-        string fishEmoji_epic = "\uD83D\uDC20";
-        string fishEmoji_legendary = "\uD83E\uDDDC";
         string fishEmoji_Result = fishEmoji_none;
-
-        int fishGold_none = 0;
-        int fishGold_common = 50;
-        int fishGold_rare = 100;
-        int fishGold_epic = 200;
-        int fishGold_legendary = 1000;
         int fishGold_Result = fishGold_none;
-
-        int nonePer = 5;
-        int commonPer = 50;
-        int rarePer = 30;
-        int epicPer = 10;
-        int legendaryPer = 5;
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
@@ -77,24 +78,6 @@ public class FishingModules : BaseCommandModule
     [Command, Aliases("fl"), Cooldown(1, 10, CooldownBucketType.User)]
     public async Task FishList(CommandContext ctx)
     {
-        string fishEmoji_none = "\uD83D\uDC5F";
-        string fishEmoji_common = "\uD83D\uDC1F";
-        string fishEmoji_rare = "\uD83D\uDC21";
-        string fishEmoji_epic = "\uD83D\uDC20";
-        string fishEmoji_legendary = "\uD83E\uDDDC";
-
-        int fishGold_none = 0;
-        int fishGold_common = 50;
-        int fishGold_rare = 100;
-        int fishGold_epic = 200;
-        int fishGold_legendary = 1000;
-
-        int nonePer = 5;
-        int commonPer = 50;
-        int rarePer = 30;
-        int epicPer = 10;
-        int legendaryPer = 5;
-        
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://image.yes24.com/goods/99358015/XL")
             .WithColor(DiscordColor.White)

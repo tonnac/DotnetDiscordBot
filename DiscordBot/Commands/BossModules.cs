@@ -25,24 +25,40 @@ public class BossModules : BaseCommandModule
         var rand = new Random();
 
         // start,, calc final damage
+        int missPer = 10;
+        int critPer = 15;
+        int massacrePer = 1;
+        int attackPer = 100 - (missPer - critPer - massacrePer);
         int FinalDamage = rand.Next(1, 101);
         int AttackChance = rand.Next(1, 101);
-        string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string CritAddText = "";
+        string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
-        
-        if (10 >= AttackChance)         // miss
+
+        if (missPer >= AttackChance) // miss
         {
             FinalDamage = 0;
             DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
             AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
         }
-        else if (85 <= AttackChance)    // critical
+        else
         {
-            FinalDamage = FinalDamage * 2 + 100;
-            CritAddText = " !";
-            DamageTypeEmojiCode = "\uD83D\uDD25 ";
-            AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
+            // attack
+            
+            if (missPer + attackPer < AttackChance) // critical
+            {
+                FinalDamage = FinalDamage * 2 + 100;
+                CritAddText = " !";
+                DamageTypeEmojiCode = "\uD83D\uDD25 ";
+                AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
+            }
+            else if (missPer + attackPer + critPer < AttackChance) // massacre
+            {
+                FinalDamage = 9999;
+                CritAddText = " !!";
+                DamageTypeEmojiCode = "\uD83D\uDD25 ";
+                AttackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
+            }
         }
         // end,, calc final damage
         
@@ -55,7 +71,7 @@ public class BossModules : BaseCommandModule
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
             .WithAuthor("\u2694\uFE0F " + name)
-            .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText,
+            .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText + "    +\uD83D\uDCB0",
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
@@ -82,7 +98,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold, 1);
+            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold + validDamage, 1);
             await database.UpdateBossRaid(ctx, query);
         
             var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
@@ -97,7 +113,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             await database.GetDatabaseUser(ctx.Guild, ctx.User);
-            BossQuery query = new BossQuery((ulong)validDamage, 0, 0, 1);
+            BossQuery query = new BossQuery((ulong)validDamage, 0, validDamage, 1);
             await database.UpdateBossRaid(ctx, query);
         }
         
