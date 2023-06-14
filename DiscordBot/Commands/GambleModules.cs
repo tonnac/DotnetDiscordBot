@@ -159,7 +159,7 @@ public class GambleModules : BaseCommandModule
         }
     }
 
-    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 2, CooldownBucketType.User)]
+f    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.User)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         using var database = new DiscordBotDatabase();
@@ -195,7 +195,7 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://i.gifer.com/E3xX.gif")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name, "[ - \uD83D\uDCB0100 ]", false))
+            .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name + "    \uD83D\uDCB0" + Convert.ToString(_fundsGambleMoney), "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGambleAnte) + " ]", false))
             .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(finalGold) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
