@@ -10,7 +10,7 @@ public partial class DiscordBotDatabase
         return await ExecuteNonQueryASync($"update USER set bosskillcount = bosskillcount+{query.KillCount}, bosstotaldamage = bosstotaldamage+{query.Damage}, gold = gold+{query.Gold}, combatcount = combatcount+{query.CombatCount} where id='{GetSHA256(ctx.Guild, ctx.User)}'");
     }
 
-    public async Task<bool> UpdateFishingGold(CommandContext ctx, FishingQuery query)
+    public async Task<bool> UpdateUserGold(CommandContext ctx, GoldQuery query)
     {
         return await ExecuteNonQueryASync(
             $"update USER set gold = gold+{query.Gold} where id='{GetSHA256(ctx.Guild, ctx.User)}'");

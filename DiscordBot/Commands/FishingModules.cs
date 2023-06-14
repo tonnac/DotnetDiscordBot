@@ -63,13 +63,13 @@ public class FishingModules : BaseCommandModule
             .WithThumbnail("https://i.pinimg.com/originals/0f/8f/4f/0f8f4fbcd48f4d335f1ff3f8ec803c3b.gif")
             .WithColor(DiscordColor.Blue)
             .WithAuthor("\uD83C\uDFA3 " + name)
-            .AddField(new DiscordEmbedField("\uD83E\uDE9D" + fishEmoji_Result + " !", "+\uD83D\uDCB0" + Convert.ToString(fishGold_Result), false));
+            .AddField(new DiscordEmbedField("\uD83E\uDE9D" + fishEmoji_Result + " !", "+ \uD83D\uDCB0" + Convert.ToString(fishGold_Result), false));
         
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        FishingQuery query = new FishingQuery(fishGold_Result);
-        await database.UpdateFishingGold(ctx, query);
+        GoldQuery query = new GoldQuery(fishGold_Result);
+        await database.UpdateUserGold(ctx, query);
         
         await ctx.RespondAsync(embedBuilder);
     }
