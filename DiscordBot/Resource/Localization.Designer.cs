@@ -195,6 +195,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donate to the donation box. You can enter the amount (ex. !dn 1000).
+        /// </summary>
+        internal static string donation_Description {
+            get {
+                return ResourceManager.GetString("donation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration.
         /// </summary>
         internal static string Duration {
@@ -507,6 +516,15 @@ namespace DiscordBot.Resource {
         internal static string skip_Description {
             get {
                 return ResourceManager.GetString("skip_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take your donation from the donation box..
+        /// </summary>
+        internal static string thanks_Description {
+            get {
+                return ResourceManager.GetString("thanks_Description", resourceCulture);
             }
         }
         
