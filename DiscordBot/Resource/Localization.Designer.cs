@@ -177,6 +177,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gambling. Additional commands can be input (ex. dgg s). Commands can be checked on the Gamble List..
+        /// </summary>
+        internal static string dogamblegame_Description {
+            get {
+                return ResourceManager.GetString("dogamblegame_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration.
         /// </summary>
         internal static string Duration {
@@ -218,6 +227,15 @@ namespace DiscordBot.Resource {
         internal static string fishlist_Description {
             get {
                 return ResourceManager.GetString("fishlist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the gamble list..
+        /// </summary>
+        internal static string gamblegamelist_Description {
+            get {
+                return ResourceManager.GetString("gamblegamelist_Description", resourceCulture);
             }
         }
         
