@@ -264,4 +264,10 @@
 	<data name="dofundsgamble_Description" xml:space="preserve">
 		<value>수금도박을 합니다. 당첨 시 모인 돈을 전부 가져갑니다.</value>
 	</data>
+	<data name="donation_Description" xml:space="preserve">
+		<value>기부함에 기부를 합니다. 금액 입력 가능(ex. !기부 1000)</value>
+	</data>
+	<data name="thanks_Description" xml:space="preserve">
+		<value>기부함에 있는 기부금을 가져갑니다.</value>
+	</data>
 </root>
