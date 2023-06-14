@@ -34,6 +34,7 @@ public class GambleModules : BaseCommandModule
     private int _fundsGambleMoney;
     private readonly int _fundsGambleWinPer = 1;
     private readonly int _fundsGambleAnte = 100;
+    private readonly int _fundsGambleMultiple = 10;
     
     public GambleModules()
     {
@@ -52,7 +53,7 @@ public class GambleModules : BaseCommandModule
         _gambleGame_Gacha.SetPercentage(1, 3, 5);
         _gambleGame_Gacha.SetReward(100000, 10, 1);
 
-        _fundsGambleMoney = _fundsGambleAnte*20;
+        _fundsGambleMoney = _fundsGambleAnte * _fundsGambleMultiple;
     }
 
     [Command, Aliases("ggl", "도박리스트"), Cooldown(1, 10, CooldownBucketType.User)]
@@ -183,7 +184,7 @@ public class GambleModules : BaseCommandModule
         {
             resultEmoji = "\uD83C\uDFC6";
             finalGold = _fundsGambleMoney;
-            _fundsGambleMoney = _fundsGambleAnte*20;
+            _fundsGambleMoney = _fundsGambleAnte * _fundsGambleMultiple;
         }
         
         GoldQuery query = new GoldQuery(finalGold);
