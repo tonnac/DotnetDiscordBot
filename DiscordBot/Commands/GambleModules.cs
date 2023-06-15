@@ -269,7 +269,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("수금함")]
+    [Command]
     public async Task SetFundsGambleMoney(CommandContext ctx, [RemainingText] string? fundsCommand)
     {
         bool result = false;
