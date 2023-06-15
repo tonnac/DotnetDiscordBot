@@ -28,6 +28,8 @@ namespace DiscordBot.Commands;
 
 public class GambleModules : BaseCommandModule
 {
+    private readonly SortedSet<ulong> _gambleChannels = new();
+    
     private readonly GambleGame _gambleGame_SlotMachine;
     private readonly GambleGame _gambleGame_Roulette;
     private readonly GambleGame _gambleGame_Gacha;
@@ -88,6 +90,17 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dgg", "도박"), Cooldown(1, 2, CooldownBucketType.User)]
     public async Task DoGambleGame(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
+        if (!_gambleChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         bool bDo = false;
         string gambleEmoji = "\uD83C\uDFB0";
         int gameAnte = 0;
@@ -166,6 +179,17 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
+        if (!_gambleChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -312,6 +336,30 @@ public class GambleModules : BaseCommandModule
              GoldQuery query = new GoldQuery(testMoney);
              await database.UpdateUserGold(ctx, query);
              result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+        }
+    }
+    
+    [Command]
+    public async Task ToggleGambleChannel(CommandContext ctx)
+    {
+        bool result = false;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            if (_gambleChannels.Contains(ctx.Channel.Id))
+            {
+                _gambleChannels.Remove(ctx.Channel.Id);
+            }
+            else
+            {
+                _gambleChannels.Add(ctx.Channel.Id);
+            }
+
+            result = true;
         }
         
         if (result)
