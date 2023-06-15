@@ -9,6 +9,8 @@ namespace DiscordBot.Commands;
 
 public class BossModules : BaseCommandModule
 {
+    private readonly SortedSet<ulong> _bossChannels = new();
+    
     private readonly BossMonster _bossMonster;
 
     public BossModules()
@@ -19,9 +21,20 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.User, true, true, 10)]
+    [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
+        if (!_bossChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         var rand = new Random();
 
         // start,, calc final damage
@@ -306,6 +319,33 @@ public class BossModules : BaseCommandModule
             {
                 await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
             }
+        }
+    }
+    
+    [Command]
+    public async Task ToggleBossChannel(CommandContext ctx)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            if (_bossChannels.Contains(ctx.Channel.Id))
+            {
+                _bossChannels.Remove(ctx.Channel.Id);
+                emoji = "❌";
+            }
+            else
+            {
+                _bossChannels.Add(ctx.Channel.Id);
+                emoji = "✅";
+            }
+
+            result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
     }
 }
