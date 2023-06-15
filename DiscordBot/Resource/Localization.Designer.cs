@@ -69,6 +69,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add money for test. (Permission required).
+        /// </summary>
+        internal static string addtestmoney_Description {
+            get {
+                return ResourceManager.GetString("addtestmoney_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sends calls to registered members..
         /// </summary>
         internal static string aram_Description {
@@ -525,15 +534,6 @@ namespace DiscordBot.Resource {
         internal static string setfundsgamblemoney_Description {
             get {
                 return ResourceManager.GetString("setfundsgamblemoney_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set up money for test. (Permission required).
-        /// </summary>
-        internal static string settestmoney_Description {
-            get {
-                return ResourceManager.GetString("settestmoney_Description", resourceCulture);
             }
         }
         

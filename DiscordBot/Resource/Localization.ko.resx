@@ -259,10 +259,10 @@
 		<value>물고기 리스트를 표시합니다.</value>
 	</data>
 	<data name="gamblegamelist_Description" xml:space="preserve">
-		<value>겜블 리스트를 표시합니다.</value>
+		<value>도박 리스트를 표시합니다.</value>
 	</data>
 	<data name="dogamblegame_Description" xml:space="preserve">
-		<value>겜블을 합니다. 추가 명령어 입력이 가능합니다.(ex. dgg s) 명령어는 겜블 리스트에서 확인 가능합니다.</value>
+		<value>도박을 합니다. 추가 명령어 입력이 가능합니다.(ex. dgg s) 명령어는 도박리스트에서 확인 가능합니다.</value>
 	</data>
 	<data name="dofundsgamble_Description" xml:space="preserve">
 		<value>수금도박을 합니다. 당첨 시 모인 돈을 전부 가져갑니다.</value>
@@ -276,7 +276,7 @@
 	<data name="setfundsgamblemoney_Description" xml:space="preserve">
 		<value>기부함에 기부금을 설정합니다.(권한필요)</value>
 	</data>
-	<data name="settestmoney_Description" xml:space="preserve">
-		<value>테스트 돈을 세팅합니다.(권한필요)</value>
+	<data name="addtestmoney_Description" xml:space="preserve">
+		<value>테스트 돈을 추가합니다.(권한필요)</value>
 	</data>
 </root>

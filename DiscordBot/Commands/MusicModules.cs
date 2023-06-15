@@ -78,7 +78,7 @@ namespace DiscordBot.Commands
             await player.NowPlaying(ctx);
         }
 
-        [Command]
+        [Command, Aliases("일시정지")]
         public async Task Pause(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -90,7 +90,7 @@ namespace DiscordBot.Commands
             await player.Pause(ctx);
         }
 
-        [Command]
+        [Command, Aliases("재개")]
         public async Task Resume(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -102,7 +102,7 @@ namespace DiscordBot.Commands
             await player.Resume(ctx);
         }
 
-        [Command]
+        [Command, Aliases("넘기기")]
         public async Task Seek(CommandContext ctx, [RemainingText] string positionString)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
