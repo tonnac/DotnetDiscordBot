@@ -28,7 +28,7 @@ public class BossModules : BaseCommandModule
         int missPer = 10;
         int critPer = 15;
         int massacrePer = 1;
-        int attackPer = 100 - (missPer - critPer - massacrePer);
+        int attackPer = 100 - missPer - critPer - massacrePer;
         int FinalDamage = rand.Next(1, 101);
         int AttackChance = rand.Next(1, 101);
         string CritAddText = "";
@@ -261,7 +261,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
-    [Command, Aliases("데이터리셋")]
+    [Command]
     public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
     {
         bool result = false;
@@ -270,7 +270,7 @@ public class BossModules : BaseCommandModule
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             
-            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand || "전부" == resetCommand)
+            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand)
             {
                 _bossMonster.ResetBossMonster();
                 
@@ -280,19 +280,19 @@ public class BossModules : BaseCommandModule
 
                 result = killResult && totalDamageResult && goldResult;
             }
-            else if ("gold" == resetCommand || "골드" == resetCommand)
+            else if ("gold" == resetCommand)
             {
                 result = await database.ResetGold(ctx);
             }
-            else if ("kill" == resetCommand || "킬" == resetCommand)
+            else if ("kill" == resetCommand)
             {
                 result = await database.ResetBossKillCount(ctx);
             }
-            else if ("totaldamage" == resetCommand || "누적데미지" == resetCommand)
+            else if ("totaldamage" == resetCommand)
             {
                 result = await database.ResetBossTotalDamage(ctx);
             }
-            else if ("combatcount" == resetCommand || "전투횟수" == resetCommand)
+            else if ("combatcount" == resetCommand)
             {
                 result = await database.ResetCombatCount(ctx);
             }

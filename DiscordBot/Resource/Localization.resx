@@ -159,7 +159,10 @@
 		<value>Check Your DMs!</value>
 	</data>
 	<data name="help_Description" xml:space="preserve">
-		<value>Display all commands and descriptions</value>
+		<value>Show all commands and descriptions</value>
+	</data>
+	<data name="gamehelp_Description" xml:space="preserve">
+		<value>Show all game commands and descriptions</value>
 	</data>
 	<data name="pause_Description" xml:space="preserve">
 		<value>Pause the currently playing music</value>
@@ -247,7 +250,7 @@ This has a lower priority than music added with play.</value>
 		<value>Shows my game information.</value>
 	</data>
 	<data name="datareset_Description" xml:space="preserve">
-		<value>Reset the data.(Permission required)</value>
+		<value>Reset the data. gold, kill, totaldamage, boss(Permission required)</value>
 	</data>
 	<data name="fishing_Description" xml:space="preserve">
 		<value>Do Fishing.</value>
@@ -269,5 +272,11 @@ This has a lower priority than music added with play.</value>
 	</data>
 	<data name="thanks_Description" xml:space="preserve">
 		<value>Take your donation from the donation box.</value>
+	</data>
+	<data name="setfundsgamblemoney_Description" xml:space="preserve">
+		<value>Set up donations in the donation box. (Permission required)</value>
+	</data>
+	<data name="settestmoney_Description" xml:space="preserve">
+		<value>Set up money for test. (Permission required)</value>
 	</data>
 </root>

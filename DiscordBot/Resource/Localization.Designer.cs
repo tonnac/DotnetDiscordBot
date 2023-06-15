@@ -132,7 +132,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset the data.(Permission required).
+        ///   Looks up a localized string similar to Reset the data. gold, kill, totaldamage, boss(Permission required).
         /// </summary>
         internal static string datareset_Description {
             get {
@@ -258,6 +258,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show all game commands and descriptions.
+        /// </summary>
+        internal static string gamehelp_Description {
+            get {
+                return ResourceManager.GetString("gamehelp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the Game Ranking board..
         /// </summary>
         internal static string gameranking_Description {
@@ -285,7 +294,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display all commands and descriptions.
+        ///   Looks up a localized string similar to Show all commands and descriptions.
         /// </summary>
         internal static string help_Description {
             get {
@@ -507,6 +516,24 @@ namespace DiscordBot.Resource {
         internal static string seek_Usage {
             get {
                 return ResourceManager.GetString("seek_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set up donations in the donation box. (Permission required).
+        /// </summary>
+        internal static string setfundsgamblemoney_Description {
+            get {
+                return ResourceManager.GetString("setfundsgamblemoney_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set up money for test. (Permission required).
+        /// </summary>
+        internal static string settestmoney_Description {
+            get {
+                return ResourceManager.GetString("settestmoney_Description", resourceCulture);
             }
         }
         

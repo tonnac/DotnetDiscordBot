@@ -1,6 +1,7 @@
 ﻿using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Database;
 
@@ -34,6 +35,7 @@ public class GambleModules : BaseCommandModule
     private int _fundsGambleMoney;
     private readonly int _fundsGambleWinPer = 1;
     private readonly int _fundsGambleAnte = 100;
+    private readonly int _fundsGambleAnteCharge = 10;
     private readonly int _fundsGambleMultiple = 10;
 
     private int _donationMoney = 0;
@@ -161,7 +163,7 @@ public class GambleModules : BaseCommandModule
         }
     }
 
-    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.User)]
+    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         using var database = new DiscordBotDatabase();
@@ -176,7 +178,8 @@ public class GambleModules : BaseCommandModule
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         string resultEmoji = "\uD83D\uDE2D";
-        int finalGold = -_fundsGambleAnte;
+        int outGold = _fundsGambleAnte + _fundsGambleAnteCharge;
+        int inGold = 0;
         _fundsGambleMoney += _fundsGambleAnte;
         
         var rand = new Random();
@@ -185,20 +188,18 @@ public class GambleModules : BaseCommandModule
         if (100 - _fundsGambleWinPer < gambleRandom)
         {
             resultEmoji = "\uD83C\uDFC6";
-            finalGold = _fundsGambleMoney;
+            inGold = _fundsGambleMoney;
             _fundsGambleMoney = _fundsGambleAnte * _fundsGambleMultiple;
         }
         
-        GoldQuery query = new GoldQuery(finalGold);
+        GoldQuery query = new GoldQuery(inGold - outGold);
         await database.UpdateUserGold(ctx, query);
-        
-        finalGold = 0 > finalGold ? 0 : finalGold;  
             
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://i.gifer.com/E3xX.gif")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name + "    \uD83D\uDCB0" + Convert.ToString(_fundsGambleMoney), "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGambleAnte) + " ]", false))
-            .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(finalGold) + " ]", false));
+            .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name + "    \uD83D\uDCB0" + Convert.ToString(_fundsGambleMoney), "[ - \uD83D\uDCB0"+ Convert.ToString(outGold) + " ]", false))
+            .AddField(new DiscordEmbedField(resultEmoji + " ", "[ + \uD83D\uDCB0" + Convert.ToString(inGold) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }
@@ -238,7 +239,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 3, CooldownBucketType.User)]
+    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 3, CooldownBucketType.User, true, true, 3)]
     public async Task Thanks(CommandContext ctx)
     {
         string name = Utility.GetMemberDisplayName(ctx.Member);
@@ -266,5 +267,56 @@ public class GambleModules : BaseCommandModule
             .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    + \uD83D\uDCB0" + Convert.ToString(tempDonationMoney), "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
+    }
+
+    [Command, Aliases("수금함")]
+    public async Task SetFundsGambleMoney(CommandContext ctx, [RemainingText] string? fundsCommand)
+    {
+        bool result = false;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int fundsValue = 0;
+            if( !string.IsNullOrEmpty(fundsCommand))
+            {
+                Int32.TryParse(fundsCommand, out fundsValue);
+            }
+
+            if (0 != fundsValue)
+            {
+                _fundsGambleMoney = fundsValue;
+                result = true;
+            }
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+        }
+    }
+    
+    [Command]
+    public async Task SetTestMoney(CommandContext ctx, [RemainingText] string? testMoneyCommand)
+    {
+        bool result = false;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int testMoney = 0;
+            if( !string.IsNullOrEmpty(testMoneyCommand))
+            {
+                Int32.TryParse(testMoneyCommand, out testMoney);
+            }
+
+             using var database = new DiscordBotDatabase();
+             await database.ConnectASync();
+             await database.GetDatabaseUser(ctx.Guild, ctx.User);
+             GoldQuery query = new GoldQuery(testMoney);
+             await database.UpdateUserGold(ctx, query);
+             result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+        }
     }
 }
