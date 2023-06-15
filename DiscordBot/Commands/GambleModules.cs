@@ -170,7 +170,7 @@ public class GambleModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
 
-        if (100 > gambleUserDatabase.gold)
+        if (_fundsGambleAnte + _fundsGambleAnteCharge > gambleUserDatabase.gold)
         {
             await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
             return;
