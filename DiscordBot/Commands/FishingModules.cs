@@ -9,6 +9,8 @@ namespace DiscordBot.Commands;
 
 public class FishingModules : BaseCommandModule
 {
+    private readonly SortedSet<ulong> _fishingChannels = new();
+    
     public string fishEmoji_none = "\uD83D\uDC5F";
     public string fishEmoji_common = "\uD83D\uDC1F";
     public string fishEmoji_rare = "\uD83D\uDC21";
@@ -28,9 +30,20 @@ public class FishingModules : BaseCommandModule
     public int legendaryPer = 5;
     
     //[Command, Aliases("f")]
-    [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.User, true, true, 10)]
+    [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
+        if (!_fishingChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("낚시가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         string fishEmoji_Result = fishEmoji_none;
         int fishGold_Result = fishGold_none;
         
@@ -90,5 +103,32 @@ public class FishingModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
+    }
+    
+    [Command]
+    public async Task ToggleFishingChannel(CommandContext ctx)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            if (_fishingChannels.Contains(ctx.Channel.Id))
+            {
+                _fishingChannels.Remove(ctx.Channel.Id);
+                emoji = "❌";
+            }
+            else
+            {
+                _fishingChannels.Add(ctx.Channel.Id);
+                emoji = "✅";
+            }
+
+            result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
     }
 }

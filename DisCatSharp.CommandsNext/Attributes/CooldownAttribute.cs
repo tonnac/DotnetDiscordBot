@@ -123,6 +123,12 @@ public sealed class CooldownAttribute : CheckBaseAttribute
         if ((this.BucketType & CooldownBucketType.Guild) != 0 && ctx.Guild == null)
             channelId = ctx.Channel.Id;
 
+        if ((this.BucketType & CooldownBucketType.UserAndChannel) != 0)
+        {
+            userId = ctx.User.Id;
+            channelId = ctx.Channel.Id;
+        }
+
         guildId = 0ul;
         if (ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
             guildId = ctx.Guild.Id;
@@ -207,6 +213,8 @@ public enum CooldownBucketType : int
     /// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
     /// </summary>
     Guild = 4,
+    
+    UserAndChannel = 8,
 
     /// <summary>
     /// Denotes that the command will have its cooldown applied globally.

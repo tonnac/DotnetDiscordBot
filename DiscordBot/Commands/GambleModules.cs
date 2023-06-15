@@ -36,9 +36,9 @@ public class GambleModules : BaseCommandModule
 
     private int _fundsGambleMoney;
     private readonly int _fundsGambleWinPer = 1;
-    private readonly int _fundsGambleAnte = 100;
-    private readonly int _fundsGambleAnteCharge = 50;
-    private readonly int _fundsGambleMultiple = 10;
+    private readonly int _fundsGambleAnte = 300;
+    private readonly int _fundsGambleAnteCharge = 200;
+    private readonly int _fundsGambleMultiple = 20;
 
     private int _donationMoney = 0;
     
@@ -87,7 +87,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("dgg", "도박"), Cooldown(1, 2, CooldownBucketType.User)]
+    [Command, Aliases("dgg", "도박"), Cooldown(1, 2, CooldownBucketType.UserAndChannel)]
     public async Task DoGambleGame(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         if (!_gambleChannels.Contains(ctx.Channel.Id))
@@ -176,7 +176,7 @@ public class GambleModules : BaseCommandModule
         }
     }
 
-    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
+    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.UserAndChannel, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         if (!_gambleChannels.Contains(ctx.Channel.Id))
@@ -348,15 +348,18 @@ public class GambleModules : BaseCommandModule
     public async Task ToggleGambleChannel(CommandContext ctx)
     {
         bool result = false;
+        string emoji = "❌";
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             if (_gambleChannels.Contains(ctx.Channel.Id))
             {
                 _gambleChannels.Remove(ctx.Channel.Id);
+                emoji = "❌";
             }
             else
             {
                 _gambleChannels.Add(ctx.Channel.Id);
+                emoji = "✅";
             }
 
             result = true;
@@ -364,7 +367,7 @@ public class GambleModules : BaseCommandModule
         
         if (result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
     }
 }
