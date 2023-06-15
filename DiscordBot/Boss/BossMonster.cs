@@ -5,7 +5,7 @@ namespace DiscordBot.Boss;
 public enum BossType : int
 {
     Start = 0,
-    Ant = 1,
+    Mosquito = 1,
     Bat = 2,
     Octopus = 3,
     Shark = 4,
@@ -101,7 +101,7 @@ public class BossMonster
         switch (type)
         {
             default:
-            case BossType.Ant:
+            case BossType.Mosquito:
                 return 10;
             case BossType.Bat:
                 return 100;
@@ -133,8 +133,8 @@ public class BossMonster
         switch (type)
         {
             default:
-            case BossType.Ant:
-                return "\uD83D\uDC1C";
+            case BossType.Mosquito:
+                return "\uD83E\uDD9F";
             case BossType.Bat:
                 return "\uD83E\uDD87";
             case BossType.Octopus:
