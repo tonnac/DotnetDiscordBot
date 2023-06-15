@@ -344,7 +344,7 @@ public class GambleModules : BaseCommandModule
         }
     }
     
-    [Command]
+    [Command, Aliases("tgc")]
     public async Task ToggleGambleChannel(CommandContext ctx)
     {
         bool result = false;

@@ -323,7 +323,7 @@ public class BossModules : BaseCommandModule
         }
     }
     
-    [Command]
+    [Command, Aliases("tbc")]
     public async Task ToggleBossChannel(CommandContext ctx)
     {
         bool result = false;
