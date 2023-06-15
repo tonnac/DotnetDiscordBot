@@ -66,7 +66,7 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://img.freepik.com/premium-photo/classic-casino-roulette_103577-4040.jpg")
             .WithColor(DiscordColor.White)
-            .AddField(new DiscordEmbedField("──────────", "[  \uD83D\uDDC3\uFE0F  ]" + " \uD83D\uDCB0" + Convert.ToString(_fundsGambleAnte), false))
+            .AddField(new DiscordEmbedField("──────────", "[  \uD83D\uDDC3\uFE0F  ]" + " \uD83D\uDCB0" + Convert.ToString(_fundsGambleAnte + _fundsGambleAnteCharge), false))
             .AddField(new DiscordEmbedField("\uD83C\uDFC6 " + Convert.ToString(_fundsGambleWinPer) + "%", "\uD83D\uDCB0" + Convert.ToString(_fundsGambleMoney), true))
             .AddField(new DiscordEmbedField("──────────", "[  \uD83C\uDFB0  ]" + " \uD83D\uDCB0" + Convert.ToString(_gambleGame_SlotMachine.GameAnte) + " ─── (s)lotMachine", false))
             .AddField(new DiscordEmbedField("\uD83E\uDD47 " + Convert.ToString(_gambleGame_SlotMachine.Percentage_GoldPrize) + "%", "\uD83D\uDCB0" + Convert.ToString(_gambleGame_SlotMachine.Reward_GoldPrize), true))
@@ -295,7 +295,7 @@ public class GambleModules : BaseCommandModule
     }
     
     [Command]
-    public async Task SetTestMoney(CommandContext ctx, [RemainingText] string? testMoneyCommand)
+    public async Task AddTestMoney(CommandContext ctx, [RemainingText] string? testMoneyCommand)
     {
         bool result = false;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))

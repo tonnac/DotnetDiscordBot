@@ -276,7 +276,7 @@ This has a lower priority than music added with play.</value>
 	<data name="setfundsgamblemoney_Description" xml:space="preserve">
 		<value>Set up donations in the donation box. (Permission required)</value>
 	</data>
-	<data name="settestmoney_Description" xml:space="preserve">
-		<value>Set up money for test. (Permission required)</value>
+	<data name="addtestmoney_Description" xml:space="preserve">
+		<value>Add money for test. (Permission required)</value>
 	</data>
 </root>
