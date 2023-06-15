@@ -139,7 +139,7 @@ namespace DiscordBot.Commands
             await player.Remove(ctx,indexString);
         }
 
-        [Command] 
+        [Command, Aliases("그랩")] 
         public async Task Grab(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx, false);
