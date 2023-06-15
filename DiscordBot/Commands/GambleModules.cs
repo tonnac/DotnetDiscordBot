@@ -35,7 +35,7 @@ public class GambleModules : BaseCommandModule
     private int _fundsGambleMoney;
     private readonly int _fundsGambleWinPer = 1;
     private readonly int _fundsGambleAnte = 100;
-    private readonly int _fundsGambleAnteCharge = 10;
+    private readonly int _fundsGambleAnteCharge = 50;
     private readonly int _fundsGambleMultiple = 10;
 
     private int _donationMoney = 0;
