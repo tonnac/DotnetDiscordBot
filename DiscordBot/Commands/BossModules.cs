@@ -64,13 +64,14 @@ public class BossModules : BaseCommandModule
                 CritAddText = " !";
                 DamageTypeEmojiCode = "\uD83D\uDD25 ";
                 AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
-            }
-            else if (missPer + attackPer + critPer < AttackChance) // massacre
-            {
-                FinalDamage = 9999;
-                CritAddText = " !!";
-                DamageTypeEmojiCode = "\uD83D\uDD25 ";
-                AttackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
+                
+                if (missPer + attackPer + critPer < AttackChance) // massacre
+                {
+                    FinalDamage = 9999;
+                    CritAddText = " !!";
+                    DamageTypeEmojiCode = "\uD83D\uDD25 ";
+                    AttackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
+                }
             }
         }
         // end,, calc final damage
@@ -256,7 +257,7 @@ public class BossModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1440/1440998.png")
             .WithColor(DiscordColor.White)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Ant) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Ant) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Ant), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Mosquito) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Mosquito) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Mosquito), false))
             .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Bat) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Bat) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Bat), false))
             .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Octopus) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Octopus) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
             .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Shark) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Shark) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Shark), false))
