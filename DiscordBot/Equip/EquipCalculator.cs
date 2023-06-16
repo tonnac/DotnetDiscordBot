@@ -9,7 +9,7 @@ public class EquipCalculator
     public readonly int WeaponUpgradeMoney = 10000;
     public int RingUpgradeMoney = 20000;
 
-    private readonly List<UpgradePercentage> UpgradePercentages;
+    public readonly List<UpgradePercentage> UpgradePercentages;
 
     private readonly int CutNum = 10;
 

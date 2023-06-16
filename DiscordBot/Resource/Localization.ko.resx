@@ -161,8 +161,14 @@
 	<data name="help_Description" xml:space="preserve">
 		<value>모든 명령어와 설명을 표시합니다.</value>
 	</data>
-	<data name="gamehelp_Description" xml:space="preserve">
-		<value>모든 게임 명령어와 설명을 표시합니다.</value>
+	<data name="bosshelp_Description" xml:space="preserve">
+		<value>보스 명령어와 설명을 표시합니다.</value>
+	</data>
+	<data name="fishinghelp_Description" xml:space="preserve">
+		<value>낚시 명령어와 설명을 표시합니다.</value>
+	</data>
+	<data name="gamblehelp_Description" xml:space="preserve">
+		<value>도박 명령어와 설명을 표시합니다.</value>
 	</data>
 	<data name="pause_Description" xml:space="preserve">
 		<value>현재 재생중인 음악을 일시 중지합니다.</value>
@@ -250,7 +256,7 @@
 		<value>내 게임 정보를 표시합니다.</value>
 	</data>
 	<data name="datareset_Description" xml:space="preserve">
-		<value>데이터를 초기화합니다. gold, kill, totaldamage, boss(권한필요)</value>
+		<value>데이터를 초기화합니다. gold, kill, totaldamage, boss, equipvalue(권한필요)</value>
 	</data>
 	<data name="fishing_Description" xml:space="preserve">
 		<value>낚시를 합니다.</value>
@@ -284,5 +290,8 @@
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>반지를 강화합니다. (공격찬스 +강화수치)</value>
+	</data>
+	<data name="upgradesuccesspercentageList_Description" xml:space="preserve">
+		<value>강화 확률 리스트를 표시합니다.</value>
 	</data>
 </root>

@@ -161,8 +161,14 @@
 	<data name="help_Description" xml:space="preserve">
 		<value>Show all commands and descriptions</value>
 	</data>
-	<data name="gamehelp_Description" xml:space="preserve">
-		<value>Show all game commands and descriptions</value>
+	<data name="bosshelp_Description" xml:space="preserve">
+		<value>Show boss commands and descriptions</value>
+	</data>
+	<data name="fishinghelp_Description" xml:space="preserve">
+		<value>Show fishing commands and descriptions</value>
+	</data>
+	<data name="gamblehelp_Description" xml:space="preserve">
+		<value>Show gamble commands and descriptions</value>
 	</data>
 	<data name="pause_Description" xml:space="preserve">
 		<value>Pause the currently playing music</value>
@@ -250,7 +256,7 @@ This has a lower priority than music added with play.</value>
 		<value>Shows my game information.</value>
 	</data>
 	<data name="datareset_Description" xml:space="preserve">
-		<value>Reset the data. gold, kill, totaldamage, boss(Permission required)</value>
+		<value>Reset the data. gold, kill, totaldamage, boss, equipvalue(Permission required)</value>
 	</data>
 	<data name="fishing_Description" xml:space="preserve">
 		<value>Do Fishing.</value>
@@ -284,5 +290,8 @@ This has a lower priority than music added with play.</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>Strengthen the ring. (attack chance + reinforcement value)</value>
+	</data>
+	<data name="upgradesuccesspercentageList_Description" xml:space="preserve">
+		<value>Shows a list of upgrade equip probabilities.</value>
 	</data>
 </root>
