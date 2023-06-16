@@ -395,7 +395,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Green)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "- 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney), false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "- \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney), false))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
