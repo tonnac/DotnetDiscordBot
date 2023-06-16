@@ -114,6 +114,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show boss commands and descriptions.
+        /// </summary>
+        internal static string bosshelp_Description {
+            get {
+                return ResourceManager.GetString("bosshelp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows current boss information..
         /// </summary>
         internal static string bossinfo_Description {
@@ -141,7 +150,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset the data. gold, kill, totaldamage, boss(Permission required).
+        ///   Looks up a localized string similar to Reset the data. gold, kill, totaldamage, boss, equipvalue(Permission required).
         /// </summary>
         internal static string datareset_Description {
             get {
@@ -249,6 +258,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show fishing commands and descriptions.
+        /// </summary>
+        internal static string fishinghelp_Description {
+            get {
+                return ResourceManager.GetString("fishinghelp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the fish list..
         /// </summary>
         internal static string fishlist_Description {
@@ -267,11 +285,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show all game commands and descriptions.
+        ///   Looks up a localized string similar to Show gamble commands and descriptions.
         /// </summary>
-        internal static string gamehelp_Description {
+        internal static string gamblehelp_Description {
             get {
-                return ResourceManager.GetString("gamehelp_Description", resourceCulture);
+                return ResourceManager.GetString("gamblehelp_Description", resourceCulture);
             }
         }
         
@@ -579,6 +597,15 @@ namespace DiscordBot.Resource {
         internal static string upgradering_Description {
             get {
                 return ResourceManager.GetString("upgradering_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities..
+        /// </summary>
+        internal static string upgradesuccesspercentageList_Description {
+            get {
+                return ResourceManager.GetString("upgradesuccesspercentageList_Description", resourceCulture);
             }
         }
         

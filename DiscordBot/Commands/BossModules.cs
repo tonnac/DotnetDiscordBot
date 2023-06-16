@@ -283,58 +283,6 @@ public class BossModules : BaseCommandModule
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
-    
-    [Command]
-    public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
-    {
-        bool result = false;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            
-            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand)
-            {
-                _bossMonster.ResetBossMonster();
-                
-                bool killResult = await database.ResetBossKillCount(ctx);
-                bool totalDamageResult = await database.ResetBossTotalDamage(ctx);
-                bool goldResult = await database.ResetGold(ctx);
-
-                result = killResult && totalDamageResult && goldResult;
-            }
-            else if ("gold" == resetCommand)
-            {
-                result = await database.ResetGold(ctx);
-            }
-            else if ("kill" == resetCommand)
-            {
-                result = await database.ResetBossKillCount(ctx);
-            }
-            else if ("totaldamage" == resetCommand)
-            {
-                result = await database.ResetBossTotalDamage(ctx);
-            }
-            else if ("combatcount" == resetCommand)
-            {
-                result = await database.ResetCombatCount(ctx);
-            }
-            else if ("equipvalue" == resetCommand)
-            {
-                result = await database.ResetEquipValue(ctx);
-            }
-            else if ("boss" == resetCommand)
-            {
-                _bossMonster.ResetBossMonster();
-                result = true;
-            }
-            
-            if (result)
-            {
-                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
-            }
-        }
-    }
 
     [Command, Aliases("uw", "무기강화")]
     public async Task UpgradeWeapon(CommandContext ctx, [RemainingText] string? tempCommand)
@@ -495,6 +443,54 @@ public class BossModules : BaseCommandModule
             }
         }
     }
+    
+    [Command, Aliases("ul", "강화확률"), Cooldown(1, 10, CooldownBucketType.User)]
+    public async Task UpgradeSuccessPercentageList(CommandContext ctx)
+    {
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
+            .WithColor(DiscordColor.White)
+            .AddField(new DiscordEmbedField("──────────", "[ 0 > 1 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[0].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 1 > 2 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[1].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 2 > 3 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[2].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 3 > 4 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[3].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[3].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[4].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 5 > 6 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[5].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 6 > 7 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[6].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 7 > 8 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[7].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 8 > 9 ]", false))
+            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[8].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
+        
+        await ctx.RespondAsync(embedBuilder);
+        
+        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
+    }
 
     [Command, Aliases("bbbb")]
     public async Task ToggleBossChannel(CommandContext ctx)
@@ -520,6 +516,58 @@ public class BossModules : BaseCommandModule
         if (result)
         {
             await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
+    {
+        bool result = false;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            
+            if (string.IsNullOrEmpty(resetCommand) || "all" == resetCommand)
+            {
+                _bossMonster.ResetBossMonster();
+                
+                bool killResult = await database.ResetBossKillCount(ctx);
+                bool totalDamageResult = await database.ResetBossTotalDamage(ctx);
+                bool goldResult = await database.ResetGold(ctx);
+
+                result = killResult && totalDamageResult && goldResult;
+            }
+            else if ("gold" == resetCommand)
+            {
+                result = await database.ResetGold(ctx);
+            }
+            else if ("kill" == resetCommand)
+            {
+                result = await database.ResetBossKillCount(ctx);
+            }
+            else if ("totaldamage" == resetCommand)
+            {
+                result = await database.ResetBossTotalDamage(ctx);
+            }
+            else if ("combatcount" == resetCommand)
+            {
+                result = await database.ResetCombatCount(ctx);
+            }
+            else if ("equipvalue" == resetCommand)
+            {
+                result = await database.ResetEquipValue(ctx);
+            }
+            else if ("boss" == resetCommand)
+            {
+                _bossMonster.ResetBossMonster();
+                result = true;
+            }
+            
+            if (result)
+            {
+                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            }
         }
     }
 }
