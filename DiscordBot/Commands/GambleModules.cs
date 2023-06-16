@@ -279,7 +279,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 3, CooldownBucketType.User, true, true, 3)]
+    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
     public async Task Thanks(CommandContext ctx)
     {
         string name = Utility.GetMemberDisplayName(ctx.Member);
