@@ -603,9 +603,9 @@ namespace DiscordBot.Resource {
         /// <summary>
         ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities..
         /// </summary>
-        internal static string upgradesuccesspercentageList_Description {
+        internal static string upgradesuccesspercentagelist_Description {
             get {
-                return ResourceManager.GetString("upgradesuccesspercentageList_Description", resourceCulture);
+                return ResourceManager.GetString("upgradesuccesspercentagelist_Description", resourceCulture);
             }
         }
         

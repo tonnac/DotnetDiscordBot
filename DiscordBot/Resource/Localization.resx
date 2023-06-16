@@ -291,7 +291,7 @@ This has a lower priority than music added with play.</value>
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>Strengthen the ring. (attack chance + reinforcement value)</value>
 	</data>
-	<data name="upgradesuccesspercentageList_Description" xml:space="preserve">
+	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities.</value>
 	</data>
 </root>

@@ -469,7 +469,13 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
             .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
             .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[4].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true));
+        
+        await ctx.RespondAsync(embedBuilder);
+        
+        DiscordEmbedBuilder embedBuilder2 = new DiscordEmbedBuilder()
+            .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
+            .WithColor(DiscordColor.White)
             .AddField(new DiscordEmbedField("──────────", "[ 5 > 6 ]", false))
             .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
             .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[5].FailPer) + "%", true))
@@ -487,7 +493,7 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[8].FailPer) + "%", true))
             .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
         
-        await ctx.RespondAsync(embedBuilder);
+        await ctx.RespondAsync(embedBuilder2);
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
