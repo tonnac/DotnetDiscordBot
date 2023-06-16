@@ -105,8 +105,6 @@ public class GambleModules : BaseCommandModule
             return;
         }
         
-        string name = Utility.GetMemberDisplayName(ctx.Member);
-        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -140,15 +138,17 @@ public class GambleModules : BaseCommandModule
             thumbnail = "https://mblogthumb-phinf.pstatic.net/MjAxNzExMTJfMjUy/MDAxNTEwNDk0NDcxNzE3.TviKbphDkRt73FbgkUtXn-gpFXuCEfWsfCLYh7hgFNIg.tlUNqn3XMoIm_Mm69k-mo07vCH9YBYY9jfcESIaN9jMg.JPEG.jongwon6544/15ed6b7663649c14e.jpg?type=w2";
             plusminus = "+";
         }
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(thumbnail)
             .WithColor(DiscordColor.Gold)
-            .WithAuthor(ctx.Member.Mention + "...!")
+            .WithAuthor("...!")
             .AddField(new DiscordEmbedField("👋 " + name, "🎲 " + Convert.ToString(userDice), true))
             .AddField(new DiscordEmbedField("VS","GO!", true))
             .AddField(new DiscordEmbedField("👋 🤖", "🎲 " + Convert.ToString(comDice), true))
-            .AddField(new DiscordEmbedField("──────────", "[ " + plusminus + " \uD83D\uDCB0" + Convert.ToString(ante) + " ]", false));
+            .AddField(new DiscordEmbedField("──────────", "[ " + ctx.Member.Mention + plusminus + " \uD83D\uDCB0" + Convert.ToString(ante) + " ]", false));
                 
         await ctx.RespondAsync(embedBuilder);
     }
@@ -187,7 +187,7 @@ public class GambleModules : BaseCommandModule
                     .WithColor(DiscordColor.Gold)
                     .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_fundsGamble.Ante) + " ]", false))
                     .AddField(new DiscordEmbedField("..", "...\uD83C\uDFC6 !", false))
-                    .AddField(new DiscordEmbedField("[ \uD83C\uDF8A" + name + "\uD83C\uDF8A ]", "[ + \uD83D\uDCB0" + Convert.ToString(winMoney) + " ]", false));
+                    .AddField(new DiscordEmbedField("[ + \uD83D\uDCB0" + Convert.ToString(winMoney) + " ]", "[ \uD83C\uDF8A" + ctx.Member.Mention + "\uD83C\uDF8A ]", false));
         
                 await ctx.RespondAsync(embedBuilder);
             }
@@ -208,7 +208,7 @@ public class GambleModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://i.gifer.com/E3xX.gif")
                     .WithColor(DiscordColor.Gold)
-                    .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name + "    \uD83D\uDCB0" + Convert.ToString(_fundsGamble.WinMoney), "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGamble.Ante) + " ]", false))
+                    .AddField(new DiscordEmbedField(Convert.ToString(_fundsGamble.WinMoney), "[ " + ctx.Member.Mention + " - \uD83D\uDCB0"+ Convert.ToString(_fundsGamble.Ante) + " ]", false))
                     .AddField(new DiscordEmbedField("\uD83D\uDE2D", "──────────", false))
                     .AddField(new DiscordEmbedField("\uD83E\uDD47" + shareMoneyUsers[0], Convert.ToString(shareMoneys[0]), true))
                     .AddField(new DiscordEmbedField("\uD83E\uDD48" + shareMoneyUsers[1], Convert.ToString(shareMoneys[1]), true))
@@ -226,12 +226,10 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dn", "기부", "사료")]
     public async Task Donation(CommandContext ctx, [RemainingText] string? donationCommand)
     {
-        string name = Utility.GetMemberDisplayName(ctx.Member);
-        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-
+        
         int donationValue = 0;
         if( !string.IsNullOrEmpty(donationCommand))
         {
@@ -253,7 +251,8 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/3815/3815861.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    - \uD83D\uDCB0" + Convert.ToString(donationValue), "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField(" - \uD83D\uDCB0" + Convert.ToString(donationValue), "\uD83D\uDCB8 " + ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField("──────────", "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }
@@ -261,8 +260,6 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
     public async Task Thanks(CommandContext ctx)
     {
-        string name = Utility.GetMemberDisplayName(ctx.Member);
-        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -283,7 +280,8 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/2913/2913091.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("\uD83D\uDCB8 " + name + "    + \uD83D\uDCB0" + Convert.ToString(tempDonationMoney), "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField(" + \uD83D\uDCB0" + Convert.ToString(tempDonationMoney), ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField("──────────", "[ \uD83C\uDF81 " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }

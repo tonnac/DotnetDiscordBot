@@ -4,36 +4,43 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Database;
+using DiscordBot.Equip;
 
 namespace DiscordBot.Commands;
 
 public class BossModules : BaseCommandModule
 {
-    private readonly SortedSet<ulong> _bossChannels = new();
+    private readonly SortedSet<ulong> _bossChannels;
     
     private readonly BossMonster _bossMonster;
 
+    private readonly EquipCalculator _equipCalculator;
+
     public BossModules()
     {
+        _bossChannels = new SortedSet<ulong>();
+        
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
         _bossMonster = new BossMonster((BossType)bossType);
+
+        _equipCalculator = new EquipCalculator();
     }
     
     //[Command, Aliases("ba")]
     [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!_bossChannels.Contains(ctx.Channel.Id))
-        {
-            var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
-            Task.Run(async () =>
-            {
-                await Task.Delay(4000);
-                await message.DeleteAsync();
-            });
-            return;
-        }
+        // if (!_bossChannels.Contains(ctx.Channel.Id))
+        // {
+        //     var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
+        //     Task.Run(async () =>
+        //     {
+        //         await Task.Delay(4000);
+        //         await message.DeleteAsync();
+        //     });
+        //     return;
+        // }
         
         var rand = new Random();
 
@@ -326,7 +333,81 @@ public class BossModules : BaseCommandModule
             }
         }
     }
-    
+
+    [Command, Aliases("uw", "무기강화")]
+    public async Task UpgradeWeapon(CommandContext ctx, [RemainingText] string? tempCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        
+        int weaponCurrentUpgrade = _equipCalculator.GetWeaponUpgradeInfo(gambleUserDatabase.equipvalue);
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+
+        if (9 <= weaponCurrentUpgrade)
+        {
+            await ctx.RespondAsync(ctx.Member.Mention + " 👍");
+        }
+        else
+        {
+            if (gambleUserDatabase.gold >= _equipCalculator.WeaponUpgradeMoney)
+            {
+                int upgradeResult = _equipCalculator.Upgrade(weaponCurrentUpgrade);
+
+                GoldQuery query = new GoldQuery(_equipCalculator.WeaponUpgradeMoney);
+                await database.UpdateUserGold(ctx, query);
+
+                switch (upgradeResult)
+                {
+                    case -1: // Broken
+                    {
+                        await database.SetEquipValue(ctx, gambleUserDatabase.equipvalue - weaponCurrentUpgrade);
+
+                        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                            .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
+                            .WithColor(DiscordColor.Red)
+                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
+                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️0🗡️ ]", false));
+
+                        await ctx.RespondAsync(embedBuilder);
+                        break;
+                    }
+                    case 0: // Fail
+                    {
+                        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                            .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
+                            .WithColor(DiscordColor.Red)
+                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
+                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ]", false));
+
+                        await ctx.RespondAsync(embedBuilder);
+                        break;
+                    }
+                    case 1: // Success
+                    {
+                        await database.SetEquipValue(ctx, gambleUserDatabase.equipvalue + 1);
+
+                        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                            .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
+                            .WithColor(DiscordColor.Red)
+                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
+                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️" + Convert.ToString(weaponCurrentUpgrade + 1) + "🗡️ ]", false));
+
+                        await ctx.RespondAsync(embedBuilder);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+            }
+        }
+    }
+
     [Command, Aliases("bbbb")]
     public async Task ToggleBossChannel(CommandContext ctx)
     {
