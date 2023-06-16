@@ -10,4 +10,5 @@ public class DatabaseUser
     [JsonProperty] public ulong bosstotaldamage;
     [JsonProperty] public int gold;
     [JsonProperty] public int combatcount;
+    [JsonProperty] public int equipvalue;
 }

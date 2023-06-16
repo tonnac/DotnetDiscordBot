@@ -261,14 +261,14 @@ This has a lower priority than music added with play.</value>
 	<data name="gamblegamelist_Description" xml:space="preserve">
 		<value>Shows the gamble list.</value>
 	</data>
-	<data name="dogamblegame_Description" xml:space="preserve">
-		<value>Gambling. Additional commands can be input (ex. dgg s). Commands can be checked on the Gamble List.</value>
+	<data name="dodicegamble_Description" xml:space="preserve">
+		<value>Do Dice Gambling. You can enter the amount (ex. ddg 1000)</value>
 	</data>
 	<data name="dofundsgamble_Description" xml:space="preserve">
 		<value>Gamble Funds. If you win, you take all the money collected.</value>
 	</data>
 	<data name="donation_Description" xml:space="preserve">
-		<value>Donate to the donation box. You can enter the amount (ex. !dn 1000)</value>
+		<value>Donate to the donation box. You can enter the amount (ex. dn 1000)</value>
 	</data>
 	<data name="thanks_Description" xml:space="preserve">
 		<value>Take your donation from the donation box.</value>
