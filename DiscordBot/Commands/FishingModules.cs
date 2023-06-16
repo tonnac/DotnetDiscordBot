@@ -105,7 +105,7 @@ public class FishingModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
-    [Command, Aliases("tfc")]
+    [Command, Aliases("ffff")]
     public async Task ToggleFishingChannel(CommandContext ctx)
     {
         bool result = false;
