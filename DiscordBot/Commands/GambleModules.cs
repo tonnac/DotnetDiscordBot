@@ -144,8 +144,9 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(thumbnail)
             .WithColor(DiscordColor.Gold)
-            .WithAuthor("...!")
+            .WithAuthor(ctx.Member.Mention + "...!")
             .AddField(new DiscordEmbedField("👋 " + name, "🎲 " + Convert.ToString(userDice), true))
+            .AddField(new DiscordEmbedField("VS","GO!", true))
             .AddField(new DiscordEmbedField("👋 🤖", "🎲 " + Convert.ToString(comDice), true))
             .AddField(new DiscordEmbedField("──────────", "[ " + plusminus + " \uD83D\uDCB0" + Convert.ToString(ante) + " ]", false));
                 
@@ -257,7 +258,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
+    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
     public async Task Thanks(CommandContext ctx)
     {
         string name = Utility.GetMemberDisplayName(ctx.Member);
