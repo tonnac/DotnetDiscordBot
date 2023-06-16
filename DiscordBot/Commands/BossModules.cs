@@ -355,20 +355,22 @@ public class BossModules : BaseCommandModule
             {
                 int upgradeResult = _equipCalculator.Upgrade(weaponCurrentUpgrade);
 
-                GoldQuery query = new GoldQuery(_equipCalculator.WeaponUpgradeMoney);
+                GoldQuery query = new GoldQuery(-_equipCalculator.WeaponUpgradeMoney);
                 await database.UpdateUserGold(ctx, query);
 
                 switch (upgradeResult)
                 {
                     case -1: // Broken
                     {
-                        await database.SetEquipValue(ctx, gambleUserDatabase.equipvalue - weaponCurrentUpgrade);
+                        await database.AddEquipValue(ctx, -weaponCurrentUpgrade);
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
                             .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
-                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️0🗡️ ]", false));
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "- 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney), false))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField("▶", "▶", true))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️0 ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -377,22 +379,26 @@ public class BossModules : BaseCommandModule
                     {
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
-                            .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
-                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ]", false));
+                            .WithColor(DiscordColor.DarkRed)
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "- 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney), false))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField("▶", "▶", true))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
                     }
                     case 1: // Success
                     {
-                        await database.SetEquipValue(ctx, gambleUserDatabase.equipvalue + 1);
+                        await database.AddEquipValue(ctx, 1);
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
-                            .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name + "    - 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney),
-                                "[ +️" + Convert.ToString(weaponCurrentUpgrade) + "🗡️ ] -> [ +️" + Convert.ToString(weaponCurrentUpgrade + 1) + "🗡️ ]", false));
+                            .WithColor(DiscordColor.Green)
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "- 💰" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney), false))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField("▶", "▶", true))
+                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
