@@ -41,4 +41,10 @@ public partial class DiscordBotDatabase
         return await ExecuteNonQueryASync($"update USER set equipvalue = 0 where guildid='{ctx.Guild.Id}'");
     }
     
+    public async Task<bool> SetEquipValue(CommandContext ctx, int setEquipValue)
+    {
+        return await ExecuteNonQueryASync(
+            $"update USER set equipvalue = setEquipValue where id='{GetSHA256(ctx.Guild, ctx.User)}'");
+    }
+    
 }
