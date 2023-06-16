@@ -33,7 +33,7 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(myUserDatabase.gold), true))
             .AddField(new DiscordEmbedField("[  🗡️  ]", "+" + Convert.ToString(weaponUpgrade), true))
             .AddField(new DiscordEmbedField("[  💍  ]", "+" + Convert.ToString(ringUpgrade), true))
-            .AddField(new DiscordEmbedField("\uD83D\uDD0D", "└────" + name, false))
+            .AddField(new DiscordEmbedField("\uD83D\uDD0D", "└────" + ctx.Member.Mention, false))
             .AddField(new DiscordEmbedField("[  \u2620\uFE0F  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
             .AddField(new DiscordEmbedField("[  \u2694\uFE0F  ]", Convert.ToString(myUserDatabase.combatcount), true))
             .AddField(new DiscordEmbedField("[  \uD83D\uDCA5  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
