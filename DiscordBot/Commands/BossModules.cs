@@ -310,6 +310,10 @@ public class BossModules : BaseCommandModule
             {
                 result = await database.ResetCombatCount(ctx);
             }
+            else if ("equipvalue" == resetCommand)
+            {
+                result = await database.ResetEquipValue(ctx);
+            }
             else if ("boss" == resetCommand)
             {
                 _bossMonster.ResetBossMonster();

@@ -186,6 +186,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do Dice Gambling. You can enter the amount (ex. ddg 1000).
+        /// </summary>
+        internal static string dodicegamble_Description {
+            get {
+                return ResourceManager.GetString("dodicegamble_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gamble Funds. If you win, you take all the money collected..
         /// </summary>
         internal static string dofundsgamble_Description {
@@ -195,16 +204,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gambling. Additional commands can be input (ex. dgg s). Commands can be checked on the Gamble List..
-        /// </summary>
-        internal static string dogamblegame_Description {
-            get {
-                return ResourceManager.GetString("dogamblegame_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Donate to the donation box. You can enter the amount (ex. !dn 1000).
+        ///   Looks up a localized string similar to Donate to the donation box. You can enter the amount (ex. dn 1000).
         /// </summary>
         internal static string donation_Description {
             get {

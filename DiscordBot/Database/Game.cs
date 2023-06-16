@@ -36,4 +36,9 @@ public partial class DiscordBotDatabase
         return await ExecuteNonQueryASync($"update USER set combatcount = 0 where guildid='{ctx.Guild.Id}'");
     }
     
+    public async Task<bool> ResetEquipValue(CommandContext ctx)
+    {
+        return await ExecuteNonQueryASync($"update USER set equipvalue = 0 where guildid='{ctx.Guild.Id}'");
+    }
+    
 }
