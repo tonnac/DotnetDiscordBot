@@ -574,6 +574,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Strengthen the ring. (attack chance + reinforcement value).
+        /// </summary>
+        internal static string upgradering_Description {
+            get {
+                return ResourceManager.GetString("upgradering_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strengthen your weapon. (Damage + Enhanced Value).
+        /// </summary>
+        internal static string upgradeweapon_Description {
+            get {
+                return ResourceManager.GetString("upgradeweapon_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Up Next.
         /// </summary>
         internal static string UpNext {

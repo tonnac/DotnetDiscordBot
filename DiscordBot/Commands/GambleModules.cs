@@ -207,8 +207,8 @@ public class GambleModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://i.gifer.com/E3xX.gif")
                     .WithColor(DiscordColor.Gold)
-                    .AddField(new DiscordEmbedField("\uD83D\uDCB0" + Convert.ToString(_fundsGamble.WinMoney), "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGamble.Ante) + " ]", false))
-                    .AddField(new DiscordEmbedField(name + "\uD83D\uDE2D", "──────────", false))
+                    .AddField(new DiscordEmbedField("\uD83D\uDCB0" + Convert.ToString(_fundsGamble.WinMoney), "──────────", false))
+                    .AddField(new DiscordEmbedField(name + " \uD83D\uDE2D", "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGamble.Ante) + " ]", false))
                     .AddField(new DiscordEmbedField("\uD83E\uDD47" + shareMoneyUsers[0], Convert.ToString(shareMoneys[0]), true))
                     .AddField(new DiscordEmbedField("\uD83E\uDD48" + shareMoneyUsers[1], Convert.ToString(shareMoneys[1]), true))
                     .AddField(new DiscordEmbedField("\uD83E\uDD49" + shareMoneyUsers[2], Convert.ToString(shareMoneys[2]), true));
