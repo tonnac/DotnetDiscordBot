@@ -184,9 +184,9 @@ public class GambleModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://mblogthumb-phinf.pstatic.net/MjAxNzExMTJfMjUy/MDAxNTEwNDk0NDcxNzE3.TviKbphDkRt73FbgkUtXn-gpFXuCEfWsfCLYh7hgFNIg.tlUNqn3XMoIm_Mm69k-mo07vCH9YBYY9jfcESIaN9jMg.JPEG.jongwon6544/15ed6b7663649c14e.jpg?type=w2")
                     .WithColor(DiscordColor.Gold)
-                    .AddField(new DiscordEmbedField("\uD83D\uDDC3\uFE0F " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_fundsGamble.Ante) + " ]", false))
-                    .AddField(new DiscordEmbedField("..", "...\uD83C\uDFC6 !", false))
-                    .AddField(new DiscordEmbedField("[ + \uD83D\uDCB0" + Convert.ToString(winMoney) + " ]", "[ \uD83C\uDF8A" + name + "\uD83C\uDF8A ]", false));
+                    .AddField(new DiscordEmbedField(name + " \uD83D\uDE2D", "[ - \uD83D\uDCB0" + Convert.ToString(_fundsGamble.Ante) + " ]", false))
+                    .AddField(new DiscordEmbedField("..", "....\uD83C\uDFC6 !", false))
+                    .AddField(new DiscordEmbedField("[ \uD83C\uDF8A " + name + " \uD83C\uDF8A ]", "[ + \uD83D\uDCB0" + Convert.ToString(winMoney) + " ]", false));
         
                 await ctx.RespondAsync(embedBuilder);
             }
@@ -207,7 +207,7 @@ public class GambleModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://i.gifer.com/E3xX.gif")
                     .WithColor(DiscordColor.Gold)
-                    .AddField(new DiscordEmbedField("\uD83D\uDCB0" + Convert.ToString(_fundsGamble.WinMoney), "──────────", false))
+                    .AddField(new DiscordEmbedField("\uD83C\uDFC6 -> \uD83D\uDCB0" + Convert.ToString(_fundsGamble.WinMoney), "──────────", false))
                     .AddField(new DiscordEmbedField(name + " \uD83D\uDE2D", "[ - \uD83D\uDCB0"+ Convert.ToString(_fundsGamble.Ante) + " ]", false))
                     .AddField(new DiscordEmbedField("\uD83E\uDD47" + shareMoneyUsers[0], Convert.ToString(shareMoneys[0]), true))
                     .AddField(new DiscordEmbedField("\uD83E\uDD48" + shareMoneyUsers[1], Convert.ToString(shareMoneys[1]), true))
