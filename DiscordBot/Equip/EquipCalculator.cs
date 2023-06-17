@@ -6,30 +6,35 @@
 
 public class EquipCalculator
 {
-    public readonly int WeaponUpgradeMoney = 5000;
-    public readonly int RingUpgradeMoney = 10000;
+    public static int WeaponUpgradeMoney = 5000;
+    public static int RingUpgradeMoney = 10000;
 
-    public readonly List<UpgradePercentage> UpgradePercentages;
-
-    private readonly int CutNum = 10;
-
-    public EquipCalculator()
+    private static int CutNum = 10;
+    
+    public static List<UpgradePercentage> UpgradePercentages = new List<UpgradePercentage>()
     {
-        UpgradePercentages = new List<UpgradePercentage>
-        {
-            new UpgradePercentage(100, 0),
-            new UpgradePercentage(90, 5),
-            new UpgradePercentage(75, 5),
-            new UpgradePercentage(50, 10),
-            new UpgradePercentage(35, 10),
-            new UpgradePercentage(25, 15),
-            new UpgradePercentage(15, 15),
-            new UpgradePercentage(10, 20),
-            new UpgradePercentage(5, 25)
-        };
+        new UpgradePercentage(100, 0),
+        new UpgradePercentage(90, 5),
+        new UpgradePercentage(75, 5),
+        new UpgradePercentage(50, 10),
+        new UpgradePercentage(35, 10),
+        new UpgradePercentage(25, 15),
+        new UpgradePercentage(15, 15),
+        new UpgradePercentage(10, 20),
+        new UpgradePercentage(5, 25)
+    };
+
+
+    public static void SetWeaponUpgradeMoney(int money)
+    {
+        WeaponUpgradeMoney = money;
+    }
+    public static void SetRingUpgradeMoney(int money)
+    {
+        RingUpgradeMoney = money;
     }
 
-    public int Upgrade(int currentUpgradeNum)
+    public static int Upgrade(int currentUpgradeNum)
     {
         var rand = new Random();
         int upgradePer = rand.Next(1, 101);
@@ -51,12 +56,12 @@ public class EquipCalculator
         }
     }
     
-    public int GetWeaponUpgradeInfo(int equipValue)
+    public static int GetWeaponUpgradeInfo(int equipValue)
     {
         return equipValue % CutNum;
     }
     
-    public int GetRingUpgradeInfo(int equipValue)
+    public static int GetRingUpgradeInfo(int equipValue)
     {
         if (0 >= equipValue)
         {

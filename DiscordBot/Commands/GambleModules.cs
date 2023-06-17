@@ -3,6 +3,7 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
+using DiscordBot.Channels;
 using DiscordBot.Database;
 using DiscordBot.Equip;
 
@@ -28,14 +29,10 @@ using DiscordBot.Equip;
 namespace DiscordBot.Commands;
 
 public class GambleModules : BaseCommandModule
-{
-    private readonly SortedSet<ulong> _gambleChannels = new();
-    
+{   
     // private readonly GambleGame _gambleGame_SlotMachine;
     // private readonly GambleGame _gambleGame_Roulette;
     // private readonly GambleGame _gambleGame_Gacha;
-
-    private readonly EquipCalculator _equipCalculator;
     
     private readonly FundsGamble _fundsGamble;
     private readonly DiceGamble _diceGamble;
@@ -60,8 +57,6 @@ public class GambleModules : BaseCommandModule
         // _gambleGame_Gacha.GameAnte = 10000;
         // _gambleGame_Gacha.SetPercentage(1, 3, 5);
         // _gambleGame_Gacha.SetReward(100000, 10, 1);
-
-        _equipCalculator = new EquipCalculator();
         
         _fundsGamble = new FundsGamble(1, 500, 200, 12);
 
@@ -99,7 +94,7 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 3, CooldownBucketType.UserAndChannel)]
     public async Task DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
-        if (!_gambleChannels.Contains(ctx.Channel.Id))
+        if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
         {
             var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -113,7 +108,7 @@ public class GambleModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int ringUpgrade = _equipCalculator.GetRingUpgradeInfo(gambleUserDatabase.equipvalue);
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(gambleUserDatabase.equipvalue);
 
         int ante = 0;
         int result = 0;
@@ -162,7 +157,7 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.UserAndChannel, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
-        if (!_gambleChannels.Contains(ctx.Channel.Id))
+        if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
         {
             var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -350,14 +345,14 @@ public class GambleModules : BaseCommandModule
         string emoji = "❌";
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            if (_gambleChannels.Contains(ctx.Channel.Id))
+            if (ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
             {
-                _gambleChannels.Remove(ctx.Channel.Id);
+                ContentsChannels.GambleChannels.Remove(ctx.Channel.Id);
                 emoji = "❌";
             }
             else
             {
-                _gambleChannels.Add(ctx.Channel.Id);
+                ContentsChannels.GambleChannels.Add(ctx.Channel.Id);
                 emoji = "✅";
             }
 
