@@ -507,6 +507,7 @@ public class BossModules : BaseCommandModule
             }
 
             EquipCalculator.SetWeaponUpgradeMoney(setMoney);
+            result = true;
             emoji = "✅";
         }
         
@@ -530,6 +531,7 @@ public class BossModules : BaseCommandModule
             }
 
             EquipCalculator.SetRingUpgradeMoney(setMoney);
+            result = true;
             emoji = "✅";
         }
         
