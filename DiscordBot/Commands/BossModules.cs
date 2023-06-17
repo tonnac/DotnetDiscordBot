@@ -31,16 +31,16 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        // if (!_bossChannels.Contains(ctx.Channel.Id))
-        // {
-        //     var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
-        //     Task.Run(async () =>
-        //     {
-        //         await Task.Delay(4000);
-        //         await message.DeleteAsync();
-        //     });
-        //     return;
-        // }
+        if (!_bossChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
         
 
         // start,, calc final damage
