@@ -69,42 +69,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add money for test. (Permission required).
-        /// </summary>
-        internal static string addtestmoney_Description {
-            get {
-                return ResourceManager.GetString("addtestmoney_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sends calls to registered members..
-        /// </summary>
-        internal static string aram_Description {
-            get {
-                return ResourceManager.GetString("aram_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deleted from the member..
-        /// </summary>
-        internal static string aramdelete_Description {
-            get {
-                return ResourceManager.GetString("aramdelete_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Register as a member..
-        /// </summary>
-        internal static string aramregister_Description {
-            get {
-                return ResourceManager.GetString("aramregister_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100).
         /// </summary>
         internal static string bossattack_Description {
@@ -150,15 +114,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset the data. gold, kill, totaldamage, boss, equipvalue(Permission required).
-        /// </summary>
-        internal static string datareset_Description {
-            get {
-                return ResourceManager.GetString("datareset_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} rolls {1} ({2}).
         /// </summary>
         internal static string Dice {
@@ -191,6 +146,33 @@ namespace DiscordBot.Resource {
         internal static string disconnected {
             get {
                 return ResourceManager.GetString("disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sends calls to registered members..
+        /// </summary>
+        internal static string doaram_Description {
+            get {
+                return ResourceManager.GetString("doaram_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted from the member..
+        /// </summary>
+        internal static string doaramdelete_Description {
+            get {
+                return ResourceManager.GetString("doaramdelete_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register as a member..
+        /// </summary>
+        internal static string doaramregister_Description {
+            get {
+                return ResourceManager.GetString("doaramregister_Description", resourceCulture);
             }
         }
         
@@ -326,15 +308,6 @@ namespace DiscordBot.Resource {
         internal static string help_Description {
             get {
                 return ResourceManager.GetString("help_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Prohibit chat on the channel where the command was run..
-        /// </summary>
-        internal static string imageonly_Description {
-            get {
-                return ResourceManager.GetString("imageonly_Description", resourceCulture);
             }
         }
         
@@ -543,15 +516,6 @@ namespace DiscordBot.Resource {
         internal static string seek_Usage {
             get {
                 return ResourceManager.GetString("seek_Usage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set up donations in the donation box. (Permission required).
-        /// </summary>
-        internal static string setfundsgamblemoney_Description {
-            get {
-                return ResourceManager.GetString("setfundsgamblemoney_Description", resourceCulture);
             }
         }
         

@@ -94,7 +94,7 @@ namespace DiscordBot.Commands
             
             foreach (var copyCommand in copyCommands)
             {
-                var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+                var commandsString = string.Join("", copyCommand.Select(x => x.Aliases.Count == 0 ? "" : $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}:\n- {FindLocal(x.Name + "_Description")}\n"));
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithAuthor(copyCommand.Key)
                     .WithColor(DiscordColor.Azure)
@@ -238,9 +238,9 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync(Localization.wrongDice);
         }
 
-        [Command]
+        [Command, Aliases("Exit")]
         [RequireBotPermissions(Permissions.KickMembers)]
-        public async Task Exit(CommandContext ctx)
+        public async Task DoExit(CommandContext ctx)
         {
             if (ctx.Member.VoiceState == null)
             {

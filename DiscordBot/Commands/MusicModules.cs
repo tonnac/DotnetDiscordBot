@@ -42,7 +42,7 @@ namespace DiscordBot.Commands
             await player.Play(ctx, search, true);
         }
 
-        [Command, Aliases("l", "내보내기")]
+        [Command, Aliases("l", "음악중지")]
         public async Task Leave(CommandContext ctx)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
@@ -102,7 +102,7 @@ namespace DiscordBot.Commands
             await player.Resume(ctx);
         }
 
-        [Command, Aliases("넘기기")]
+        [Command, Aliases("시간넘기기")]
         public async Task Seek(CommandContext ctx, [RemainingText] string positionString)
         {
             MusicPlayer? player = await GetMusicPlayer(ctx);
