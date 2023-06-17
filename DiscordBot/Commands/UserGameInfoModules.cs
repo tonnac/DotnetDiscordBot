@@ -7,14 +7,7 @@ using DiscordBot.Equip;
 namespace DiscordBot.Commands;
 
 public class UserGameInfoModules : BaseCommandModule
-{
-    private readonly EquipCalculator _equipCalculator;
-
-    public UserGameInfoModules()
-    {
-        _equipCalculator = new EquipCalculator();
-    }
-    
+{   
     [Command, Aliases("mi", "내정보"), Cooldown(1, 5, CooldownBucketType.User)]
     public async Task MyInfo(CommandContext ctx)
     {
@@ -24,8 +17,8 @@ public class UserGameInfoModules : BaseCommandModule
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
-        int weaponUpgrade = _equipCalculator.GetWeaponUpgradeInfo(myUserDatabase.equipvalue);
-        int ringUpgrade = _equipCalculator.GetRingUpgradeInfo(myUserDatabase.equipvalue);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(myUserDatabase.equipvalue);
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(myUserDatabase.equipvalue);
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")

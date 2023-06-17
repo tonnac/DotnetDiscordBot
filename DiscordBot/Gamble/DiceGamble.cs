@@ -10,9 +10,7 @@ public class DiceGamble
         userNum = rand.Next(1, 101);
         comNum = rand.Next(1, 101);
 
-        userNum += userRingUpgrade;
-
-        if (userNum > comNum)
+        if (userNum + userRingUpgrade > comNum)
         {
             resultMoney = ante * 2;
         }

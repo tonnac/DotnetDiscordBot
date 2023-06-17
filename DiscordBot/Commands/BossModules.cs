@@ -3,35 +3,28 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
+using DiscordBot.Channels;
 using DiscordBot.Database;
 using DiscordBot.Equip;
 
 namespace DiscordBot.Commands;
 
 public class BossModules : BaseCommandModule
-{
-    private readonly SortedSet<ulong> _bossChannels;
-    
+{   
     private readonly BossMonster _bossMonster;
-
-    private readonly EquipCalculator _equipCalculator;
 
     public BossModules()
     {
-        _bossChannels = new SortedSet<ulong>();
-        
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
         _bossMonster = new BossMonster((BossType)bossType);
-
-        _equipCalculator = new EquipCalculator();
     }
     
     //[Command, Aliases("ba")]
     [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!_bossChannels.Contains(ctx.Channel.Id))
+        if (!ContentsChannels.BossChannels.Contains(ctx.Channel.Id))
         {
             var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -47,8 +40,8 @@ public class BossModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = _equipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
-        int ringUpgrade = _equipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
         
         var rand = new Random();
         
@@ -61,6 +54,7 @@ public class BossModules : BaseCommandModule
         string CritAddText = "";
         string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
         string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
+        
 
         if (missPer >= AttackChance + ringUpgrade) // miss
         {
@@ -71,10 +65,10 @@ public class BossModules : BaseCommandModule
         else
         {
             // attack
-            FinalDamage += weaponUpgrade;
             
             if (missPer + attackPer < AttackChance + ringUpgrade) // critical
             {
+                weaponUpgrade *= 2;
                 FinalDamage = FinalDamage * 2 + 100;
                 CritAddText = " !";
                 DamageTypeEmojiCode = "\uD83D\uDD25 ";
@@ -91,7 +85,9 @@ public class BossModules : BaseCommandModule
         }
         // end,, calc final damage
         
-        bool bIsOverKill = FinalDamage >= _bossMonster.CurrentHp;
+        string weaponUpgradePlusText = 0 < weaponUpgrade ? " +" + Convert.ToString(weaponUpgrade) + "🗡️": "";
+        
+        bool bIsOverKill = (FinalDamage + weaponUpgrade) >= _bossMonster.CurrentHp;
 
         string name = Utility.GetMemberDisplayName(ctx.Member);
 
@@ -99,13 +95,13 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + name)
-            .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText + "    +\uD83D\uDCB0",
-                _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - FinalDamage) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
+            .WithAuthor("\u2694\uFE0F " + name + "    +\uD83D\uDCB0")
+            .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText + weaponUpgradePlusText,
+                _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - (FinalDamage + weaponUpgrade)) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
-        int validDamage = bIsOverKill ? _bossMonster.CurrentHp : FinalDamage;
+        int validDamage = bIsOverKill ? _bossMonster.CurrentHp : (FinalDamage + weaponUpgrade);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -113,7 +109,7 @@ public class BossModules : BaseCommandModule
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<string, int> bestDealerInfo;
         
-        if( _bossMonster.IsKilledByDamage(name, FinalDamage, out bestDealerInfo) )
+        if( _bossMonster.IsKilledByDamage(name, (FinalDamage + weaponUpgrade), out bestDealerInfo) )
         {
             DiscordEmbedBuilder killEmbedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
@@ -127,12 +123,7 @@ public class BossModules : BaseCommandModule
             BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold + validDamage, 1);
             await database.UpdateBossRaid(ctx, query);
         
-            var message = await ctx.Channel.SendMessageAsync(killEmbedBuilder);
-
-            // if( message != null )
-            // {
-            //     await message.PinAsync();
-            // }
+            await ctx.Channel.SendMessageAsync(killEmbedBuilder);
         }
         else
         {
@@ -241,9 +232,9 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD49" + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
             .AddField(new DiscordEmbedField("──────────", "[  🗡️ + 💍  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + equipRankUser[0], "+" + Convert.ToString(_equipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(_equipCalculator.GetRingUpgradeInfo(equipRankCount[0])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + equipRankUser[1], "+" + Convert.ToString(_equipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(_equipCalculator.GetRingUpgradeInfo(equipRankCount[1])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + equipRankUser[2], "+" + Convert.ToString(_equipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(_equipCalculator.GetRingUpgradeInfo(equipRankCount[2])), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD47" + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD48" + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD49" + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])), true))
             .AddField(new DiscordEmbedField("──────────", "[  \u2620\uFE0F  ]", false))
             .AddField(new DiscordEmbedField("\uD83E\uDD47" + killRankUser[0], Convert.ToString(killRankCount[0]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + killRankUser[1], Convert.ToString(killRankCount[1]), true))
@@ -291,7 +282,7 @@ public class BossModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         
-        int weaponCurrentUpgrade = _equipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
+        int weaponCurrentUpgrade = EquipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
 
@@ -301,11 +292,11 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (userDatabase.gold >= _equipCalculator.WeaponUpgradeMoney)
+            if (userDatabase.gold >= EquipCalculator.WeaponUpgradeMoney)
             {
-                int upgradeResult = _equipCalculator.Upgrade(weaponCurrentUpgrade);
+                int upgradeResult = EquipCalculator.Upgrade(weaponCurrentUpgrade);
 
-                GoldQuery query = new GoldQuery(-_equipCalculator.WeaponUpgradeMoney);
+                GoldQuery query = new GoldQuery(-EquipCalculator.WeaponUpgradeMoney);
                 await database.UpdateUserGold(ctx, query);
 
                 switch (upgradeResult)
@@ -317,7 +308,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
                             .WithColor(DiscordColor.DarkRed)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️0 ]", true));
@@ -330,7 +321,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true));
@@ -345,7 +336,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Green)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
@@ -371,7 +362,7 @@ public class BossModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         
-        int ringCurrentUpgrade = _equipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
+        int ringCurrentUpgrade = EquipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
 
@@ -381,11 +372,11 @@ public class BossModules : BaseCommandModule
         }
         else
         {
-            if (userDatabase.gold >= _equipCalculator.RingUpgradeMoney)
+            if (userDatabase.gold >= EquipCalculator.RingUpgradeMoney)
             {
-                int upgradeResult = _equipCalculator.Upgrade(ringCurrentUpgrade);
+                int upgradeResult = EquipCalculator.Upgrade(ringCurrentUpgrade);
 
-                GoldQuery query = new GoldQuery(-_equipCalculator.RingUpgradeMoney);
+                GoldQuery query = new GoldQuery(-EquipCalculator.RingUpgradeMoney);
                 await database.UpdateUserGold(ctx, query);
 
                 switch (upgradeResult)
@@ -397,7 +388,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
                             .WithColor(DiscordColor.DarkRed)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️0 ]", true));
@@ -410,7 +401,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true));
@@ -425,7 +416,7 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Green)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
@@ -450,56 +441,102 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
             .WithColor(DiscordColor.White)
-            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", true))
-            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
             .AddField(new DiscordEmbedField("──────────", "[ 0 > 1 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 1 > 2 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 2 > 3 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 3 > 4 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].BrokenPer) + "%", true));
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].BrokenPer) + "%", true));
         
         await ctx.RespondAsync(embedBuilder);
         
         DiscordEmbedBuilder embedBuilder2 = new DiscordEmbedBuilder()
             .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
             .WithColor(DiscordColor.White)
-            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", true))
-            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
             .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 5 > 6 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 6 > 7 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 7 > 8 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 8 > 9 ]", false))
-            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
         
         await ctx.RespondAsync(embedBuilder2);
         
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
+    }
+
+    [Command]
+    public async Task SetWeaponUpgradeMoney(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int setMoney = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out setMoney);
+            }
+
+            EquipCalculator.SetWeaponUpgradeMoney(setMoney);
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetRingUpgradeMoney(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int setMoney = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out setMoney);
+            }
+
+            EquipCalculator.SetRingUpgradeMoney(setMoney);
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
     }
 
     [Command] // ToggleBossChannel
@@ -509,14 +546,14 @@ public class BossModules : BaseCommandModule
         string emoji = "❌";
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            if (_bossChannels.Contains(ctx.Channel.Id))
+            if (ContentsChannels.BossChannels.Contains(ctx.Channel.Id))
             {
-                _bossChannels.Remove(ctx.Channel.Id);
+                ContentsChannels.BossChannels.Remove(ctx.Channel.Id);
                 emoji = "❌";
             }
             else
             {
-                _bossChannels.Add(ctx.Channel.Id);
+                ContentsChannels.BossChannels.Add(ctx.Channel.Id);
                 emoji = "✅";
             }
 

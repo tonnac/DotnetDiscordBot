@@ -3,14 +3,13 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
+using DiscordBot.Channels;
 using DiscordBot.Database;
 
 namespace DiscordBot.Commands;
 
 public class FishingModules : BaseCommandModule
-{
-    private readonly SortedSet<ulong> _fishingChannels = new();
-    
+{   
     public string fishEmoji_none = "\uD83D\uDC5F";
     public string fishEmoji_common = "\uD83D\uDC1F";
     public string fishEmoji_rare = "\uD83D\uDC21";
@@ -33,7 +32,7 @@ public class FishingModules : BaseCommandModule
     [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!_fishingChannels.Contains(ctx.Channel.Id))
+        if (!ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
         {
             var message = await ctx.RespondAsync("낚시가 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -112,14 +111,14 @@ public class FishingModules : BaseCommandModule
         string emoji = "❌";
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            if (_fishingChannels.Contains(ctx.Channel.Id))
+            if (ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
             {
-                _fishingChannels.Remove(ctx.Channel.Id);
+                ContentsChannels.FishingChannels.Remove(ctx.Channel.Id);
                 emoji = "❌";
             }
             else
             {
-                _fishingChannels.Add(ctx.Channel.Id);
+                ContentsChannels.FishingChannels.Add(ctx.Channel.Id);
                 emoji = "✅";
             }
 
