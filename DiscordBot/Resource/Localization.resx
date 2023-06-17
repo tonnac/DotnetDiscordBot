@@ -280,6 +280,6 @@ This has a lower priority than music added with play.</value>
 		<value>Strengthen the ring. (attack chance, dice gamble + reinforcement value)</value>
 	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
-		<value>Shows a list of upgrade equip probabilities.</value>
+		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
 </root>

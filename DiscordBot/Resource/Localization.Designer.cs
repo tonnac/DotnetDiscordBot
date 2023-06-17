@@ -565,7 +565,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities..
+        ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0).
         /// </summary>
         internal static string upgradesuccesspercentagelist_Description {
             get {
