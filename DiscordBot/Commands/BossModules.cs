@@ -31,16 +31,16 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        // if (!_bossChannels.Contains(ctx.Channel.Id))
-        // {
-        //     var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
-        //     Task.Run(async () =>
-        //     {
-        //         await Task.Delay(4000);
-        //         await message.DeleteAsync();
-        //     });
-        //     return;
-        // }
+        if (!_bossChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
         
 
         // start,, calc final damage
@@ -450,48 +450,52 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
             .WithColor(DiscordColor.White)
+            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", true))
             .AddField(new DiscordEmbedField("──────────", "[ 0 > 1 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[0].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 1 > 2 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[1].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 2 > 3 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[2].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 3 > 4 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[3].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[3].BrokenPer) + "%", true))
-            .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[4].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true));
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[3].BrokenPer) + "%", true));
         
         await ctx.RespondAsync(embedBuilder);
         
         DiscordEmbedBuilder embedBuilder2 = new DiscordEmbedBuilder()
             .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
             .WithColor(DiscordColor.White)
+            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.WeaponUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(_equipCalculator.RingUpgradeMoney) + " ]", true))
+            .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 5 > 6 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[5].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 6 > 7 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[6].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 7 > 8 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[7].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
             .AddField(new DiscordEmbedField("──────────", "[ 8 > 9 ]", false))
-            .AddField(new DiscordEmbedField("[🟢]", Convert.ToString(_equipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
-            .AddField(new DiscordEmbedField("[🔴]", Convert.ToString(_equipCalculator.UpgradePercentages[8].FailPer) + "%", true))
-            .AddField(new DiscordEmbedField("[💥]", Convert.ToString(_equipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
+            .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].FailPer) + "%", true))
+            .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(_equipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
         
         await ctx.RespondAsync(embedBuilder2);
         
