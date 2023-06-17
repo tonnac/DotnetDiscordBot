@@ -277,7 +277,7 @@
 		<value>무기를 강화합니다. (데미지 +강화수치)</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
-		<value>반지를 강화합니다. (공격찬스 +강화수치)</value>
+		<value>반지를 강화합니다. (공격찬스,주사위도박 +강화수치)</value>
 	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>강화 확률 리스트를 표시합니다.</value>

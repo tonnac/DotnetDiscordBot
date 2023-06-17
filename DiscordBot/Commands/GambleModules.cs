@@ -4,6 +4,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Database;
+using DiscordBot.Equip;
 
 /*
     [1000]
@@ -34,6 +35,8 @@ public class GambleModules : BaseCommandModule
     // private readonly GambleGame _gambleGame_Roulette;
     // private readonly GambleGame _gambleGame_Gacha;
 
+    private readonly EquipCalculator _equipCalculator;
+    
     private readonly FundsGamble _fundsGamble;
     private readonly DiceGamble _diceGamble;
 
@@ -58,6 +61,8 @@ public class GambleModules : BaseCommandModule
         // _gambleGame_Gacha.SetPercentage(1, 3, 5);
         // _gambleGame_Gacha.SetReward(100000, 10, 1);
 
+        _equipCalculator = new EquipCalculator();
+        
         _fundsGamble = new FundsGamble(1, 500, 200, 12);
 
         _diceGamble = new DiceGamble();
@@ -108,6 +113,7 @@ public class GambleModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        int ringUpgrade = _equipCalculator.GetRingUpgradeInfo(gambleUserDatabase.equipvalue);
 
         int ante = 0;
         int result = 0;
@@ -125,7 +131,7 @@ public class GambleModules : BaseCommandModule
             return;
         }
 
-        result = _diceGamble.DoDiceGamble(ante, out userDice, out comDice);
+        result = _diceGamble.DoDiceGamble(ante, out userDice, out comDice, ringUpgrade);
         
         GoldQuery query = new GoldQuery(result - ante);
         await database.UpdateUserGold(ctx, query);
@@ -140,11 +146,12 @@ public class GambleModules : BaseCommandModule
         }
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
+        string ringUpgradePlusText = 0 < ringUpgrade ? " +" + Convert.ToString(ringUpgrade) + "💍": "";
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(thumbnail)
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField("[ " + name + " ]", "🎲 " + Convert.ToString(userDice), true))
+            .AddField(new DiscordEmbedField("[ " + name + " ]", "🎲 " + Convert.ToString(userDice) + ringUpgradePlusText, true))
             .AddField(new DiscordEmbedField("VS","!", true))
             .AddField(new DiscordEmbedField("[ 🤖 ]", "🎲 " + Convert.ToString(comDice), true))
             .AddField(new DiscordEmbedField("──────────────", "[ " + plusminus + " \uD83D\uDCB0" + Convert.ToString(ante) + " ]", false));

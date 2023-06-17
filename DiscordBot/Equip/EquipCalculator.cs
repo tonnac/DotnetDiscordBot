@@ -6,8 +6,8 @@
 
 public class EquipCalculator
 {
-    public readonly int WeaponUpgradeMoney = 10000;
-    public int RingUpgradeMoney = 20000;
+    public readonly int WeaponUpgradeMoney = 5000;
+    public readonly int RingUpgradeMoney = 10000;
 
     public readonly List<UpgradePercentage> UpgradePercentages;
 
