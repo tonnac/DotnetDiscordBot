@@ -28,7 +28,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
+    [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         if (!_bossChannels.Contains(ctx.Channel.Id))
@@ -502,8 +502,8 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
 
-    [Command, Aliases("bbbb")]
-    public async Task ToggleBossChannel(CommandContext ctx)
+    [Command] // ToggleBossChannel
+    public async Task Bbbb(CommandContext ctx)
     {
         bool result = false;
         string emoji = "❌";

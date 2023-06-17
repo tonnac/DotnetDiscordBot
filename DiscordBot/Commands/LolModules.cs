@@ -7,8 +7,8 @@ namespace DiscordBot.Commands;
 
 public class LolModules : BaseCommandModule
 {
-    [Command]
-    public async Task AramRegister(CommandContext ctx)
+    [Command, Aliases("AramRegister")]
+    public async Task DoAramRegister(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -35,8 +35,8 @@ public class LolModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
         
-    [Command]
-    public async Task AramDelete(CommandContext ctx)
+    [Command, Aliases("AramDelete")]
+    public async Task DoAramDelete(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -62,7 +62,7 @@ public class LolModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
         
-    [Command, Cooldown(1, 20, CooldownBucketType.Guild)]
+    [Command, Aliases("DoAram"), Cooldown(1, 20, CooldownBucketType.Guild)]
     public async Task Aram(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();

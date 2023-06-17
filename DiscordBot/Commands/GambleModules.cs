@@ -286,7 +286,7 @@ public class GambleModules : BaseCommandModule
     }
 
     [Command]
-    public async Task SetFundsGambleMoney(CommandContext ctx, [RemainingText] string? fundsCommand)
+    public async Task SetFundsGambleWinMoney(CommandContext ctx, [RemainingText] string? fundsCommand)
     {
         bool result = false;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
@@ -311,7 +311,7 @@ public class GambleModules : BaseCommandModule
     }
     
     [Command]
-    public async Task AddTestMoney(CommandContext ctx, [RemainingText] string? testMoneyCommand)
+    public async Task AddMoneyAdmin(CommandContext ctx, [RemainingText] string? testMoneyCommand)
     {
         bool result = false;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
@@ -336,8 +336,8 @@ public class GambleModules : BaseCommandModule
         }
     }
     
-    [Command, Aliases("gggg")]
-    public async Task ToggleGambleChannel(CommandContext ctx)
+    [Command] // ToggleGambleChannel
+    public async Task Gggg(CommandContext ctx)
     {
         bool result = false;
         string emoji = "❌";

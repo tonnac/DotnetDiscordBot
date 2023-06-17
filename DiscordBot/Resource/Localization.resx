@@ -201,19 +201,16 @@
 		<value>Play music.
 This has a lower priority than music added with play.</value>
 	</data>
-	<data name="imageonly_Description" xml:space="preserve">
-		<value>Prohibit chat on the channel where the command was run.</value>
-	</data>
 	<data name="gpt_Description" xml:space="preserve">
 		<value>Send a message to chatgpt.</value>
 	</data>
-	<data name="aram_Description" xml:space="preserve">
+	<data name="doaram_Description" xml:space="preserve">
 		<value>Sends calls to registered members.</value>
 	</data>
-	<data name="aramregister_Description" xml:space="preserve">
+	<data name="doaramregister_Description" xml:space="preserve">
 		<value>Register as a member.</value>
 	</data>
-	<data name="aramdelete_Description" xml:space="preserve">
+	<data name="doaramdelete_Description" xml:space="preserve">
 		<value>Deleted from the member.</value>
 	</data>
 	<data name="Permission" xml:space="preserve">
@@ -255,9 +252,6 @@ This has a lower priority than music added with play.</value>
 	<data name="myinfo_Description" xml:space="preserve">
 		<value>Shows my game information.</value>
 	</data>
-	<data name="datareset_Description" xml:space="preserve">
-		<value>Reset the data. gold, kill, totaldamage, boss, equipvalue(Permission required)</value>
-	</data>
 	<data name="fishing_Description" xml:space="preserve">
 		<value>Do Fishing.</value>
 	</data>
@@ -278,12 +272,6 @@ This has a lower priority than music added with play.</value>
 	</data>
 	<data name="thanks_Description" xml:space="preserve">
 		<value>Take your donation from the donation box.</value>
-	</data>
-	<data name="setfundsgamblemoney_Description" xml:space="preserve">
-		<value>Set up donations in the donation box. (Permission required)</value>
-	</data>
-	<data name="addtestmoney_Description" xml:space="preserve">
-		<value>Add money for test. (Permission required)</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
 		<value>Strengthen your weapon. (Damage + Enhanced Value)</value>

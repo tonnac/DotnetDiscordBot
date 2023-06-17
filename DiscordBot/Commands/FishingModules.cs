@@ -105,8 +105,8 @@ public class FishingModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
-    [Command, Aliases("ffff")]
-    public async Task ToggleFishingChannel(CommandContext ctx)
+    [Command] // ToggleFishingChannel
+    public async Task Ffff(CommandContext ctx)
     {
         bool result = false;
         string emoji = "❌";
