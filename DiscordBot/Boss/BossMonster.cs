@@ -26,11 +26,11 @@ public class BossMonster
     public int CurrentHp { get; set; }
     public int CurrentMaxHp { get; set; }
     public int HitCount { get; set; }
-    private Dictionary<string, int> TotalDamage { get; set; }
+    private Dictionary<ulong, BossUserInfo> TotalDamageDictionary { get; set; }
 
     public BossMonster(BossType type)
     {
-        TotalDamage = new Dictionary<string, int>();
+        TotalDamageDictionary = new Dictionary<ulong, BossUserInfo>();
         SetBossMonsterInfo(type);
     }
 
@@ -40,14 +40,14 @@ public class BossMonster
         CurrentHp = GetBossMaxHp(type);
         CurrentMaxHp = CurrentHp;
         HitCount = 0;
-        TotalDamage.Clear();
+        TotalDamageDictionary.Clear();
     }
 
-    public KeyValuePair<string, int> GetBestDealer()
+    public KeyValuePair<ulong, BossUserInfo> GetBestDealer()
     {
-        Dictionary<string, int> sortDict = TotalDamage.OrderByDescending(item => item.Value).ToDictionary(x => x.Key, x => x.Value);
+        Dictionary<ulong, BossUserInfo> sortDict = TotalDamageDictionary.OrderByDescending(item => item.Value.TotalDamage).ToDictionary(x => x.Key, x => x.Value);
 
-        KeyValuePair<string, int> bestDealer = new KeyValuePair<string, int>();
+        KeyValuePair<ulong, BossUserInfo> bestDealer = new KeyValuePair<ulong, BossUserInfo>();
         foreach (var item in sortDict)
         {
             bestDealer = item;
@@ -57,28 +57,29 @@ public class BossMonster
         return bestDealer;
     }
 
-    public bool IsKilledByDamage(string attacker, int damage, out KeyValuePair<string, int> bestDealerInfo)
+    public bool IsKilledByDamage(BossUserInfo info, out KeyValuePair<ulong, BossUserInfo> bestDealerInfo)
     {
-        if (CurrentHp <= damage)
+        if (CurrentHp <= info.TotalDamage)
         {
-            damage = CurrentHp;
+            info.TotalDamage = CurrentHp;
         }
         
-        if (!TotalDamage.ContainsKey(attacker))
+        if (!TotalDamageDictionary.ContainsKey(info.User.Id))
         {
-            TotalDamage.Add(attacker, damage);
+            TotalDamageDictionary.Add(info.User.Id, info);
         }
         else
         {
-            int totalDamage = TotalDamage[attacker] + damage;
-            TotalDamage.Remove(attacker);
-            TotalDamage.Add(attacker, totalDamage);
+            BossUserInfo bossUserInfo = TotalDamageDictionary[info.User.Id];
+            bossUserInfo.TotalDamage += info.TotalDamage;
+            TotalDamageDictionary.Remove(info.User.Id);
+            TotalDamageDictionary.Add(info.User.Id, bossUserInfo);
         }
         
         bestDealerInfo = GetBestDealer();
         
         HitCount++;
-        CurrentHp -= damage;
+        CurrentHp -= info.TotalDamage;
 
         if (0 >= CurrentHp)
         {

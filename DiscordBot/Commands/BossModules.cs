@@ -39,9 +39,9 @@ public class BossModules : BaseCommandModule
         // start,, calc final damage
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
-        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
+        DatabaseUser attackUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue);
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue);
         
         var rand = new Random();
         
@@ -108,21 +108,29 @@ public class BossModules : BaseCommandModule
         int hitCount = _bossMonster.HitCount;
         int killedBossGetGold = 777 == _bossMonster.CurrentMaxHp ? 7777 : _bossMonster.CurrentMaxHp;
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
-        KeyValuePair<string, int> bestDealerInfo;
+        KeyValuePair<ulong, BossUserInfo> bestDealerInfo;
+
+        BossUserInfo attackerInfo = new BossUserInfo();
+        attackerInfo.Guild = ctx.Guild;
+        attackerInfo.User = ctx.User;
+        attackerInfo.Member = ctx.Member;
+        attackerInfo.TotalDamage = FinalDamage + weaponUpgrade;
         
-        if( _bossMonster.IsKilledByDamage(name, (FinalDamage + weaponUpgrade), out bestDealerInfo) )
+        if( _bossMonster.IsKilledByDamage(attackerInfo, out bestDealerInfo) )
         {
             DiscordEmbedBuilder killEmbedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
                 .WithAuthor("[ \uD83C\uDF8A" + name + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
-                    "\uD83E\uDD47" + bestDealerInfo.Key + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value),
-                    false));
+                    "\uD83E\uDD47" + Utility.GetMemberDisplayName(bestDealerInfo.Value.Member) + " \uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value.TotalDamage) + " +\uD83D\uDCB0", false));
 
             
             BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold + validDamage, 1);
             await database.UpdateBossRaid(ctx, query);
+
+            GoldQuery goldQuery = new GoldQuery(bestDealerInfo.Value.TotalDamage);
+            await database.UpdateUserGold(bestDealerInfo.Value.Guild, bestDealerInfo.Value.User, goldQuery);
         
             await ctx.Channel.SendMessageAsync(killEmbedBuilder);
         }
@@ -138,22 +146,16 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("bi", "보스정보"), Cooldown(1, 3, CooldownBucketType.User)]
     public async Task BossInfo(CommandContext ctx)
     {
-        KeyValuePair<string, int> BestDealerInfo = _bossMonster.GetBestDealer();
-        string BestDealer = BestDealerInfo.Key;
-        int BestDealerTotalDamage = BestDealerInfo.Value;
-        
-        if (string.IsNullOrEmpty(BestDealerInfo.Key))
-        {
-            BestDealer = "X";
-            BestDealerTotalDamage = 0;
-        }
+        KeyValuePair<ulong, BossUserInfo> bestDealerInfo = _bossMonster.GetBestDealer();
+        string bestDealer = 0 == bestDealerInfo.Key ? "X" : Utility.GetMemberDisplayName(bestDealerInfo.Value.Member);
+        int bestDealerTotalDamage = 0 == bestDealerInfo.Key ? 0 : bestDealerInfo.Value.TotalDamage;
         
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://upload2.inven.co.kr/upload/2018/11/09/bbs/i15705696321.jpg?MW=800")
             .WithColor(DiscordColor.Orange)
             //.WithAuthor(_bossMonster.BossEmojiCode)
             .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + BestDealer + "   " + "\uD83D\uDCA5" + Convert.ToString(BestDealerTotalDamage),
+            .AddField(new DiscordEmbedField("\uD83E\uDD47" + bestDealer + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerTotalDamage),
                 "\u2694\uFE0F " + _bossMonster.HitCount, false));
         
         await ctx.RespondAsync(embedBuilder);

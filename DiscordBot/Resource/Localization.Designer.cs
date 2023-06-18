@@ -69,7 +69,9 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100).
+        ///   Looks up a localized string similar to When attacking, gain gold equal to the damage dealt.
+        ///   When defeated, a certain amount of gold is paid to the last attacker.
+        ///   In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount..
         /// </summary>
         internal static string bossattack_Description {
             get {
@@ -556,7 +558,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen the ring. (attack chance, dice gamble + reinforcement value).
+        ///   Looks up a localized string similar to Strengthen the ring. (attack hit chance, dice gamble + reinforcement value).
         /// </summary>
         internal static string upgradering_Description {
             get {

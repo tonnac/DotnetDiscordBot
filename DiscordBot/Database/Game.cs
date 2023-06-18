@@ -1,4 +1,5 @@
 ﻿using DisCatSharp.CommandsNext;
+using DisCatSharp.Entities;
 using DiscordBot.Boss;
 
 namespace DiscordBot.Database;
@@ -14,6 +15,12 @@ public partial class DiscordBotDatabase
     {
         return await ExecuteNonQueryASync(
             $"update USER set gold = gold+{query.Gold} where id='{GetSHA256(ctx.Guild, ctx.User)}'");
+    }
+    
+    public async Task<bool> UpdateUserGold(DiscordGuild guild, DiscordUser user, GoldQuery query)
+    {
+        return await ExecuteNonQueryASync(
+            $"update USER set gold = gold+{query.Gold} where id='{GetSHA256(guild, user)}'");
     }
 
     public async Task<bool> ResetBossKillCount(CommandContext ctx)
