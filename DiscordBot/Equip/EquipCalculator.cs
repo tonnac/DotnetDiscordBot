@@ -6,7 +6,7 @@
 
 public class EquipCalculator
 {
-    public static int WeaponUpgradeMoney = 3000;
+    public static int WeaponUpgradeMoney = 2000;
     public static int RingUpgradeMoney = 5000;
 
     private static int CutNum = 10;
