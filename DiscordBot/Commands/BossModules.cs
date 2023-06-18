@@ -58,6 +58,7 @@ public class BossModules : BaseCommandModule
 
         if (missPer >= AttackChance + ringUpgrade) // miss
         {
+            weaponUpgrade = 0;
             FinalDamage = 0;
             DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
             AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
@@ -231,10 +232,10 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField("\uD83E\uDD47" + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD49" + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
-            .AddField(new DiscordEmbedField("──────────", "[  🗡️ + 💍  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])), true))
+            .AddField(new DiscordEmbedField("──────────", "[  💍, 🗡️  ]", false))
+            .AddField(new DiscordEmbedField("\uD83E\uDD47" + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD48" + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
+            .AddField(new DiscordEmbedField("\uD83E\uDD49" + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
             .AddField(new DiscordEmbedField("──────────", "[  \u2620\uFE0F  ]", false))
             .AddField(new DiscordEmbedField("\uD83E\uDD47" + killRankUser[0], Convert.ToString(killRankCount[0]), true))
             .AddField(new DiscordEmbedField("\uD83E\uDD48" + killRankUser[1], Convert.ToString(killRankCount[1]), true))
@@ -616,8 +617,10 @@ public class BossModules : BaseCommandModule
                 bool killResult = await database.ResetBossKillCount(ctx);
                 bool totalDamageResult = await database.ResetBossTotalDamage(ctx);
                 bool goldResult = await database.ResetGold(ctx);
+                bool combatCountResult = await database.ResetCombatCount(ctx);
+                bool equipValueResult = await database.ResetEquipValue(ctx);
 
-                result = killResult && totalDamageResult && goldResult;
+                result = killResult && totalDamageResult && goldResult && combatCountResult && equipValueResult;
             }
             else if ("gold" == resetCommand)
             {
