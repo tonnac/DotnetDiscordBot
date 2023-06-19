@@ -277,10 +277,14 @@ This has a lower priority than music added with play.</value>
 		<value>Take your donation from the donation box.</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
-		<value>Strengthen your weapon. (Damage + Enhanced Value)</value>
+		<value>Strengthen your weapon.
+   (Damage + Enhancement Value X 5)
+   (Fishing Probability + Enhanced Value)</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
-		<value>Strengthen the ring. (attack hit chance, dice gamble + reinforcement value)</value>
+		<value>Strengthen the ring.
+   (Attack Hit Probability + Enhanced Value)
+   (Dice gambling + Enhancement value X 2)</value>
 	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>

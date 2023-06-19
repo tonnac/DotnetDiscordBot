@@ -558,7 +558,9 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen the ring. (attack hit chance, dice gamble + reinforcement value).
+        ///   Looks up a localized string similar to Strengthen the ring.
+        ///   (Attack Hit Probability + Enhanced Value)
+        ///   (Dice gambling + Enhancement value X 2).
         /// </summary>
         internal static string upgradering_Description {
             get {
@@ -576,7 +578,9 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen your weapon. (Damage + Enhanced Value).
+        ///   Looks up a localized string similar to Strengthen your weapon.
+        ///   (Damage + Enhancement Value X 5)
+        ///   (Fishing Probability + Enhanced Value).
         /// </summary>
         internal static string upgradeweapon_Description {
             get {
