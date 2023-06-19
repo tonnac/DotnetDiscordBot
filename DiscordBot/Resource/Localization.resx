@@ -238,10 +238,10 @@ This has a lower priority than music added with play.</value>
 		<value>Leave voice channel you are currently participating in.</value>
 	</data>
 	<data name="bossattack_Description" xml:space="preserve">
-		<value>Attempt to attack the boss. (Damage 1-100)</value>
+		<value>Attempt to attack the boss. (Damage 1-100)
    When attacking, gain gold equal to the damage dealt.
    When defeated, a certain amount of gold is paid to the last attacker.
-   In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount.
+   In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
 	</data>
 	<data name="bossinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>
@@ -277,14 +277,10 @@ This has a lower priority than music added with play.</value>
 		<value>Take your donation from the donation box.</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
-		<value>Strengthen your weapon.
-   (Damage + Enhancement Value X 5)
-   (Fishing Probability + Enhanced Value)</value>
+		<value>Strengthen your weapon. (Damage, fishing rate increase)</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
-		<value>Strengthen the ring.
-   (Attack Hit Probability + Enhanced Value)
-   (Dice gambling + Enhancement value X 2)</value>
+		<value>Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
