@@ -9,6 +9,12 @@ public class EquipCalculator
     public static int WeaponUpgradeMoney = 2000;
     public static int RingUpgradeMoney = 4000;
 
+    public static int Boss_WeaponUpgradeMultiplier = 5;
+    public static int Boss_RingUpgradeMultiplier = 1;
+    
+    public static int Fish_WeaponUpgradeMultiplier = 1;
+    public static int Dice_RingUpgradeMultiplier = 2;
+
     private static int CutNum = 10;
     
     public static List<UpgradePercentage> UpgradePercentages = new List<UpgradePercentage>()
@@ -32,6 +38,22 @@ public class EquipCalculator
     public static void SetRingUpgradeMoney(int money)
     {
         RingUpgradeMoney = money;
+    }
+    public static void SetBoss_WeaponUpgradeMultiplier(int value)
+    {
+        Boss_WeaponUpgradeMultiplier = value;
+    }
+    public static void SetBoss_RingUpgradeMultiplier(int value)
+    {
+        Boss_RingUpgradeMultiplier = value;
+    }
+    public static void SetFish_WeaponUpgradeMultiplier(int value)
+    {
+        Fish_WeaponUpgradeMultiplier = value;
+    }
+    public static void SetDice_RingUpgradeMultiplier(int value)
+    {
+        Dice_RingUpgradeMultiplier = value;
     }
 
     public static int Upgrade(int currentUpgradeNum)

@@ -5,6 +5,7 @@ using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
+using DiscordBot.Equip;
 
 namespace DiscordBot.Commands;
 
@@ -48,8 +49,16 @@ public class FishingModules : BaseCommandModule
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
+        // start,, calc final damage
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser fishUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Fish_WeaponUpgradeMultiplier;
+        
         var rand = new Random();
         int fishingRandom = rand.Next(1, 101);
+
+        fishingRandom += weaponUpgrade;
 
         if (nonePer < fishingRandom)
         {
@@ -78,9 +87,6 @@ public class FishingModules : BaseCommandModule
             .WithAuthor("\uD83C\uDFA3 " + name)
             .AddField(new DiscordEmbedField("\uD83E\uDE9D" + fishEmoji_Result + " !", "+ \uD83D\uDCB0" + Convert.ToString(fishGold_Result), false));
         
-        using var database = new DiscordBotDatabase();
-        await database.ConnectASync();
-        await database.GetDatabaseUser(ctx.Guild, ctx.User);
         GoldQuery query = new GoldQuery(fishGold_Result);
         await database.UpdateUserGold(ctx, query);
         

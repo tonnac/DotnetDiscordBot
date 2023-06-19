@@ -40,8 +40,8 @@ public class BossModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser attackUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue);
-        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_WeaponUpgradeMultiplier;
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_RingUpgradeMultiplier;
         
         var rand = new Random();
         
@@ -458,8 +458,8 @@ public class BossModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                     .WithColor(DiscordColor.White)
-                    .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                     .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                    .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                     .AddField(new DiscordEmbedField("──────────", "[ "+ Convert.ToString(nowStep) + " > " + Convert.ToString(nowStep + 1) + " ]", false))
                     .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].SuccessPer) + "%", true))
                     .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].FailPer) + "%", true))
@@ -475,8 +475,8 @@ public class BossModules : BaseCommandModule
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                 .WithColor(DiscordColor.White)
-                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 0 > 1 ]", false))
                 .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
                 .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].FailPer) + "%", true))
@@ -499,8 +499,8 @@ public class BossModules : BaseCommandModule
             DiscordEmbedBuilder embedBuilder2 = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                 .WithColor(DiscordColor.White)
-                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
                 .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
                 .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].FailPer) + "%", true))
@@ -566,6 +566,103 @@ public class BossModules : BaseCommandModule
             }
 
             EquipCalculator.SetRingUpgradeMoney(setMoney);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    
+    [Command]
+    public async Task SetBossWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetBoss_WeaponUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetFishWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetFish_WeaponUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetBossRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetBoss_RingUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetDiceRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetDice_RingUpgradeMultiplier(value);
             result = true;
             emoji = "✅";
         }
