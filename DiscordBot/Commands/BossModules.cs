@@ -77,6 +77,7 @@ public class BossModules : BaseCommandModule
                 
                 if (missPer + attackPer + critPer < AttackChance) // massacre
                 {
+                    weaponUpgrade = 0;
                     FinalDamage = 9999;
                     CritAddText = " !!";
                     DamageTypeEmojiCode = "\uD83D\uDD25 ";
