@@ -40,8 +40,8 @@ public class BossModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser attackUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue);
-        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_WeaponUpgradeMultiplier;
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_RingUpgradeMultiplier;
         
         var rand = new Random();
         
@@ -566,6 +566,103 @@ public class BossModules : BaseCommandModule
             }
 
             EquipCalculator.SetRingUpgradeMoney(setMoney);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    
+    [Command]
+    public async Task SetBossWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetBoss_WeaponUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetFishWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetFish_WeaponUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetBossRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetBoss_RingUpgradeMultiplier(value);
+            result = true;
+            emoji = "✅";
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetDiceRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = "❌";
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetDice_RingUpgradeMultiplier(value);
             result = true;
             emoji = "✅";
         }
