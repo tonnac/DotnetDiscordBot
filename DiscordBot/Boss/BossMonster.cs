@@ -14,9 +14,10 @@ public enum BossType : int
     Devil = 7,
     SlotMachine = 8,
     Alien = 9,
-    Trex = 10,
-    Dragon = 11,
-    TheOffice = 12,
+    AngryDevil = 10,
+    Trex = 11,
+    Dragon = 12,
+    TheOffice = 13,
     End,
 }
 
@@ -120,6 +121,8 @@ public class BossMonster
                 return 777;
             case BossType.Alien:
                 return 800;
+            case BossType.AngryDevil:
+                return 999;
             case BossType.Trex:
                 return 1000;
             case BossType.Dragon:
@@ -152,6 +155,8 @@ public class BossMonster
                 return "\uD83C\uDFB0";
             case BossType.Alien:
                 return "\uD83D\uDC7D";
+            case BossType.AngryDevil:
+                return "\uD83D\uDC7F";
             case BossType.Trex:
                 return "\uD83E\uDD96";
             case BossType.Dragon:
