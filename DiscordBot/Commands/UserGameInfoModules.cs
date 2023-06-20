@@ -3,6 +3,7 @@ using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DiscordBot.Database;
 using DiscordBot.Equip;
+using DiscordBot.Resource;
 
 namespace DiscordBot.Commands;
 
@@ -23,13 +24,13 @@ public class UserGameInfoModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
-            .AddField(new DiscordEmbedField("[  \uD83D\uDCB0  ]", Convert.ToString(myUserDatabase.gold), true))
-            .AddField(new DiscordEmbedField("[  💍  ]", "+" + Convert.ToString(ringUpgrade), true))
-            .AddField(new DiscordEmbedField("[  🗡️  ]", "+" + Convert.ToString(weaponUpgrade), true))
-            .AddField(new DiscordEmbedField("\uD83D\uDD0D", "└───" + ctx.Member.Mention, false))
-            .AddField(new DiscordEmbedField("[  \u2620\uFE0F  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
-            .AddField(new DiscordEmbedField("[  \u2694\uFE0F  ]", Convert.ToString(myUserDatabase.combatcount), true))
-            .AddField(new DiscordEmbedField("[  \uD83D\uDCA5  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Ring + "  ]", "+" + Convert.ToString(ringUpgrade), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
+            .AddField(new DiscordEmbedField(VEmoji.Magnifier, "└───" + ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Crossbones + "  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.CrossSword + "  ]", Convert.ToString(myUserDatabase.combatcount), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
         
         await ctx.RespondAsync(embedBuilder);
     }

@@ -6,16 +6,17 @@ using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
 using DiscordBot.Equip;
+using DiscordBot.Resource;
 
 namespace DiscordBot.Commands;
 
 public class FishingModules : BaseCommandModule
-{   
-    public string fishEmoji_none = "\uD83D\uDC5F";
-    public string fishEmoji_common = "\uD83D\uDC1F";
-    public string fishEmoji_rare = "\uD83D\uDC21";
-    public string fishEmoji_epic = "\uD83D\uDC20";
-    public string fishEmoji_legendary = "\uD83E\uDDDC";
+{
+    public string fishEmoji_none = VEmoji.Shoe;
+    public string fishEmoji_common = VEmoji.Fish;
+    public string fishEmoji_rare = VEmoji.Blowfish;
+    public string fishEmoji_epic = VEmoji.TropicalFish;
+    public string fishEmoji_legendary = VEmoji.Merperson;
 
     public int fishGold_none = 0;
     public int fishGold_common = 100;
@@ -43,7 +44,8 @@ public class FishingModules : BaseCommandModule
             });
             return;
         }
-        
+
+        string fishThumbnail = "https://i.pinimg.com/originals/0f/8f/4f/0f8f4fbcd48f4d335f1ff3f8ec803c3b.gif";
         string fishEmoji_Result = fishEmoji_none;
         int fishGold_Result = fishGold_none;
         
@@ -77,15 +79,16 @@ public class FishingModules : BaseCommandModule
         }
         if (nonePer+commonPer+rarePer+epicPer < fishingRandom)
         {
+            fishThumbnail = "https://tenor.com/view/ariel-princess-ariel-the-little-mermaid-little-mermaid-disney-gif-25423314"; 
             fishEmoji_Result = fishEmoji_legendary;
             fishGold_Result = fishGold_legendary;
         }
         
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-            .WithThumbnail("https://i.pinimg.com/originals/0f/8f/4f/0f8f4fbcd48f4d335f1ff3f8ec803c3b.gif")
+            .WithThumbnail(fishThumbnail)
             .WithColor(DiscordColor.Blue)
-            .WithAuthor("\uD83C\uDFA3 " + name)
-            .AddField(new DiscordEmbedField("\uD83E\uDE9D" + fishEmoji_Result + " !", "+ \uD83D\uDCB0" + Convert.ToString(fishGold_Result), false));
+            .WithAuthor(VEmoji.FishingPole + " " + name)
+            .AddField(new DiscordEmbedField(VEmoji.Hook + fishEmoji_Result + " !", "+ " + VEmoji.Money + Convert.ToString(fishGold_Result), false));
         
         GoldQuery query = new GoldQuery(fishGold_Result);
         await database.UpdateUserGold(ctx, query);
@@ -99,33 +102,31 @@ public class FishingModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://image.yes24.com/goods/99358015/XL")
             .WithColor(DiscordColor.White)
-            .AddField(new DiscordEmbedField("[ "+ fishEmoji_none + " ]", Convert.ToString(nonePer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_none), false))
-            .AddField(new DiscordEmbedField("[ "+ fishEmoji_common + " ]", Convert.ToString(commonPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_common), false))
-            .AddField(new DiscordEmbedField("[ "+ fishEmoji_rare + " ]", Convert.ToString(rarePer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_rare), false))
-            .AddField(new DiscordEmbedField("[ "+ fishEmoji_epic + " ]", Convert.ToString(epicPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_epic), false))
-            .AddField(new DiscordEmbedField("[ "+ fishEmoji_legendary + " ]", Convert.ToString(legendaryPer) + "%, \uD83D\uDCB0" + Convert.ToString(fishGold_legendary), false));
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_none + " ]", Convert.ToString(nonePer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_none), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_common + " ]", Convert.ToString(commonPer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_common), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_rare + " ]", Convert.ToString(rarePer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_rare), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_epic + " ]", Convert.ToString(epicPer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_epic), false))
+            .AddField(new DiscordEmbedField("[ "+ fishEmoji_legendary + " ]", Convert.ToString(legendaryPer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_legendary), false));
         
         await ctx.RespondAsync(embedBuilder);
-        
-        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
     
     [Command] // ToggleFishingChannel
     public async Task Ffff(CommandContext ctx)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             if (ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
             {
                 ContentsChannels.FishingChannels.Remove(ctx.Channel.Id);
-                emoji = "❌";
+                emoji = VEmoji.RedCrossMark;
             }
             else
             {
                 ContentsChannels.FishingChannels.Add(ctx.Channel.Id);
-                emoji = "✅";
+                emoji = VEmoji.GreenCheckBox;
             }
 
             result = true;
