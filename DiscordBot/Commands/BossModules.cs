@@ -329,7 +329,12 @@ public class BossModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️0 ]", true));
 
-                        await ctx.RespondAsync(embedBuilder);
+                        var message = await ctx.RespondAsync(embedBuilder);
+                        
+                        if (message != null && 7 <= weaponCurrentUpgrade)
+                        {
+                            await message.PinAsync();
+                        }
                         break;
                     }
                     case 0: // Fail
@@ -357,7 +362,12 @@ public class BossModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
 
-                        await ctx.RespondAsync(embedBuilder);
+                        var message = await ctx.RespondAsync(embedBuilder);
+                        
+                        if (message != null && 6 <= weaponCurrentUpgrade)
+                        {
+                            await message.PinAsync();
+                        }
                         break;
                     }
                     default:
@@ -420,7 +430,11 @@ public class BossModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️0 ]", true));
 
-                        await ctx.RespondAsync(embedBuilder);
+                        var message = await ctx.RespondAsync(embedBuilder);
+                        if (message != null && 7 <= ringCurrentUpgrade)
+                        {
+                            await message.PinAsync();
+                        }
                         break;
                     }
                     case 0: // Fail
@@ -448,7 +462,11 @@ public class BossModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("▶", "▶", true))
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
 
-                        await ctx.RespondAsync(embedBuilder);
+                        var message = await ctx.RespondAsync(embedBuilder);
+                        if (message != null && 6 <= ringCurrentUpgrade)
+                        {
+                            await message.PinAsync();
+                        }
                         break;
                     }
                     default:
