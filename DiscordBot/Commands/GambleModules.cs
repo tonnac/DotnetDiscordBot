@@ -58,7 +58,7 @@ public class GambleModules : BaseCommandModule
         // _gambleGame_Gacha.SetPercentage(1, 3, 5);
         // _gambleGame_Gacha.SetReward(100000, 10, 1);
         
-        _fundsGamble = new FundsGamble(1, 500, 200, 12);
+        _fundsGamble = new FundsGamble(1, 500, 200, 24);
 
         _diceGamble = new DiceGamble();
     }
@@ -178,7 +178,7 @@ public class GambleModules : BaseCommandModule
             
             string name = Utility.GetMemberDisplayName(ctx.Member);
         
-            GoldQuery query = new GoldQuery(_fundsGamble.Ante - winMoney);
+            GoldQuery query = new GoldQuery(winMoney - _fundsGamble.Ante);
             await database.UpdateUserGold(ctx, query);
 
             if (0 < winMoney)
