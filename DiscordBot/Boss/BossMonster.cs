@@ -10,7 +10,7 @@ public enum BossType : int
     Octopus = 3,
     Shark = 4,
     Unicorn = 5,
-    Mammoth = 6,   
+    Skeleton = 6,   
     Devil = 7,
     SlotMachine = 8,
     Alien = 9,
@@ -113,8 +113,8 @@ public class BossMonster
                 return 300;
             case BossType.Unicorn:
                 return 400;
-            case BossType.Mammoth:
-                return 500;
+            case BossType.Skeleton:
+                return 444;
             case BossType.Devil:
                 return 666;
             case BossType.SlotMachine:
@@ -147,8 +147,8 @@ public class BossMonster
                 return "\uD83E\uDD88";
             case BossType.Unicorn:
                 return "\uD83E\uDD84";
-            case BossType.Mammoth:
-                return "\uD83E\uDDA3";
+            case BossType.Skeleton:
+                return "\uD83D\uDC80";
             case BossType.Devil:
                 return "\uD83D\uDE08";
             case BossType.SlotMachine:
