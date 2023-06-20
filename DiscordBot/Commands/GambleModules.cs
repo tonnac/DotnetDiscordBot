@@ -85,9 +85,17 @@ public class GambleModules : BaseCommandModule
         int comDice = 0;
         if( !string.IsNullOrEmpty(gambleCommand))
         {
-            Int32.TryParse(gambleCommand, out ante);
+            if ("all" == gambleCommand || "전부" == gambleCommand)
+            {
+                ante = gambleUserDatabase.gold;
+            }
+            else
+            {
+                Int32.TryParse(gambleCommand, out ante);
+            }
         }
-        ante = 0 >= ante ? 1 : ante;
+
+        ante = Math.Clamp(ante, 1, 10000);
         
         if (ante > gambleUserDatabase.gold)
         {
