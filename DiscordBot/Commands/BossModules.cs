@@ -6,6 +6,8 @@ using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
 using DiscordBot.Equip;
+using DiscordBot.Resource;
+using DiscordBot.Resource;
 
 namespace DiscordBot.Commands;
 
@@ -52,7 +54,7 @@ public class BossModules : BaseCommandModule
         int FinalDamage = rand.Next(1, 101);
         int AttackChance = rand.Next(1, 101);
         string CritAddText = "";
-        string DamageTypeEmojiCode = "\uD83D\uDCA5 ";
+        string DamageTypeEmojiCode = VEmoji.Boom + " ";
         string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
         
 
@@ -60,7 +62,7 @@ public class BossModules : BaseCommandModule
         {
             weaponUpgrade = 0;
             FinalDamage = 0;
-            DamageTypeEmojiCode = "\ud83d\ude35\u200d\ud83d\udcab ";
+            DamageTypeEmojiCode = VEmoji.SpiralEyes + " ";
             AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
         }
         else
@@ -72,7 +74,7 @@ public class BossModules : BaseCommandModule
                 weaponUpgrade *= 2;
                 FinalDamage = FinalDamage * 2 + 100;
                 CritAddText = " !";
-                DamageTypeEmojiCode = "\uD83D\uDD25 ";
+                DamageTypeEmojiCode = VEmoji.Fire + " ";
                 AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
                 
                 if (missPer + attackPer + critPer < AttackChance) // massacre
@@ -80,7 +82,7 @@ public class BossModules : BaseCommandModule
                     weaponUpgrade = 0;
                     FinalDamage = 9999;
                     CritAddText = " !!";
-                    DamageTypeEmojiCode = "\uD83D\uDD25 ";
+                    //DamageTypeEmojiCode = VEmoji.Fire + " ";
                     AttackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
                 }
             }
@@ -97,7 +99,7 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(AttackGifurl)
             .WithColor(DiscordColor.HotPink)
-            .WithAuthor("\u2694\uFE0F " + name + "    +\uD83D\uDCB0")
+            .WithAuthor(VEmoji.CrossSword + " " + name + "    +" + VEmoji.Money)
             .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText + weaponUpgradePlusText,
                 _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - (FinalDamage + weaponUpgrade)) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
@@ -122,9 +124,9 @@ public class BossModules : BaseCommandModule
             DiscordEmbedBuilder killEmbedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.tenor.com/mV5aSB_USt4AAAAi/coins.gif")
                 .WithColor(DiscordColor.Gold)
-                .WithAuthor("[ \uD83C\uDF8A" + name + "\uD83C\uDF8A ]  +\uD83D\uDCB0" + Convert.ToString(killedBossGetGold) )
-                .AddField(new DiscordEmbedField(deadBossEmojiCode + " \u2694\uFE0F " + Convert.ToString(hitCount + 1), 
-                    "\uD83E\uDD47" + Utility.GetMemberDisplayName(bestDealerInfo.Value.Member) + " \uD83D\uDCA5" + Convert.ToString(bestDealerInfo.Value.TotalDamage) + " +\uD83D\uDCB0", false));
+                .WithAuthor("[ " + VEmoji.ConfettiBall + name + VEmoji.ConfettiBall + " ]  +" + VEmoji.Money + Convert.ToString(killedBossGetGold) )
+                .AddField(new DiscordEmbedField(deadBossEmojiCode + " " + VEmoji.CrossSword + " " + Convert.ToString(hitCount + 1), 
+                    VEmoji.GoldMedal + Utility.GetMemberDisplayName(bestDealerInfo.Value.Member) + " " + VEmoji.Boom + Convert.ToString(bestDealerInfo.Value.TotalDamage) + " +" + VEmoji.Money, false));
 
             
             BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold + validDamage, 1);
@@ -140,8 +142,6 @@ public class BossModules : BaseCommandModule
             BossQuery query = new BossQuery((ulong)validDamage, 0, validDamage, 1);
             await database.UpdateBossRaid(ctx, query);
         }
-        
-        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("💥"));
     }
     
     [Command, Aliases("bi", "보스정보"), Cooldown(1, 3, CooldownBucketType.User)]
@@ -155,9 +155,9 @@ public class BossModules : BaseCommandModule
             .WithThumbnail("https://upload2.inven.co.kr/upload/2018/11/09/bbs/i15705696321.jpg?MW=800")
             .WithColor(DiscordColor.Orange)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, "\u2665\uFE0F " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + bestDealer + "   " + "\uD83D\uDCA5" + Convert.ToString(bestDealerTotalDamage),
-                "\u2694\uFE0F " + _bossMonster.HitCount, false));
+            .AddField(new DiscordEmbedField(_bossMonster.BossEmojiCode, VEmoji.Heart + " " + _bossMonster.CurrentHp + "/" + _bossMonster.CurrentMaxHp, false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + bestDealer + "   " + VEmoji.Boom + Convert.ToString(bestDealerTotalDamage),
+                VEmoji.CrossSword + " " + _bossMonster.HitCount, false));
         
         await ctx.RespondAsync(embedBuilder);
         
@@ -231,22 +231,22 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1021/1021100.png")
             .WithColor(DiscordColor.Brown)
-            .AddField(new DiscordEmbedField("────\uD83C\uDFC6────", "[  \uD83D\uDCB0  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
-            .AddField(new DiscordEmbedField("──────────", "[  💍, 🗡️  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
-            .AddField(new DiscordEmbedField("──────────", "[  \u2620\uFE0F  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + killRankUser[0], Convert.ToString(killRankCount[0]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + killRankUser[1], Convert.ToString(killRankCount[1]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + killRankUser[2], Convert.ToString(killRankCount[2]), true))
-            .AddField(new DiscordEmbedField("──────────", "[  \uD83D\uDCA5  ]", false))
-            .AddField(new DiscordEmbedField("\uD83E\uDD47" + dealRankUser[0], Convert.ToString(dealRankCount[0]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD48" + dealRankUser[1], Convert.ToString(dealRankCount[1]), true))
-            .AddField(new DiscordEmbedField("\uD83E\uDD49" + dealRankUser[2], Convert.ToString(dealRankCount[2]), true));
+            .AddField(new DiscordEmbedField("────" + VEmoji.Trophy + "────", "[  " + VEmoji.Money + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Crossbones + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + killRankUser[0], Convert.ToString(killRankCount[0]), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + killRankUser[1], Convert.ToString(killRankCount[1]), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + killRankUser[2], Convert.ToString(killRankCount[2]), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Boom + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + dealRankUser[0], Convert.ToString(dealRankCount[0]), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + dealRankUser[1], Convert.ToString(dealRankCount[1]), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + dealRankUser[2], Convert.ToString(dealRankCount[2]), true));
         
         await ctx.RespondAsync(embedBuilder);
         
@@ -261,19 +261,19 @@ public class BossModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1440/1440998.png")
             .WithColor(DiscordColor.White)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Mosquito) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Mosquito) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Mosquito), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Bat) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Bat) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Bat), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Octopus) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Octopus) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Shark) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Shark) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Shark), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Unicorn) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Unicorn) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Unicorn), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Skeleton) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Skeleton) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Skeleton), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Devil) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Devil) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Devil), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.SlotMachine) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.SlotMachine) + ", \uD83D\uDCB0" + Convert.ToString(7777), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Alien) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Alien) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Alien), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.AngryDevil) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.AngryDevil) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.AngryDevil), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Trex) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Trex) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Trex), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Dragon) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.Dragon) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.Dragon), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.TheOffice) + " ]", "\u2665\uFE0F" + _bossMonster.GetBossMaxHp(BossType.TheOffice) + ", \uD83D\uDCB0" + _bossMonster.GetBossMaxHp(BossType.TheOffice), false));
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Mosquito) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Mosquito) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Mosquito), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Bat) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Bat) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Bat), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Octopus) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Octopus) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Shark) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Shark) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Shark), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Unicorn) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Unicorn) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Unicorn), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Skeleton) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Skeleton) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Skeleton), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Devil) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Devil) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Devil), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.SlotMachine) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.SlotMachine) + ", " + VEmoji.Money + Convert.ToString(7777), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Alien) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Alien) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Alien), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.AngryDevil) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.AngryDevil) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.AngryDevil), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Trex) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Trex) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Trex), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Dragon) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Dragon) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Dragon), false))
+            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.TheOffice) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.TheOffice) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.TheOffice), false));
         
         await ctx.RespondAsync(embedBuilder);
         
@@ -293,7 +293,7 @@ public class BossModules : BaseCommandModule
 
         if (9 <= weaponCurrentUpgrade)
         {
-            await ctx.RespondAsync(ctx.Member.Mention + " 👍");
+            await ctx.RespondAsync(ctx.Member.Mention + " " + VEmoji.ThumbsUp);
         }
         else
         {
@@ -313,10 +313,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
                             .WithColor(DiscordColor.DarkRed)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️0 ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️0 ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -326,10 +326,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -341,10 +341,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Green)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ +️" + Convert.ToString(weaponCurrentUpgrade+1) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -355,7 +355,7 @@ public class BossModules : BaseCommandModule
             }
             else
             {
-                await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+                await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
             }
         }
     }
@@ -373,7 +373,7 @@ public class BossModules : BaseCommandModule
 
         if (9 <= ringCurrentUpgrade)
         {
-            await ctx.RespondAsync(ctx.Member.Mention + " 👍");
+            await ctx.RespondAsync(ctx.Member.Mention + " " + VEmoji.ThumbsUp);
         }
         else
         {
@@ -393,10 +393,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
                             .WithColor(DiscordColor.DarkRed)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️0 ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️0 ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -406,10 +406,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Red)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -421,10 +421,10 @@ public class BossModules : BaseCommandModule
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
                             .WithColor(DiscordColor.Green)
-                            .AddField(new DiscordEmbedField("⚒️ " + name, "[ - \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
+                            .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", false))
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade) + " ]", true))
                             .AddField(new DiscordEmbedField("▶", "▶", true))
-                            .AddField(new DiscordEmbedField("[ 💍 ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
+                            .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
 
                         await ctx.RespondAsync(embedBuilder);
                         break;
@@ -435,7 +435,7 @@ public class BossModules : BaseCommandModule
             }
             else
             {
-                await ctx.RespondAsync("\uD83D\uDCB0.. \u2753");
+                await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
             }
         }
     }
@@ -460,12 +460,12 @@ public class BossModules : BaseCommandModule
                 DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                     .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                     .WithColor(DiscordColor.White)
-                    .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
-                    .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                     .AddField(new DiscordEmbedField("──────────", "[ "+ Convert.ToString(nowStep) + " > " + Convert.ToString(nowStep + 1) + " ]", false))
-                    .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].SuccessPer) + "%", true))
-                    .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].FailPer) + "%", true))
-                    .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].BrokenPer) + "%", true));
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].SuccessPer) + "%", true))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].FailPer) + "%", true))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[nowStep].BrokenPer) + "%", true));
             
                 await ctx.RespondAsync(embedBuilder);
             }
@@ -477,52 +477,52 @@ public class BossModules : BaseCommandModule
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                 .WithColor(DiscordColor.White)
-                .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
-                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 0 > 1 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[0].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 1 > 2 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[1].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 2 > 3 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[2].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 3 > 4 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].BrokenPer) + "%", true));
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[3].BrokenPer) + "%", true));
 
             await ctx.RespondAsync(embedBuilder);
 
             DiscordEmbedBuilder embedBuilder2 = new DiscordEmbedBuilder()
                 .WithThumbnail("https://media.istockphoto.com/id/607898530/photo/blacksmith-manually-forging-the-molten-metal.jpg?s=612x612&w=0&k=20&c=XJK8AuqbsehPFumor0RZGO4bd5s0M9MWInGixbzhw48=")
                 .WithColor(DiscordColor.White)
-                .AddField(new DiscordEmbedField("[ 💍 ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
-                .AddField(new DiscordEmbedField("[ 🗡️ ]", "[ \uD83D\uDCB0" + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.RingUpgradeMoney) + " ]", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Weapon + " ]", "[ " + VEmoji.Money + Convert.ToString(EquipCalculator.WeaponUpgradeMoney) + " ]", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 4 > 5 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[4].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 5 > 6 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[5].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 6 > 7 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[6].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 7 > 8 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[7].BrokenPer) + "%", true))
                 .AddField(new DiscordEmbedField("──────────", "[ 8 > 9 ]", false))
-                .AddField(new DiscordEmbedField("[ 🟢 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 🔴 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].FailPer) + "%", true))
-                .AddField(new DiscordEmbedField("[ 💥 ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
+                .AddField(new DiscordEmbedField("[ " + VEmoji.GreenCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].SuccessPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.RedCircle + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].FailPer) + "%", true))
+                .AddField(new DiscordEmbedField("[ " + VEmoji.Boom + " ]", Convert.ToString(EquipCalculator.UpgradePercentages[8].BrokenPer) + "%", true));
 
             await ctx.RespondAsync(embedBuilder2);
         }
@@ -534,7 +534,7 @@ public class BossModules : BaseCommandModule
     public async Task SetWeaponUpgradeMoney(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int setMoney = 0;
@@ -545,7 +545,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetWeaponUpgradeMoney(setMoney);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -558,7 +558,7 @@ public class BossModules : BaseCommandModule
     public async Task SetRingUpgradeMoney(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int setMoney = 0;
@@ -569,7 +569,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetRingUpgradeMoney(setMoney);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -583,7 +583,7 @@ public class BossModules : BaseCommandModule
     public async Task SetBossWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int value = 0;
@@ -594,7 +594,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetBoss_WeaponUpgradeMultiplier(value);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -607,7 +607,7 @@ public class BossModules : BaseCommandModule
     public async Task SetFishWeaponMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int value = 0;
@@ -618,7 +618,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetFish_WeaponUpgradeMultiplier(value);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -631,7 +631,7 @@ public class BossModules : BaseCommandModule
     public async Task SetBossRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int value = 0;
@@ -642,7 +642,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetBoss_RingUpgradeMultiplier(value);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -655,7 +655,7 @@ public class BossModules : BaseCommandModule
     public async Task SetDiceRingMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             int value = 0;
@@ -666,7 +666,7 @@ public class BossModules : BaseCommandModule
 
             EquipCalculator.SetDice_RingUpgradeMultiplier(value);
             result = true;
-            emoji = "✅";
+            emoji = VEmoji.GreenCheckBox;
         }
         
         if (result)
@@ -679,18 +679,18 @@ public class BossModules : BaseCommandModule
     public async Task Bbbb(CommandContext ctx)
     {
         bool result = false;
-        string emoji = "❌";
+        string emoji = VEmoji.RedCrossMark;
         if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
             if (ContentsChannels.BossChannels.Contains(ctx.Channel.Id))
             {
                 ContentsChannels.BossChannels.Remove(ctx.Channel.Id);
-                emoji = "❌";
+                emoji = VEmoji.RedCrossMark;
             }
             else
             {
                 ContentsChannels.BossChannels.Add(ctx.Channel.Id);
-                emoji = "✅";
+                emoji = VEmoji.GreenCheckBox;
             }
 
             result = true;
@@ -751,7 +751,7 @@ public class BossModules : BaseCommandModule
             
             if (result)
             {
-                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(VEmoji.GreenCheckBox));
             }
         }
     }

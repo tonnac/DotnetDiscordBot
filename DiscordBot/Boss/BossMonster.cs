@@ -1,4 +1,5 @@
 ﻿using DisCatSharp.Enums;
+using DiscordBot.Resource;
 
 namespace DiscordBot.Boss;
 
@@ -138,31 +139,31 @@ public class BossMonster
         {
             default:
             case BossType.Mosquito:
-                return "\uD83E\uDD9F";
+                return VEmoji.Mosquito;
             case BossType.Bat:
-                return "\uD83E\uDD87";
+                return VEmoji.Bat;
             case BossType.Octopus:
-                return "\uD83D\uDC19";
+                return VEmoji.Octopus;
             case BossType.Shark:
-                return "\uD83E\uDD88";
+                return VEmoji.Shark;
             case BossType.Unicorn:
-                return "\uD83E\uDD84";
+                return VEmoji.Unicorn;
             case BossType.Skeleton:
-                return "\uD83D\uDC80";
+                return VEmoji.Skeleton;
             case BossType.Devil:
-                return "\uD83D\uDE08";
+                return VEmoji.Devil;
             case BossType.SlotMachine:
-                return "\uD83C\uDFB0";
+                return VEmoji.SlotMachine;
             case BossType.Alien:
-                return "\uD83D\uDC7D";
+                return VEmoji.Alien;
             case BossType.AngryDevil:
-                return "\uD83D\uDC7F";
+                return VEmoji.AngryDevil;
             case BossType.Trex:
-                return "\uD83E\uDD96";
+                return VEmoji.Trex;
             case BossType.Dragon:
-                return "\uD83D\uDC09";
+                return VEmoji.Dragon;
             case BossType.TheOffice:
-                return "\uD83C\uDFEC";
+                return VEmoji.TheOffice;
         }
     }
 }
