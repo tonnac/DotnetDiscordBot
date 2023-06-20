@@ -174,9 +174,9 @@ public class GambleModules : BaseCommandModule
         
         if (gambleUserDatabase.gold >= _fundsGamble.Ante)
         {
-            int winMoney = _fundsGamble.DoFundsGamble(ctx);
-            
             string name = Utility.GetMemberDisplayName(ctx.Member);
+            
+            int winMoney = _fundsGamble.DoFundsGamble(ctx);
         
             GoldQuery query = new GoldQuery(winMoney - _fundsGamble.Ante);
             await database.UpdateUserGold(ctx, query);
