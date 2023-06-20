@@ -79,7 +79,7 @@ public class FishingModules : BaseCommandModule
         }
         if (nonePer+commonPer+rarePer+epicPer < fishingRandom)
         {
-            fishThumbnail = "https://tenor.com/view/ariel-princess-ariel-the-little-mermaid-little-mermaid-disney-gif-25423314"; 
+            fishThumbnail = "https://media.tenor.com/xOqPQTU9RagAAAAd/ariel-princess-ariel.gif"; 
             fishEmoji_Result = fishEmoji_legendary;
             fishGold_Result = fishGold_legendary;
         }
