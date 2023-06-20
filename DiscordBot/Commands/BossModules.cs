@@ -283,6 +283,17 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("uw", "무기강화")]
     public async Task UpgradeWeapon(CommandContext ctx, [RemainingText] string? tempCommand)
     {
+        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -363,6 +374,17 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("ur", "반지강화")]
     public async Task UpgradeRing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
+        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -690,6 +712,33 @@ public class BossModules : BaseCommandModule
             else
             {
                 ContentsChannels.BossChannels.Add(ctx.Channel.Id);
+                emoji = VEmoji.GreenCheckBox;
+            }
+
+            result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command] // ToggleForgeChannel
+    public async Task Uuuu(CommandContext ctx)
+    {
+        bool result = false;
+        string emoji = VEmoji.RedCrossMark;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            if (ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+            {
+                ContentsChannels.ForgeChannels.Remove(ctx.Channel.Id);
+                emoji = VEmoji.RedCrossMark;
+            }
+            else
+            {
+                ContentsChannels.ForgeChannels.Add(ctx.Channel.Id);
                 emoji = VEmoji.GreenCheckBox;
             }
 

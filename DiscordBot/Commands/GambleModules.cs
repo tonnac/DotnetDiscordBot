@@ -60,7 +60,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 3, CooldownBucketType.UserAndChannel)]
+    [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 2, CooldownBucketType.UserAndChannel)]
     public async Task DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
@@ -123,7 +123,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 5, CooldownBucketType.UserAndChannel, true, true, 5)]
+    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 4, CooldownBucketType.UserAndChannel, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
