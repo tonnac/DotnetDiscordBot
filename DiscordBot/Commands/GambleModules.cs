@@ -58,7 +58,7 @@ public class GambleModules : BaseCommandModule
         // _gambleGame_Gacha.SetPercentage(1, 3, 5);
         // _gambleGame_Gacha.SetReward(100000, 10, 1);
         
-        _fundsGamble = new FundsGamble(1, 500, 200, 12);
+        _fundsGamble = new FundsGamble(1, 500, 200, 30);
 
         _diceGamble = new DiceGamble();
     }
