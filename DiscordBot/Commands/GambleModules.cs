@@ -319,7 +319,7 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://m.media-amazon.com/images/I/41Ts-rQFrLS._AC_.jpg")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(VEmoji.WingMoney + " " + name, " - " + VEmoji.Money + Convert.ToString(donationValue) + "　" + VEmoji.LockedWithKey + Convert.ToString(_randomDonationKey), false))
+            .AddField(new DiscordEmbedField(VEmoji.WingMoney + " " + name, "[ -" + VEmoji.Money + Convert.ToString(donationValue) + " ]　" + VEmoji.LockedWithKey + Convert.ToString(_randomDonationKey), false))
             .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_randomDonationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
@@ -344,7 +344,7 @@ public class GambleModules : BaseCommandModule
         string name = Utility.GetMemberDisplayName(ctx.Member);
         string thumbnail = "https://www.vhv.rs/dpng/d/431-4314442_open-silver-safe-png-clip-art-open-safe.png";
         string openText = ".." + VEmoji.QuestionMark;
-        string openTextSub = "　" + VEmoji.Locked + Convert.ToString(_randomDonationKey);
+        string openTextSub = "　[ " + VEmoji.Locked + Convert.ToString(_randomDonationKey) + " ]";
 
         if (_randomDonationKey == keyNumber)
         {
@@ -357,7 +357,7 @@ public class GambleModules : BaseCommandModule
             _randomDonationKey = 0;
 
             thumbnail = "https://img.freepik.com/free-vector/safe-lockers-doors-concept-with-security-privacy-symbols-realistic-vector-illustration_1284-75528.jpg";
-            openText = " + " + VEmoji.Money + Convert.ToString(tempDonationMoney);
+            openText = "[ + " + VEmoji.Money + Convert.ToString(tempDonationMoney) + " ]";
             openTextSub = "　" + VEmoji.Unlocked;
         }
         
