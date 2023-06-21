@@ -741,7 +741,29 @@ public class BossModules : BaseCommandModule
             await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
     }
-    
+
+    [Command]
+    public async Task ResetBossMonster(CommandContext ctx, [RemainingText] string? resetCommand)
+    {
+        bool result = false;
+        string emoji = VEmoji.RedCrossMark;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int resetBossType = 0;
+            Int32.TryParse(resetCommand, out resetBossType);
+
+            _bossMonster.ResetBossMonster(resetBossType);
+            
+            emoji = VEmoji.GreenCheckBox;
+            result = true;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+
     [Command] // ToggleForgeChannel
     public async Task Uuuu(CommandContext ctx)
     {

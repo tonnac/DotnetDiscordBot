@@ -19,7 +19,7 @@ public enum BossType : int
     MrKrabs = 12,
     Dragon = 13,
     TheOffice = 14,
-    End,
+    End = 15,
 }
 
 public class BossInfo

@@ -75,11 +75,20 @@ public class BossMonster
         return false;
     }
 
-    public void ResetBossMonster()
+    public void ResetBossMonster(int resetBossType = (int)BossType.Start)
     {
-        var rand = new Random();
-        int bossType = rand.Next((int)BossType.Start + 1, (int)BossType.End);
-        SetBossMonsterInfo( (BossType)bossType );
+        Math.Clamp(resetBossType, (int)BossType.Start, (int)BossType.End);
+        
+        if ((int)BossType.Start == resetBossType || (int)BossType.End == resetBossType )
+        {
+            var rand = new Random();
+            int bossType = rand.Next((int)BossType.Start + 1, (int)BossType.End);
+            SetBossMonsterInfo( (BossType)bossType );
+        }
+        else
+        {
+            SetBossMonsterInfo( (BossType)resetBossType );
+        }
     }
 
     public bool IsBossType(BossType bossType)
