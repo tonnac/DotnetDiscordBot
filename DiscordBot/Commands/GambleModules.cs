@@ -36,9 +36,15 @@ public class GambleModules : BaseCommandModule
 
     private int _donationMoney;
     
+    private int _randomDonationMoney;
+    private int _randomDonationKey;
+    
     public GambleModules()
     {
         _donationMoney = 0;
+        
+        _randomDonationMoney = 0;
+        _randomDonationKey = 0;
         
         _fundsGamble = new FundsGamble(1, 500, 200, 24);
 
@@ -201,8 +207,7 @@ public class GambleModules : BaseCommandModule
         }
     }
 
-    [Command, Aliases("dn", "기부", "사료")]
-    public async Task Donation(CommandContext ctx, [RemainingText] string? donationCommand)
+    public async Task<int> DoDonation(CommandContext ctx, string donationCommand)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -211,9 +216,27 @@ public class GambleModules : BaseCommandModule
         int donationValue = 0;
         if( !string.IsNullOrEmpty(donationCommand))
         {
-            Int32.TryParse(donationCommand, out donationValue);
+            if ("all" == donationCommand || "전부" == donationCommand)
+            {
+                donationValue = gambleUserDatabase.gold;
+            }
+            else
+            {
+                Int32.TryParse(donationCommand, out donationValue);
+            }
         }
-        donationValue = 0 >= donationValue ? 100 : donationValue;
+
+        return Math.Clamp(donationValue, 1, gambleUserDatabase.gold);
+    }
+
+    [Command, Aliases("dn", "기부", "사료")]
+    public async Task Donation(CommandContext ctx, [RemainingText] string? donationCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+        int donationValue = await DoDonation(ctx, donationCommand);
         
         if (donationValue > gambleUserDatabase.gold)
         {
@@ -259,6 +282,78 @@ public class GambleModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/2913/2913091.png")
             .WithColor(DiscordColor.Gold)
             .AddField(new DiscordEmbedField(" + " + VEmoji.Money + Convert.ToString(tempDonationMoney), ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
+        
+        await ctx.RespondAsync(embedBuilder);
+    }
+    
+    [Command, Aliases("rdn", "랜덤기부", "랜덤사료")]
+    public async Task RandomDonation(CommandContext ctx, [RemainingText] string? donationCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+        int donationValue = await DoDonation(ctx, donationCommand);
+        
+        if (donationValue > gambleUserDatabase.gold)
+        {
+            await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
+            return;
+        }
+        
+        GoldQuery query = new GoldQuery(-donationValue);
+        await database.UpdateUserGold(ctx, query);
+
+        var rand = new Random();
+        
+        _randomDonationMoney += donationValue;
+        _randomDonationKey = 0 == _randomDonationKey ? rand.Next(1, 11) : _randomDonationKey;
+
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://m.media-amazon.com/images/I/41Ts-rQFrLS._AC_.jpg")
+            .WithColor(DiscordColor.Gold)
+            .AddField(new DiscordEmbedField(" - " + VEmoji.Money + Convert.ToString(donationValue) + "　" + VEmoji.LockedWithKey + Convert.ToString(_randomDonationKey), VEmoji.WingMoney + " " + ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
+        
+        await ctx.RespondAsync(embedBuilder);
+    }
+    
+    [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
+    public async Task RandomThanks(CommandContext ctx)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        
+        if (0 >= _randomDonationMoney)
+        {
+            await ctx.RespondAsync(VEmoji.GiftBox + ".. " + VEmoji.QuestionMark);
+            return;
+        }
+
+        var rand = new Random();
+        int keyNumber = rand.Next(1, 11);
+        int tempDonationMoney = 0;
+        string thumbnail = "https://www.vhv.rs/dpng/d/431-4314442_open-silver-safe-png-clip-art-open-safe.png";
+
+        if (_randomDonationKey == keyNumber)
+        {
+            tempDonationMoney = _randomDonationMoney;
+        
+            GoldQuery query = new GoldQuery(_randomDonationMoney);
+            await database.UpdateUserGold(ctx, query);
+
+            _randomDonationMoney = 0;
+            _randomDonationKey = 0;
+
+            thumbnail = "https://img.freepik.com/free-vector/safe-lockers-doors-concept-with-security-privacy-symbols-realistic-vector-illustration_1284-75528.jpg";
+        }
+        
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail(thumbnail)
+            .WithColor(DiscordColor.Gold)
+            .AddField(new DiscordEmbedField(" + " + VEmoji.Money + Convert.ToString(tempDonationMoney) + "　" + VEmoji.LockedWithKey + Convert.ToString(keyNumber), ctx.Member.Mention, false))
             .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);

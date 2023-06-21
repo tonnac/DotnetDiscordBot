@@ -442,6 +442,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10).
+        /// </summary>
+        internal static string randomdonation_Description {
+            get {
+                return ResourceManager.GetString("randomdonation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generates a random key and brings donations to the random donation box if correct..
+        /// </summary>
+        internal static string randomthanks_Description {
+            get {
+                return ResourceManager.GetString("randomthanks_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove song from the queue.
         /// </summary>
         internal static string remove_Description {
