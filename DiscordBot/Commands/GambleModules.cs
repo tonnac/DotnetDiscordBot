@@ -344,7 +344,7 @@ public class GambleModules : BaseCommandModule
         string name = Utility.GetMemberDisplayName(ctx.Member);
         string thumbnail = "https://www.vhv.rs/dpng/d/431-4314442_open-silver-safe-png-clip-art-open-safe.png";
         string openText = ".." + VEmoji.QuestionMark;
-        string openTextSub = "　[ " + VEmoji.Locked + Convert.ToString(_randomDonationKey) + " ]";
+        string openTextSub = "　" + VEmoji.Locked + Convert.ToString(_randomDonationKey);
 
         if (_randomDonationKey == keyNumber)
         {
