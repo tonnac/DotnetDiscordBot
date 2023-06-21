@@ -7,7 +7,6 @@ using DiscordBot.Channels;
 using DiscordBot.Database;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
-using DiscordBot.Resource;
 
 namespace DiscordBot.Commands;
 
@@ -109,7 +108,7 @@ public class BossModules : BaseCommandModule
         
         // dead check
         int hitCount = _bossMonster.HitCount;
-        int killedBossGetGold = 777 == _bossMonster.CurrentMaxHp ? 7777 : _bossMonster.CurrentMaxHp;
+        int killedBossGetGold = BossInfo.GetBossDropGold(_bossMonster.Type);
         string deadBossEmojiCode = _bossMonster.BossEmojiCode;
         KeyValuePair<ulong, BossUserInfo> bestDealerInfo;
 
@@ -145,7 +144,7 @@ public class BossModules : BaseCommandModule
     }
     
     [Command, Aliases("bi", "보스정보"), Cooldown(1, 3, CooldownBucketType.User)]
-    public async Task BossInfo(CommandContext ctx)
+    public async Task BossHuntInfo(CommandContext ctx)
     {
         KeyValuePair<ulong, BossUserInfo> bestDealerInfo = _bossMonster.GetBestDealer();
         string bestDealer = 0 == bestDealerInfo.Key ? "X" : Utility.GetMemberDisplayName(bestDealerInfo.Value.Member);
@@ -261,19 +260,20 @@ public class BossModules : BaseCommandModule
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/1440/1440998.png")
             .WithColor(DiscordColor.White)
             //.WithAuthor(_bossMonster.BossEmojiCode)
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Mosquito) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Mosquito) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Mosquito), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Bat) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Bat) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Bat), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Octopus) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Octopus) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Octopus), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Shark) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Shark) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Shark), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Unicorn) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Unicorn) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Unicorn), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Skeleton) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Skeleton) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Skeleton), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Devil) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Devil) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Devil), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.SlotMachine) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.SlotMachine) + ", " + VEmoji.Money + Convert.ToString(7777), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Alien) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Alien) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Alien), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.AngryDevil) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.AngryDevil) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.AngryDevil), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Trex) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Trex) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Trex), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.Dragon) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.Dragon) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.Dragon), false))
-            .AddField(new DiscordEmbedField("[ "+ _bossMonster.GetBossEmojiCode(BossType.TheOffice) + " ]", VEmoji.Heart + _bossMonster.GetBossMaxHp(BossType.TheOffice) + ", " + VEmoji.Money + _bossMonster.GetBossMaxHp(BossType.TheOffice), false));
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Mosquito) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Mosquito) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Mosquito), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Bat) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Bat) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Bat), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Octopus) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Octopus) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Octopus), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Shark) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Shark) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Shark), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Unicorn) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Unicorn) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Unicorn), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Skeleton) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Skeleton) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Skeleton), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Devil) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Devil) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Devil), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.SlotMachine) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.SlotMachine) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.SlotMachine), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Alien) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Alien) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Alien), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.AngryDevil) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.AngryDevil) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.AngryDevil), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Trex) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Trex) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Trex), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.MrKrabs) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.MrKrabs) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.MrKrabs), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.Dragon) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.Dragon) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.Dragon), false))
+            .AddField(new DiscordEmbedField("[ "+ BossInfo.GetBossEmojiCode(BossType.TheOffice) + " ]", VEmoji.Heart + BossInfo.GetBossMaxHp(BossType.TheOffice) + ", " + VEmoji.Money + BossInfo.GetBossDropGold(BossType.TheOffice), false));
         
         await ctx.RespondAsync(embedBuilder);
         

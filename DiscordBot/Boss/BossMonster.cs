@@ -3,27 +3,9 @@ using DiscordBot.Resource;
 
 namespace DiscordBot.Boss;
 
-public enum BossType : int
-{
-    Start = 0,
-    Mosquito = 1,
-    Bat = 2,
-    Octopus = 3,
-    Shark = 4,
-    Unicorn = 5,
-    Skeleton = 6,   
-    Devil = 7,
-    SlotMachine = 8,
-    Alien = 9,
-    AngryDevil = 10,
-    Trex = 11,
-    Dragon = 12,
-    TheOffice = 13,
-    End,
-}
-
 public class BossMonster
 {
+    public BossType Type { get; set; }
     public string BossEmojiCode { get; set; }
     public int CurrentHp { get; set; }
     public int CurrentMaxHp { get; set; }
@@ -38,8 +20,9 @@ public class BossMonster
 
     private void SetBossMonsterInfo(BossType type)
     {
-        BossEmojiCode = GetBossEmojiCode(type);
-        CurrentHp = GetBossMaxHp(type);
+        Type = type;
+        BossEmojiCode = BossInfo.GetBossEmojiCode(type);
+        CurrentHp = BossInfo.GetBossMaxHp(type);
         CurrentMaxHp = CurrentHp;
         HitCount = 0;
         TotalDamageDictionary.Clear();
@@ -99,71 +82,8 @@ public class BossMonster
         SetBossMonsterInfo( (BossType)bossType );
     }
 
-    public int GetBossMaxHp(BossType type)
+    public bool IsBossType(BossType bossType)
     {
-        switch (type)
-        {
-            default:
-            case BossType.Mosquito:
-                return 10;
-            case BossType.Bat:
-                return 100;
-            case BossType.Octopus:
-                return 200;
-            case BossType.Shark:
-                return 300;
-            case BossType.Unicorn:
-                return 400;
-            case BossType.Skeleton:
-                return 444;
-            case BossType.Devil:
-                return 666;
-            case BossType.SlotMachine:
-                return 777;
-            case BossType.Alien:
-                return 800;
-            case BossType.AngryDevil:
-                return 999;
-            case BossType.Trex:
-                return 1000;
-            case BossType.Dragon:
-                return 1500;
-            case BossType.TheOffice:
-                return 1818;
-        }
-    }
-    
-    public string GetBossEmojiCode(BossType type)
-    {
-        switch (type)
-        {
-            default:
-            case BossType.Mosquito:
-                return VEmoji.Mosquito;
-            case BossType.Bat:
-                return VEmoji.Bat;
-            case BossType.Octopus:
-                return VEmoji.Octopus;
-            case BossType.Shark:
-                return VEmoji.Shark;
-            case BossType.Unicorn:
-                return VEmoji.Unicorn;
-            case BossType.Skeleton:
-                return VEmoji.Skeleton;
-            case BossType.Devil:
-                return VEmoji.Devil;
-            case BossType.SlotMachine:
-                return VEmoji.SlotMachine;
-            case BossType.Alien:
-                return VEmoji.Alien;
-            case BossType.AngryDevil:
-                return VEmoji.AngryDevil;
-            case BossType.Trex:
-                return VEmoji.Trex;
-            case BossType.Dragon:
-                return VEmoji.Dragon;
-            case BossType.TheOffice:
-                return VEmoji.TheOffice;
-        }
+        return Type == bossType;
     }
 }

@@ -92,9 +92,9 @@ namespace DiscordBot.Resource {
         /// <summary>
         ///   Looks up a localized string similar to Shows current boss information..
         /// </summary>
-        internal static string bossinfo_Description {
+        internal static string bosshuntinfo_Description {
             get {
-                return ResourceManager.GetString("bossinfo_Description", resourceCulture);
+                return ResourceManager.GetString("bosshuntinfo_Description", resourceCulture);
             }
         }
         

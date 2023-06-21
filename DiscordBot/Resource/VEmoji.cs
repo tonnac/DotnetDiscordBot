@@ -13,6 +13,7 @@ public class VEmoji
     public static readonly string Alien = "\uD83D\uDC7D"; // 👽
     public static readonly string AngryDevil = "\uD83D\uDC7F"; // 👿
     public static readonly string Trex = "\uD83E\uDD96"; // 🦖
+    public static readonly string Crab = "\uD83E\uDD80"; // 🦀
     public static readonly string Dragon = "\uD83D\uDC09"; // 🐉
     public static readonly string TheOffice = "\uD83C\uDFEC"; // 🏬
 

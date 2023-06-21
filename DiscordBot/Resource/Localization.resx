@@ -243,7 +243,7 @@ This has a lower priority than music added with play.</value>
    When defeated, a certain amount of gold is paid to the last attacker.
    In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
 	</data>
-	<data name="bossinfo_Description" xml:space="preserve">
+	<data name="bosshuntinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>
 	</data>
 	<data name="gameranking_Description" xml:space="preserve">

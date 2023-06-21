@@ -243,7 +243,7 @@
    처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
    처지 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
 	</data>
-	<data name="bossinfo_Description" xml:space="preserve">
+	<data name="bosshuntinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
 	</data>
 	<data name="gameranking_Description" xml:space="preserve">
