@@ -243,7 +243,7 @@
    처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
    처지 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
 	</data>
-	<data name="bossinfo_Description" xml:space="preserve">
+	<data name="bosshuntinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
 	</data>
 	<data name="gameranking_Description" xml:space="preserve">
@@ -275,6 +275,12 @@
 	</data>
 	<data name="thanks_Description" xml:space="preserve">
 		<value>기부함에 있는 기부금을 가져갑니다.</value>
+	</data>
+	<data name="randomdonation_Description" xml:space="preserve">
+		<value>랜덤기부함에 기부를 합니다. 금액 입력 가능.(ex. 기부 1000), 랜덤 키가 자동생성됩니다. (1~10)</value>
+	</data>
+	<data name="randomthanks_Description" xml:space="preserve">
+		<value>랜덤키를 생성하여 맞을 경우 랜덤기부함 기부금을 가져옵니다.</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
 		<value>무기를 강화합니다. (데미지, 낚시확률 증가)</value>

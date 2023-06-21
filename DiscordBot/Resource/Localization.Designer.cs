@@ -92,9 +92,9 @@ namespace DiscordBot.Resource {
         /// <summary>
         ///   Looks up a localized string similar to Shows current boss information..
         /// </summary>
-        internal static string bossinfo_Description {
+        internal static string bosshuntinfo_Description {
             get {
-                return ResourceManager.GetString("bossinfo_Description", resourceCulture);
+                return ResourceManager.GetString("bosshuntinfo_Description", resourceCulture);
             }
         }
         
@@ -438,6 +438,24 @@ namespace DiscordBot.Resource {
         internal static string queue_Description {
             get {
                 return ResourceManager.GetString("queue_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10).
+        /// </summary>
+        internal static string randomdonation_Description {
+            get {
+                return ResourceManager.GetString("randomdonation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generates a random key and brings donations to the random donation box if correct..
+        /// </summary>
+        internal static string randomthanks_Description {
+            get {
+                return ResourceManager.GetString("randomthanks_Description", resourceCulture);
             }
         }
         

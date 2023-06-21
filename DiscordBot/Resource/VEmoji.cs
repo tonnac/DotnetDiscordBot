@@ -13,6 +13,7 @@ public class VEmoji
     public static readonly string Alien = "\uD83D\uDC7D"; // 👽
     public static readonly string AngryDevil = "\uD83D\uDC7F"; // 👿
     public static readonly string Trex = "\uD83E\uDD96"; // 🦖
+    public static readonly string Crab = "\uD83E\uDD80"; // 🦀
     public static readonly string Dragon = "\uD83D\uDC09"; // 🐉
     public static readonly string TheOffice = "\uD83C\uDFEC"; // 🏬
 
@@ -26,6 +27,8 @@ public class VEmoji
     public static readonly string WingMoney = "\uD83D\uDCB8"; // 💸
     public static readonly string Money = "\uD83D\uDCB0"; // 💰
     public static readonly string ConfettiBall = "\uD83C\uDF8A"; // 🎊
+    
+    public static readonly string LockedWithKey = "\uD83D\uDD10"; // 🔐
 
     public static readonly string Trophy = "\uD83C\uDFC6"; // 🏆
     public static readonly string GoldMedal = "\uD83E\uDD47"; // 🥇
