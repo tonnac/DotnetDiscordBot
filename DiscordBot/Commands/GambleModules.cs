@@ -108,12 +108,12 @@ public class GambleModules : BaseCommandModule
         GoldQuery query = new GoldQuery(result - ante);
         await database.UpdateUserGold(ctx, query);
 
-        string thumbnail = "https://mblogthumb-phinf.pstatic.net/20150921_183/ahn3607_14427964013593pE8h_PNG/bandicam_2015-09-21_09-33-43-638.png?type=w2";
+        string thumbnail = "https://media.tenor.com/yIWyg_2g9EgAAAAd/feyresmaid.gif";
         string plusminus = "-";
         
         if (0 < result)
         {
-            thumbnail = "https://mblogthumb-phinf.pstatic.net/MjAxNzExMTJfMjUy/MDAxNTEwNDk0NDcxNzE3.TviKbphDkRt73FbgkUtXn-gpFXuCEfWsfCLYh7hgFNIg.tlUNqn3XMoIm_Mm69k-mo07vCH9YBYY9jfcESIaN9jMg.JPEG.jongwon6544/15ed6b7663649c14e.jpg?type=w2";
+            thumbnail = "https://media.tenor.com/OaYYWO9efBIAAAAC/rich-money.gif";
             plusminus = "+";
         }
         
