@@ -1,5 +1,4 @@
 ﻿using DiscordBot.Resource;
-
 namespace DiscordBot.Boss;
 
 public enum BossType : int
