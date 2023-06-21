@@ -248,11 +248,13 @@ public class GambleModules : BaseCommandModule
         await database.UpdateUserGold(ctx, query);
 
         _donationMoney += donationValue;
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/3815/3815861.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(" - " + VEmoji.Money + Convert.ToString(donationValue), VEmoji.WingMoney + " " + ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField(VEmoji.WingMoney + " " + name, " - " + VEmoji.Money + Convert.ToString(donationValue), false))
             .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
@@ -277,11 +279,13 @@ public class GambleModules : BaseCommandModule
         await database.UpdateUserGold(ctx, query);
 
         _donationMoney = 0;
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/2913/2913091.png")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(" + " + VEmoji.Money + Convert.ToString(tempDonationMoney), ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField(name, " + " + VEmoji.Money + Convert.ToString(tempDonationMoney), false))
             .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
@@ -304,6 +308,8 @@ public class GambleModules : BaseCommandModule
         
         GoldQuery query = new GoldQuery(-donationValue);
         await database.UpdateUserGold(ctx, query);
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
 
         var rand = new Random();
         
@@ -313,8 +319,8 @@ public class GambleModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://m.media-amazon.com/images/I/41Ts-rQFrLS._AC_.jpg")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(" - " + VEmoji.Money + Convert.ToString(donationValue) + "　" + VEmoji.LockedWithKey + Convert.ToString(_randomDonationKey), VEmoji.WingMoney + " " + ctx.Member.Mention, false))
-            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField(VEmoji.WingMoney + " " + name, " - " + VEmoji.Money + Convert.ToString(donationValue) + "　" + VEmoji.LockedWithKey + Convert.ToString(_randomDonationKey), false))
+            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_randomDonationMoney) + " ]", false));
         
         await ctx.RespondAsync(embedBuilder);
     }
@@ -335,7 +341,10 @@ public class GambleModules : BaseCommandModule
         var rand = new Random();
         int keyNumber = rand.Next(1, 11);
         int tempDonationMoney = 0;
+        string name = Utility.GetMemberDisplayName(ctx.Member);
         string thumbnail = "https://www.vhv.rs/dpng/d/431-4314442_open-silver-safe-png-clip-art-open-safe.png";
+        string openText = ".." + VEmoji.QuestionMark;
+        string openTextSub = "　" + VEmoji.Locked + Convert.ToString(_randomDonationKey);
 
         if (_randomDonationKey == keyNumber)
         {
@@ -348,13 +357,15 @@ public class GambleModules : BaseCommandModule
             _randomDonationKey = 0;
 
             thumbnail = "https://img.freepik.com/free-vector/safe-lockers-doors-concept-with-security-privacy-symbols-realistic-vector-illustration_1284-75528.jpg";
+            openText = " + " + VEmoji.Money + Convert.ToString(tempDonationMoney);
+            openTextSub = "　" + VEmoji.Unlocked;
         }
         
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail(thumbnail)
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(" + " + VEmoji.Money + Convert.ToString(tempDonationMoney) + "　" + VEmoji.LockedWithKey + Convert.ToString(keyNumber), ctx.Member.Mention, false))
-            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_donationMoney) + " ]", false));
+            .AddField(new DiscordEmbedField(name, openText + "　" + VEmoji.Key + Convert.ToString(keyNumber), false))
+            .AddField(new DiscordEmbedField("──────────", "[ " + VEmoji.GiftBox + " " + Convert.ToString(_randomDonationMoney) + " ]" + openTextSub, false));
         
         await ctx.RespondAsync(embedBuilder);
     }

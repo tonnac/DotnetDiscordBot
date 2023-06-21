@@ -29,6 +29,9 @@ public class VEmoji
     public static readonly string ConfettiBall = "\uD83C\uDF8A"; // 🎊
     
     public static readonly string LockedWithKey = "\uD83D\uDD10"; // 🔐
+    public static readonly string Key = "\uD83D\uDD11"; // 🔑
+    public static readonly string Locked = "\uD83D\uDD12"; // 🔒
+    public static readonly string Unlocked = "\uD83D\uDD13"; // 🔓
 
     public static readonly string Trophy = "\uD83C\uDFC6"; // 🏆
     public static readonly string GoldMedal = "\uD83E\uDD47"; // 🥇
