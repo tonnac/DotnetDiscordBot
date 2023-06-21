@@ -39,7 +39,7 @@ public class GambleModules : BaseCommandModule
     private int _randomDonationMoney;
     private int _randomDonationKey;
     
-    private readonly int _diceGambleMinAnte = 1000;
+    private readonly int _diceGambleMinAnte = 500;
     private readonly int _diceGambleMaxAnte = 10000;
     
     public GambleModules()
@@ -108,7 +108,7 @@ public class GambleModules : BaseCommandModule
         
         if (_diceGambleMinAnte > ante || ante > gambleUserDatabase.gold)
         {
-            await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
+            await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark + "(" + Convert.ToString(_diceGambleMinAnte) + " ~ " + Convert.ToString(_diceGambleMaxAnte) + ")");
             return;
         }
 
