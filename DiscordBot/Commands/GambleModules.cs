@@ -101,7 +101,7 @@ public class GambleModules : BaseCommandModule
             }
         }
 
-        ante = Math.Clamp(ante, 1, 10000);
+        ante = Math.Clamp(ante, 1000, 10000);
         
         if (ante > gambleUserDatabase.gold)
         {
