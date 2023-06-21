@@ -325,7 +325,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
+    [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
     public async Task RandomThanks(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
