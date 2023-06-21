@@ -39,6 +39,9 @@ public class GambleModules : BaseCommandModule
     private int _randomDonationMoney;
     private int _randomDonationKey;
     
+    private readonly int _diceGambleMinAnte = 1000;
+    private readonly int _diceGambleMaxAnte = 10000;
+    
     public GambleModules()
     {
         _donationMoney = 0;
@@ -59,8 +62,8 @@ public class GambleModules : BaseCommandModule
             .WithColor(DiscordColor.White)
             .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.CardFileBox + "  ] " + VEmoji.Money + Convert.ToString(_fundsGamble.Ante) + " ─── dfg", false))
             .AddField(new DiscordEmbedField(VEmoji.Trophy + " " + Convert.ToString(_fundsGamble.WinPer) + "%", VEmoji.Money + Convert.ToString(_fundsGamble.WinMoney), true))
-            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Dice + "  ] " + VEmoji.Money + "1~10000 ─── ddg ???", false))
-            .AddField(new DiscordEmbedField(VEmoji.Trophy + " ??%", " " + VEmoji.Money + "1~10000", true));
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Dice + "  ] " + VEmoji.Money + Convert.ToString(_diceGambleMinAnte) + " ~ " + Convert.ToString(_diceGambleMaxAnte) + " ─── ddg ???", false))
+            .AddField(new DiscordEmbedField(VEmoji.Trophy + " ??%", " " + VEmoji.Money + Convert.ToString(_diceGambleMinAnte) + " ~ " + Convert.ToString(_diceGambleMaxAnte), true));
             
         
         await ctx.RespondAsync(embedBuilder);
@@ -101,9 +104,9 @@ public class GambleModules : BaseCommandModule
             }
         }
 
-        ante = Math.Clamp(ante, 1000, 10000);
+        ante = Math.Clamp(ante, 1, _diceGambleMaxAnte);
         
-        if (ante > gambleUserDatabase.gold)
+        if (_diceGambleMinAnte > ante || ante > gambleUserDatabase.gold)
         {
             await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
             return;
