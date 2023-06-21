@@ -47,21 +47,20 @@ namespace DiscordBot.Commands
         [Command, Aliases("yj")]
         public async Task YachtJoin(CommandContext ctx)
         {
-            if (_currPlayingYachtChannels.ContainsKey(ctx.Channel.Id))
+            if (!IsYachtChannel(ctx.Channel.Id))
             {
-                if ( _currPlayingYachtChannels[ctx.Channel.Id]  != null &&  _currPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
-                {
-                    _currPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
-                    await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
-                }
-                else
-                {
-                    await ctx.RespondAsync("풀방임");
-                }
+                await ctx.RespondAsync("야추방이 아닌데요?");
+                return;
+            } 
+            
+            if ( _currPlayingYachtChannels[ctx.Channel.Id]  != null &&  _currPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
+            {
+                _currPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
+                await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
             }
             else
             {
-                await ctx.RespondAsync("야추방이 아닌데요?");
+                await ctx.RespondAsync("풀방임");
             }
         }
 
