@@ -38,6 +38,7 @@ public class YachtGame
     private readonly int[] _dices = new int[5];
 
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
+    public string? TurnName => _turn % 2 == 0 ? "2P" : "1P";
 
     public static string? DiceFaceEmojiCode(int diceNum)
     {
@@ -118,18 +119,18 @@ public class YachtGame
         sortList.AddRange(_dices);
         sortList.Sort();
 
-        int tempcheck = 0;
+        int tempCheck = 0;
 
         for (int i = 0; i < 4; i++)
         {
             if (sortList[i] + 1 != sortList[i + 1])
             {
-                tempcheck++;
+                tempCheck++;
             }
 
         }
 
-        if (tempcheck == 0)
+        if (tempCheck == 0)
             _tempPoints[(int)EYachtPointType.LStraight] = 30;
 
         for (int i = 0; i < 3; i++)
@@ -194,7 +195,6 @@ public class YachtGame
         }
     }
 
-
     public DiscordEmbedBuilder ScoreBoardVisualize()
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -206,11 +206,11 @@ public class YachtGame
      {
          DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
              .WithColor(DiscordColor.Green)
-             .WithTitle(CurrPlayer?.Mention);
+             .WithTitle(TurnName + " : " + CurrPlayer?.Username);
 
-         for (int i = 0 ; i < _dices.Length; i++)
+         foreach (var diceNum in _dices)
          {
-             embedBuilder.AddField(new DiscordEmbedField(_dices[i].ToString(),DiceFaceEmojiCode(_dices[i]),true));
+             embedBuilder.AddField(new DiscordEmbedField(diceNum.ToString(),DiceFaceEmojiCode(diceNum),true));
          }
 
          return embedBuilder;
