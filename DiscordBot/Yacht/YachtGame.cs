@@ -1,4 +1,5 @@
 using DisCatSharp;
+using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
@@ -37,6 +38,8 @@ public class YachtGame
     private readonly int[] _tempPoints = new int[12];
     private readonly int[] _dices = new int[5];
 
+    private readonly List<int> _diceTarget = new List<int>(5);
+
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
     public string? TurnName => _turn % 2 == 0 ? "2P" : "1P";
 
@@ -62,9 +65,10 @@ public class YachtGame
         }
 
         int choice = 0;
-        for (int i = 0; i < 5; i++)
+
+        foreach (var dice in _dices)
         {
-            choice += _dices[i];
+            choice += dice;
         }
 
         _tempPoints[(int)EYachtPointType.Choice] = choice;
@@ -119,18 +123,18 @@ public class YachtGame
         sortList.AddRange(_dices);
         sortList.Sort();
 
-        int tempCheck = 0;
+        int straightCheck = 0;
 
         for (int i = 0; i < 4; i++)
         {
             if (sortList[i] + 1 != sortList[i + 1])
             {
-                tempCheck++;
+                straightCheck++;
             }
 
         }
 
-        if (tempCheck == 0)
+        if (straightCheck == 0)
             _tempPoints[(int)EYachtPointType.LStraight] = 30;
 
         for (int i = 0; i < 3; i++)
@@ -175,23 +179,35 @@ public class YachtGame
     }
     public async Task MessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
-        if (_yachtChannel!.Id != eventArgs.ChannelId||
-            eventArgs.Message.Id != _yachtDiceTrayUiMessage!.Id)
-        {
+        if (_yachtChannel!.Id != eventArgs.ChannelId)
             return;
-        }
-
-        throw new Exception();
+        
+        if (eventArgs.Message.Id != _yachtDiceTrayUiMessage!.Id)
+            return;
+        
+        
     }
 
-
-    void DiceRoll(List<int>? targetDices = null)
+    void DiceRoll()
     {
         Random rand = new Random();
         for (int i = 0 ; i<_dices.Length;i++)
         {
-            if((bool) targetDices?.Contains(i))
-                _dices[i] = rand.Next(1, 7);
+            if (!_diceTarget.EmptyOrNull())
+            {
+                if (!_diceTarget.Contains(i))
+                    continue;
+            }
+            _dices[i] = rand.Next(1, 7);
+        }
+    }
+
+    void DiceReset()
+    {
+        _diceTarget.Clear();
+        for (int i = 0; i < _dices.Length; i++)
+        {
+            _dices[i] = 0;
         }
     }
 
