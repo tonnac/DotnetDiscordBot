@@ -226,7 +226,7 @@ public class GambleModules : BaseCommandModule
             }
         }
 
-        return Math.Clamp(donationValue, 1, gambleUserDatabase.gold);
+        return Math.Max(0, donationValue);
     }
 
     [Command, Aliases("dn", "기부", "사료")]
@@ -238,7 +238,7 @@ public class GambleModules : BaseCommandModule
 
         int donationValue = await DoDonation(ctx, donationCommand);
         
-        if (donationValue > gambleUserDatabase.gold)
+        if (0 == donationValue || donationValue > gambleUserDatabase.gold)
         {
             await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
             return;
@@ -300,7 +300,7 @@ public class GambleModules : BaseCommandModule
 
         int donationValue = await DoDonation(ctx, donationCommand);
         
-        if (donationValue > gambleUserDatabase.gold)
+        if (0 == donationValue || donationValue > gambleUserDatabase.gold)
         {
             await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
             return;
