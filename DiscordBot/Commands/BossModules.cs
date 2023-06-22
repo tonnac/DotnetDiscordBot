@@ -43,6 +43,8 @@ public class BossModules : BaseCommandModule
         DatabaseUser attackUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_WeaponUpgradeMultiplier;
         int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_RingUpgradeMultiplier;
+        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Gold_GemUpgradeMultiplier;
+        float gemPercentage = gemUpgrade / 100.0f;
         
         var rand = new Random();
         
@@ -127,18 +129,24 @@ public class BossModules : BaseCommandModule
                 .AddField(new DiscordEmbedField(deadBossEmojiCode + " " + VEmoji.CrossSword + " " + Convert.ToString(hitCount + 1), 
                     VEmoji.GoldMedal + Utility.GetMemberDisplayName(bestDealerInfo.Value.Member) + " " + VEmoji.Boom + Convert.ToString(bestDealerInfo.Value.TotalDamage) + " +" + VEmoji.Money, false));
 
-            
-            BossQuery query = new BossQuery((ulong)validDamage, 1, killedBossGetGold + validDamage, 1);
+            float addGemPercentageMoney = (killedBossGetGold + validDamage) * (1.0f + gemPercentage);
+            BossQuery query = new BossQuery((ulong)validDamage, 1, (int)addGemPercentageMoney, 1);
             await database.UpdateBossRaid(ctx, query);
 
-            GoldQuery goldQuery = new GoldQuery(bestDealerInfo.Value.TotalDamage);
+            DatabaseUser bestDealerUserDatabase = await database.GetDatabaseUser(bestDealerInfo.Value.Guild, bestDealerInfo.Value.User);
+            int bestDealerGemUpgrade = EquipCalculator.GetGemUpgradeInfo(bestDealerUserDatabase.equipvalue);
+            float bestDealerGemPercentage = (bestDealerGemUpgrade * EquipCalculator.Gold_GemUpgradeMultiplier) / 100.0f;
+            float bestDealerAddGemPercentageMoney = bestDealerInfo.Value.TotalDamage * (1.0f + bestDealerGemPercentage);
+            
+            GoldQuery goldQuery = new GoldQuery((int)bestDealerAddGemPercentageMoney);
             await database.UpdateUserGold(bestDealerInfo.Value.Guild, bestDealerInfo.Value.User, goldQuery);
         
             await ctx.Channel.SendMessageAsync(killEmbedBuilder);
         }
         else
         {
-            BossQuery query = new BossQuery((ulong)validDamage, 0, validDamage, 1);
+            float addGemPercentageMoney = validDamage * (1.0f + gemPercentage);
+            BossQuery query = new BossQuery((ulong)validDamage, 0, (int)addGemPercentageMoney, 1);
             await database.UpdateBossRaid(ctx, query);
         }
     }
@@ -234,10 +242,10 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
             .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
-            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
-            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
-            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
-            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Gem + ", " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
             .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Crossbones + "  ]", false))
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + killRankUser[0], Convert.ToString(killRankCount[0]), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + killRankUser[1], Convert.ToString(killRankCount[1]), true))
@@ -420,7 +428,7 @@ public class BossModules : BaseCommandModule
                 {
                     case -1: // Broken
                     {
-                        await database.AddEquipValue(ctx, -(ringCurrentUpgrade*10));
+                        await database.AddEquipValue(ctx, -(ringCurrentUpgrade * EquipCalculator.CutNum));
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
@@ -452,7 +460,7 @@ public class BossModules : BaseCommandModule
                     }
                     case 1: // Success
                     {
-                        await database.AddEquipValue(ctx, 10);
+                        await database.AddEquipValue(ctx, EquipCalculator.CutNum);
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
@@ -476,6 +484,97 @@ public class BossModules : BaseCommandModule
             else
             {
                 await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark);
+            }
+        }
+    }
+    
+    [Command, Aliases("ug", "보석강화"), Cooldown(1, 1800, CooldownBucketType.UserAndChannel, true)]
+    public async Task UpgradeGem(CommandContext ctx, [RemainingText] string? tempCommand)
+    {
+        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        {
+            var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        
+        int gemCurrentUpgrade = EquipCalculator.GetGemUpgradeInfo(userDatabase.equipvalue);
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+
+        if (9 <= gemCurrentUpgrade)
+        {
+            await ctx.RespondAsync(ctx.Member.Mention + " " + VEmoji.ThumbsUp);
+        }
+        else
+        {
+            int upgradeResult = EquipCalculator.Upgrade(gemCurrentUpgrade);
+
+            switch (upgradeResult)
+            {
+                case -1: // Broken
+                {
+                    await database.AddEquipValue(ctx, -(gemCurrentUpgrade * EquipCalculator.CutNum * EquipCalculator.CutNum));
+
+                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                        .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
+                        .WithColor(DiscordColor.DarkRed)
+                        .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "────────", false))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade) + " ]", true))
+                        .AddField(new DiscordEmbedField("▶", "▶", true))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️0 ]", true));
+
+                    var message = await ctx.RespondAsync(embedBuilder);
+                    if (message != null && 7 <= gemCurrentUpgrade)
+                    {
+                        await message.PinAsync();
+                    }
+
+                    break;
+                }
+                case 0: // Fail
+                {
+                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                        .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
+                        .WithColor(DiscordColor.Red)
+                        .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "────────", false))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade) + " ]", true))
+                        .AddField(new DiscordEmbedField("▶", "▶", true))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade) + " ]", true));
+
+                    await ctx.RespondAsync(embedBuilder);
+                    break;
+                }
+                case 1: // Success
+                {
+                    await database.AddEquipValue(ctx, EquipCalculator.CutNum * EquipCalculator.CutNum);
+
+                    DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                        .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
+                        .WithColor(DiscordColor.Green)
+                        .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "────────", false))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade) + " ]", true))
+                        .AddField(new DiscordEmbedField("▶", "▶", true))
+                        .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade + 1) + " ]", true));
+
+                    var message = await ctx.RespondAsync(embedBuilder);
+                    if (message != null && 6 <= gemCurrentUpgrade)
+                    {
+                        await message.PinAsync();
+                    }
+
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
@@ -566,8 +665,30 @@ public class BossModules : BaseCommandModule
 
             await ctx.RespondAsync(embedBuilder2);
         }
+    }
+
+    [Command, Aliases("ggp", "보석수급"), Cooldown(1, 3600, CooldownBucketType.User, true)]
+    public async Task GetGemPay(CommandContext ctx, [RemainingText] string? tempCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         
-        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
+        int gemCurrentUpgrade = EquipCalculator.GetGemUpgradeInfo(userDatabase.equipvalue);
+
+        int gemPay = gemCurrentUpgrade * EquipCalculator.Pay_GemUpgradeMultiplier;
+        
+        GoldQuery query = new GoldQuery(gemPay);
+        await database.UpdateUserGold(ctx, query);
+        
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://i.pinimg.com/originals/36/6f/10/366f10fa1064662651463d3f058854c6.gif")
+            .WithColor(DiscordColor.Gold)
+            .AddField(new DiscordEmbedField(VEmoji.Gem + " " + name, "[ +" + VEmoji.Money + Convert.ToString(gemPay) + " ]" ));
+        
+        await ctx.RespondAsync(embedBuilder);
     }
 
     [Command]

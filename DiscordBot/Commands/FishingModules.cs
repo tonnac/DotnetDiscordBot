@@ -56,6 +56,8 @@ public class FishingModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser fishUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Fish_WeaponUpgradeMultiplier;
+        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Gold_GemUpgradeMultiplier;
+        float gemPercentage = gemUpgrade / 100.0f;
         
         var rand = new Random();
         int fishingRandom = rand.Next(1, 101);
@@ -90,7 +92,8 @@ public class FishingModules : BaseCommandModule
             .WithAuthor(VEmoji.FishingPole + " " + name)
             .AddField(new DiscordEmbedField(VEmoji.Hook + fishEmoji_Result + " !", "+ " + VEmoji.Money + Convert.ToString(fishGold_Result), false));
         
-        GoldQuery query = new GoldQuery(fishGold_Result);
+        float addGemPercentageMoney = fishGold_Result * (1.0f + gemPercentage);
+        GoldQuery query = new GoldQuery((int)addGemPercentageMoney);
         await database.UpdateUserGold(ctx, query);
         
         await ctx.RespondAsync(embedBuilder);

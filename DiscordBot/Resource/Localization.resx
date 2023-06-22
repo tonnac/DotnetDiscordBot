@@ -288,6 +288,12 @@ This has a lower priority than music added with play.</value>
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
+	<data name="upgradegem_Description" xml:space="preserve">
+		<value>Enhance your gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
+	</data>
+	<data name="getgempay_Description" xml:space="preserve">
+		<value>You receive money equal to the number of gem enhancements.</value>
+	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>

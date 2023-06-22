@@ -288,6 +288,12 @@
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
 	</data>
+	<data name="upgradegem_Description" xml:space="preserve">
+		<value>보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
+	</data>
+	<data name="getgempay_Description" xml:space="preserve">
+		<value>보석 강화 수치만큼 돈을 지급받습니다.</value>
+	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
 	</data>

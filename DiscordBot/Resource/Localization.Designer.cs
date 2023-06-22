@@ -288,6 +288,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You receive money equal to the number of gem enhancements..
+        /// </summary>
+        internal static string getgempay_Description {
+            get {
+                return ResourceManager.GetString("getgempay_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send a message to chatgpt..
         /// </summary>
         internal static string gpt_Description {
@@ -573,6 +582,15 @@ namespace DiscordBot.Resource {
         internal static string TotalSongs {
             get {
                 return ResourceManager.GetString("TotalSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enhance your gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        /// </summary>
+        internal static string upgradegem_Description {
+            get {
+                return ResourceManager.GetString("upgradegem_Description", resourceCulture);
             }
         }
         
