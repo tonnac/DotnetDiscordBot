@@ -256,8 +256,6 @@ public class BossModules : BaseCommandModule
             .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + dealRankUser[2], Convert.ToString(dealRankCount[2]), true));
         
         await ctx.RespondAsync(embedBuilder);
-        
-        //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🏆"));
     }
     
     [Command, Aliases("bl", "보스리스트"), Cooldown(1, 10, CooldownBucketType.User)]
