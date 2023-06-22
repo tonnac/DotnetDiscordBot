@@ -833,6 +833,54 @@ public class BossModules : BaseCommandModule
             await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
     }
+    
+    [Command]
+    public async Task SetGoldGemMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = VEmoji.RedCrossMark;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetGold_GemUpgradeMultiplier(value);
+            result = true;
+            emoji = VEmoji.GreenCheckBox;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
+    public async Task SetGemPayMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = VEmoji.RedCrossMark;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetPay_GemUpgradeMultiplier(value);
+            result = true;
+            emoji = VEmoji.GreenCheckBox;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
 
     [Command] // ToggleBossChannel
     public async Task Bbbb(CommandContext ctx)
