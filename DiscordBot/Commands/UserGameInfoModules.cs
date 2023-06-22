@@ -25,11 +25,11 @@ public class UserGameInfoModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
-            .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), false))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Gem + "  ]", "+" + Convert.ToString(gemUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Ring + "  ]", "+" + Convert.ToString(ringUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
-            .AddField(new DiscordEmbedField(VEmoji.Magnifier, "└───" + ctx.Member.Mention, false))
+            .AddField(new DiscordEmbedField(VEmoji.Magnifier + " ┐", "└ " + ctx.Member.Mention, false))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Crossbones + "  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.CrossSword + "  ]", Convert.ToString(myUserDatabase.combatcount), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
