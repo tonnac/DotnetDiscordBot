@@ -15,7 +15,10 @@ public class EquipCalculator
     public static int Fish_WeaponUpgradeMultiplier = 1;
     public static int Dice_RingUpgradeMultiplier = 2;
 
-    private static int CutNum = 10;
+    public static int Gold_GemUpgradeMultiplier = 5;
+    public static int Pay_GemUpgradeMultiplier = 1000;
+
+    public static int CutNum = 10;
     
     public static List<UpgradePercentage> UpgradePercentages = new List<UpgradePercentage>()
     {
@@ -55,6 +58,14 @@ public class EquipCalculator
     {
         Dice_RingUpgradeMultiplier = value;
     }
+    public static void SetGold_GemUpgradeMultiplier(int value)
+    {
+        Gold_GemUpgradeMultiplier = value;
+    }
+    public static void SetPay_GemUpgradeMultiplier(int value)
+    {
+        Pay_GemUpgradeMultiplier = value;
+    }
 
     public static int Upgrade(int currentUpgradeNum)
     {
@@ -91,5 +102,15 @@ public class EquipCalculator
         }
         
         return (equipValue / CutNum) % CutNum;
+    }
+    
+    public static int GetGemUpgradeInfo(int equipValue)
+    {
+        if (0 >= equipValue)
+        {
+            return 0;
+        }
+        
+        return (equipValue / CutNum) / CutNum;
     }
 }
