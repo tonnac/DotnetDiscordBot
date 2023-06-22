@@ -684,7 +684,7 @@ public class BossModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://i.pinimg.com/originals/36/6f/10/366f10fa1064662651463d3f058854c6.gif")
             .WithColor(DiscordColor.Gold)
-            .AddField(new DiscordEmbedField(VEmoji.Gem + " " + name, "[ +" + VEmoji.Money + Convert.ToString(gemPay) + " ]" ));
+            .AddField(new DiscordEmbedField(VEmoji.Gem + " " + name, "[ + " + VEmoji.Money + Convert.ToString(gemPay) + " ]" ));
         
         await ctx.RespondAsync(embedBuilder);
     }
