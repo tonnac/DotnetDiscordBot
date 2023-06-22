@@ -1,7 +1,9 @@
 using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Interactivity.Extensions;
 using DiscordBot.Yacht;
 
 namespace DiscordBot.Commands
@@ -36,7 +38,8 @@ namespace DiscordBot.Commands
                 _1P = ctx.User,
                 _yachtChannel = await ctx.Channel.CreateThreadAsync($"{ctx.User.Username}님의 야추방", ThreadAutoArchiveDuration.OneDay),
             };
-            _client.MessageReactionAdded += newGame.MessageReactionAdded;
+            _client.MessageReactionAdded += newGame.DiceTrayMessageReactionAdded;
+            _client.MessageReactionAdded += newGame.ScoreBoardMessageReactionAdded;
             if (_currPlayingYachtChannels.TryAdd(newGame._yachtChannel.Id, newGame))
             {
                 await newGame._yachtChannel.SendMessageAsync($"{newGame._1P.Mention}님이 야추방을 만드셨습니다.");
@@ -78,7 +81,8 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync("플레이중이 아니신데요?");
                 return;
             }
-            _client.MessageReactionAdded -= _currPlayingYachtChannels[ctx.Channel.Id]!.MessageReactionAdded;
+            _client.MessageReactionAdded -= _currPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionAdded;
+            _client.MessageReactionAdded -= _currPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionAdded;
             _currPlayingYachtChannels[ctx.Channel.Id]?.GameSettle();
             _currPlayingYachtChannels.Remove(ctx.Channel.Id);
             await ctx.RespondAsync("야추 종료");
@@ -106,7 +110,16 @@ namespace DiscordBot.Commands
                     return;
                 }
 
-                await ctx.Channel.SendMessageAsync(yachtGame.DiceTrayVisualize());
+                DiscordMessage scoreBoard = await ctx.Channel.SendMessageAsync(yachtGame.ScoreBoardVisualize());
+                DiscordMessage diceTrayMessage = await ctx.Channel.SendMessageAsync(yachtGame.DiceTrayVisualize());
+                await yachtGame.SetUi(diceTrayMessage,scoreBoard);
+                await diceTrayMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("1️⃣"));
+                await diceTrayMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("2️⃣"));
+                await diceTrayMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("3️⃣"));
+                await diceTrayMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("4️⃣"));
+                await diceTrayMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("5️⃣"));
+                await yachtGame.ClearUi();
+
             }
 
         }

@@ -31,6 +31,7 @@ public class YachtGame
     public DiscordThreadChannel? _yachtChannel;
     public DiscordMessage? _yachtScoreUiMessage;
     public DiscordMessage? _yachtDiceTrayUiMessage;
+    private readonly List<DiscordMessage> _prevUiMessages = new List<DiscordMessage>();
 
     private int _turn = 1;
 
@@ -40,10 +41,25 @@ public class YachtGame
 
     private readonly List<int> _diceTarget = new List<int>(5);
 
+
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
     public string? TurnName => _turn % 2 == 0 ? "2P" : "1P";
 
-    public static string? DiceFaceEmojiCode(int diceNum)
+    public async Task ClearUi()
+    {
+        await _yachtChannel?.DeleteMessagesAsync(_prevUiMessages)!;
+        _prevUiMessages.Clear();
+    }
+    public async Task  SetUi(DiscordMessage diceTray, DiscordMessage scoreUi)
+    {
+        if (_yachtDiceTrayUiMessage != null) _prevUiMessages.Add(_yachtDiceTrayUiMessage);
+        if (_yachtScoreUiMessage != null) _prevUiMessages.Add(_yachtScoreUiMessage);
+
+        _yachtDiceTrayUiMessage = diceTray;
+        _yachtScoreUiMessage = scoreUi;
+    }
+
+    public static string DiceFaceEmojiCode(int diceNum)
     {
         switch (diceNum)
         {
@@ -177,15 +193,50 @@ public class YachtGame
     {
 
     }
-    public async Task MessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
+    public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
         if (_yachtChannel!.Id != eventArgs.ChannelId)
             return;
         
         if (eventArgs.Message.Id != _yachtDiceTrayUiMessage!.Id)
             return;
+            
+        if (CurrPlayer?.Id != eventArgs.Message.Author.Id)
+            return;
+
+        switch (eventArgs.Emoji.Name)
+        {
+            case "1️⃣": break;
+            case "2️⃣": break;
+            case "3️⃣": break;
+            case "4️⃣": break;
+            case "5️⃣": break;
+            case "6️⃣": break;
+        }
+  
+
+        DiscordEmoji.FromName(client,"dice1");
+        DiscordEmoji.FromName(client,"dice2");
+        DiscordEmoji.FromName(client,"dice3");
+        DiscordEmoji.FromName(client,"dice4");
+        DiscordEmoji.FromName(client,"dice5");
+        DiscordEmoji.FromName(client,"dice6");
         
         
+    }
+
+    public async Task ScoreBoardMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
+    {
+        if (_yachtChannel!.Id != eventArgs.ChannelId)
+            return;
+        
+        if (eventArgs.Message.Id != _yachtScoreUiMessage!.Id)
+            return;
+
+        if (CurrPlayer?.Id != eventArgs.Message.Author.Id)
+            return;
+
+
     }
 
     void DiceRoll()
@@ -214,7 +265,8 @@ public class YachtGame
     public DiscordEmbedBuilder ScoreBoardVisualize()
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-            .WithColor(DiscordColor.Orange);
+            .WithColor(DiscordColor.Orange)
+            .WithTitle("ScoreBoard");
         return embedBuilder;
     }
 
