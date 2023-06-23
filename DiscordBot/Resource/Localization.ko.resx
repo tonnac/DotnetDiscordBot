@@ -170,6 +170,9 @@
 	<data name="gamblehelp_Description" xml:space="preserve">
 		<value>도박 명령어와 설명을 표시합니다.</value>
 	</data>
+	<data name="userinfohelp_Description" xml:space="preserve">
+		<value>유저정보 명령어와 설명을 표시합니다.</value>
+	</data>
 	<data name="pause_Description" xml:space="preserve">
 		<value>현재 재생중인 음악을 일시 중지합니다.</value>
 	</data>
@@ -234,7 +237,7 @@
 	<data name="dice_Description" xml:space="preserve">
 		<value>주사위를 굴립니다.</value>
 	</data>
-	<data name="exit_Description" xml:space="preserve">
+	<data name="doexit_Description" xml:space="preserve">
 		<value>현재 참여중인 음성채널 연결을 종료합니다.</value>
 	</data>
 	<data name="bossattack_Description" xml:space="preserve">
@@ -288,7 +291,16 @@
 	<data name="upgradering_Description" xml:space="preserve">
 		<value>반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
 	</data>
+	<data name="upgradegem_Description" xml:space="preserve">
+		<value>보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
+	</data>
+	<data name="getgempay_Description" xml:space="preserve">
+		<value>보석 강화 수치만큼 돈을 지급받습니다.</value>
+	</data>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
+	</data>
+	<data name="buyxp_Description" xml:space="preserve">
+		<value>경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
 	</data>
 </root>

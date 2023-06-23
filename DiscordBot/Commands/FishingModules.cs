@@ -56,6 +56,8 @@ public class FishingModules : BaseCommandModule
         await database.ConnectASync();
         DatabaseUser fishUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Fish_WeaponUpgradeMultiplier;
+        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Gold_GemUpgradeMultiplier;
+        float gemPercentage = gemUpgrade / 100.0f;
         
         var rand = new Random();
         int fishingRandom = rand.Next(1, 101);
@@ -90,7 +92,8 @@ public class FishingModules : BaseCommandModule
             .WithAuthor(VEmoji.FishingPole + " " + name)
             .AddField(new DiscordEmbedField(VEmoji.Hook + fishEmoji_Result + " !", "+ " + VEmoji.Money + Convert.ToString(fishGold_Result), false));
         
-        GoldQuery query = new GoldQuery(fishGold_Result);
+        float addGemPercentageMoney = fishGold_Result * (1.0f + gemPercentage);
+        GoldQuery query = new GoldQuery((int)addGemPercentageMoney);
         await database.UpdateUserGold(ctx, query);
         
         await ctx.RespondAsync(embedBuilder);
@@ -109,32 +112,5 @@ public class FishingModules : BaseCommandModule
             .AddField(new DiscordEmbedField("[ "+ fishEmoji_legendary + " ]", Convert.ToString(legendaryPer) + "%, " + VEmoji.Money + Convert.ToString(fishGold_legendary), false));
         
         await ctx.RespondAsync(embedBuilder);
-    }
-    
-    [Command] // ToggleFishingChannel
-    public async Task Ffff(CommandContext ctx)
-    {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.FishingChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.FishingChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
-        if (result)
-        {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
-        }
     }
 }

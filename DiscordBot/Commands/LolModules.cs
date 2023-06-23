@@ -62,8 +62,8 @@ public class LolModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
         
-    [Command, Aliases("DoAram"), Cooldown(1, 20, CooldownBucketType.Guild)]
-    public async Task Aram(CommandContext ctx)
+    [Command, Aliases("Aram"), Cooldown(1, 20, CooldownBucketType.Guild)]
+    public async Task DoAram(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();

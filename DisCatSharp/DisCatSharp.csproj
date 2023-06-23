@@ -66,5 +66,7 @@ Written with love and for everyone.
     <Folder Include="Entities\Interaction\Components\DateTime\" />
     <Folder Include="Entities\Interaction\Components\Radio\" />
   </ItemGroup>
-
+  <Target Condition="'$(Configuration)' == 'Release' And '$(OS)' == 'Windows_NT'" Name="PostBuild" BeforeTargets="PostBuildEvent">
+    <Exec Command="copy $(OutDir)$(AssemblyName).dll $(ProjectDir)..\DiscordBot\" />
+  </Target>
 </Project>

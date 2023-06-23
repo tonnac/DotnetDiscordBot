@@ -1,13 +1,16 @@
 ﻿namespace DiscordBot.Equip;
 
 /*
- 101010
+ 99990999
+ 레벨  경험치  ????  보석  반지  무기
+ 99       99     0     9     9    9
  */
 
 public class EquipCalculator
 {
     public static int WeaponUpgradeMoney = 2000;
     public static int RingUpgradeMoney = 4000;
+    public static int LevelUpgradeMoney = 10000;
 
     public static int Boss_WeaponUpgradeMultiplier = 5;
     public static int Boss_RingUpgradeMultiplier = 1;
@@ -15,7 +18,13 @@ public class EquipCalculator
     public static int Fish_WeaponUpgradeMultiplier = 1;
     public static int Dice_RingUpgradeMultiplier = 2;
 
-    private static int CutNum = 10;
+    public static int Gold_GemUpgradeMultiplier = 5;
+    public static int Pay_GemUpgradeMultiplier = 1000;
+
+    public static int EquipCutNum = 10;
+
+    public static int LevelCutNum = 10000;
+    public static int XpCutNum = 100;
     
     public static List<UpgradePercentage> UpgradePercentages = new List<UpgradePercentage>()
     {
@@ -55,6 +64,14 @@ public class EquipCalculator
     {
         Dice_RingUpgradeMultiplier = value;
     }
+    public static void SetGold_GemUpgradeMultiplier(int value)
+    {
+        Gold_GemUpgradeMultiplier = value;
+    }
+    public static void SetPay_GemUpgradeMultiplier(int value)
+    {
+        Pay_GemUpgradeMultiplier = value;
+    }
 
     public static int Upgrade(int currentUpgradeNum)
     {
@@ -80,7 +97,7 @@ public class EquipCalculator
     
     public static int GetWeaponUpgradeInfo(int equipValue)
     {
-        return equipValue % CutNum;
+        return equipValue % EquipCutNum;
     }
     
     public static int GetRingUpgradeInfo(int equipValue)
@@ -90,6 +107,36 @@ public class EquipCalculator
             return 0;
         }
         
-        return (equipValue / CutNum) % CutNum;
+        return (equipValue / EquipCutNum) % EquipCutNum;
+    }
+    
+    public static int GetGemUpgradeInfo(int equipValue)
+    {
+        if (0 >= equipValue)
+        {
+            return 0;
+        }
+        
+        return (equipValue % LevelCutNum) / (EquipCutNum * EquipCutNum);
+    }
+    
+    public static int GetLevel(int equipValue)
+    {
+        if (0 >= equipValue)
+        {
+            return 0;
+        }
+        
+        return equipValue / (LevelCutNum * XpCutNum);
+    }
+    
+    public static int GetXp(int equipValue)
+    {
+        if (0 >= equipValue)
+        {
+            return 0;
+        }
+
+        return (equipValue / LevelCutNum) % XpCutNum;
     }
 }

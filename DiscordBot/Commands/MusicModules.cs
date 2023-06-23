@@ -1,4 +1,5 @@
-﻿using DisCatSharp.CommandsNext;
+﻿using DisCatSharp;
+using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
@@ -184,31 +185,47 @@ namespace DiscordBot.Commands
 
         private async Task<MusicPlayer?> CreateMusicPlayer(CommandContext ctx)
         {
-            LavalinkExtension? lava = ctx.Client.GetLavalink();
+            return await CreateMusicPlayer(ctx.Client, ctx.Member.VoiceState.Channel, _musicPlayers);
+        }
+        public static async Task<MusicPlayer?> CreateMusicPlayer(DiscordClient client, DiscordChannel channel, Dictionary<DiscordGuild, MusicPlayer> musicPlayers)
+        {
+            var musicPlayer = await CreateMusicPlayer(client, channel);
+            if (musicPlayer != null)
+            {
+                musicPlayer.Connection.ChannelDisconnected += (connection) =>
+                {
+                    musicPlayers.Remove(connection.Guild);
+                };
+                musicPlayers.TryAdd(channel.Guild, musicPlayer);
+            }
+
+            return musicPlayer;
+        }
+        
+        private static async Task<MusicPlayer?> CreateMusicPlayer(DiscordClient client, DiscordChannel channel)
+        {
+            LavalinkExtension? lava = client.GetLavalink();
             if (lava == null)
             {
-                ctx.Client.Logger.LogError(new EventId(200, "LavaLinkExtension"), null, "LavaLinkExtension null");
+                client.Logger.LogError(new EventId(200, "LavaLinkExtension"), null, "LavaLinkExtension null");
                 return null;
             }
 
             LavalinkNodeConnection? node = lava.ConnectedNodes.Values.First();
             if (node == null)
             {
-                ctx.Client.Logger.LogError(new EventId(201, "LavaLinkNodeConnection"), null, "LavaLinkNodeConnection null");
+                client.Logger.LogError(new EventId(201, "LavaLinkNodeConnection"), null, "LavaLinkNodeConnection null");
                 return null;
             }
 
-            LavalinkGuildConnection? conn = await node.ConnectAsync(ctx.Member.VoiceState.Channel);
+            LavalinkGuildConnection? conn = await node.ConnectAsync(channel);
             if (conn == null)
             {
-                ctx.Client.Logger.LogError(new EventId(202, "LavaLinkGuildConnection"), null, "LavaLinkGuildConnection null");
+                client.Logger.LogError(new EventId(202, "LavaLinkGuildConnection"), null, "LavaLinkGuildConnection null");
                 return null;
             }
 
-            conn.ChannelDisconnected += (connection) => { _musicPlayers.Remove(connection.Guild); };
-
             MusicPlayer musicPlayer = new MusicPlayer(conn);
-            _musicPlayers.TryAdd(ctx.Guild, musicPlayer);
             return musicPlayer;
         }
     }

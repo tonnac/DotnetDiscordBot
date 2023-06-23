@@ -18,8 +18,4 @@ jobs:
         port: ${{ secrets.PORT }}
         password: ${{ secrets.PASSWORD }}
         script: | 
-          cd DotnetDiscordBot
-          git pull
-          sudo docker compose stop
-          sudo docker compose build
-          sudo docker compose --env-file ./.env up -d
+          bash run.sh

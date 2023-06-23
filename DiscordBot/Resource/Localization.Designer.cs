@@ -108,6 +108,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Raise your experience. The level rises when the experience reaches a certain level..
+        /// </summary>
+        internal static string buyxp_Description {
+            get {
+                return ResourceManager.GetString("buyxp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
@@ -189,6 +198,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
+        /// </summary>
+        internal static string doexit_Description {
+            get {
+                return ResourceManager.GetString("doexit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gamble Funds. If you win, you take all the money collected..
         /// </summary>
         internal static string dofundsgamble_Description {
@@ -221,15 +239,6 @@ namespace DiscordBot.Resource {
         internal static string ErrorNotQueue {
             get {
                 return ResourceManager.GetString("ErrorNotQueue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
-        /// </summary>
-        internal static string exit_Description {
-            get {
-                return ResourceManager.GetString("exit_Description", resourceCulture);
             }
         }
         
@@ -284,6 +293,15 @@ namespace DiscordBot.Resource {
         internal static string gameranking_Description {
             get {
                 return ResourceManager.GetString("gameranking_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You receive money equal to the number of gem enhancements..
+        /// </summary>
+        internal static string getgempay_Description {
+            get {
+                return ResourceManager.GetString("getgempay_Description", resourceCulture);
             }
         }
         
@@ -577,6 +595,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enhance your gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        /// </summary>
+        internal static string upgradegem_Description {
+            get {
+                return ResourceManager.GetString("upgradegem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Strengthen the ring. (Attack hit rate, dice gambling value increase).
         /// </summary>
         internal static string upgradering_Description {
@@ -609,6 +636,15 @@ namespace DiscordBot.Resource {
         internal static string UpNext {
             get {
                 return ResourceManager.GetString("UpNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show userinfo commands and descriptions.
+        /// </summary>
+        internal static string userinfohelp_Description {
+            get {
+                return ResourceManager.GetString("userinfohelp_Description", resourceCulture);
             }
         }
         
