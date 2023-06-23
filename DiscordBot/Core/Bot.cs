@@ -52,19 +52,21 @@ public class Bot
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
 
-        var listener = services.GetService(typeof(TerminateReceiver));
-        if (listener != null)
+        var receiver = services.GetService(typeof(TerminateReceiver));
+        if (receiver != null)
         {
-            _terminateReceiver = (TerminateReceiver)listener;
+            _terminateReceiver = (TerminateReceiver)receiver;
+            _client.GuildDownloadCompleted += (sender, args) => Task.Factory.StartNew(() => _terminateReceiver.Run());
         }
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
         {
-            StringPrefixes = new List<string>{ Config.Prefix },
+            StringPrefixes = new List<string> { Config.Prefix },
             ServiceProvider = services
         });
         commandNext.UnregisterCommands(commandNext.FindCommand("help", out string _));
         commandNext.RegisterCommands(Assembly.GetExecutingAssembly());
+
     }
     
     public async Task MainAsync()
@@ -72,7 +74,6 @@ public class Bot
         await _client.ConnectAsync();
         await _messageHandler.RunASync();
         await ConnectLaveLinkASync();
-        await _terminateReceiver.Run();
         await Task.Delay(-1);
     }
 
