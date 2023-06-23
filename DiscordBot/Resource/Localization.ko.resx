@@ -170,6 +170,9 @@
 	<data name="gamblehelp_Description" xml:space="preserve">
 		<value>도박 명령어와 설명을 표시합니다.</value>
 	</data>
+	<data name="userinfohelp_Description" xml:space="preserve">
+		<value>유저정보 명령어와 설명을 표시합니다.</value>
+	</data>
 	<data name="pause_Description" xml:space="preserve">
 		<value>현재 재생중인 음악을 일시 중지합니다.</value>
 	</data>
@@ -234,7 +237,7 @@
 	<data name="dice_Description" xml:space="preserve">
 		<value>주사위를 굴립니다.</value>
 	</data>
-	<data name="exit_Description" xml:space="preserve">
+	<data name="doexit_Description" xml:space="preserve">
 		<value>현재 참여중인 음성채널 연결을 종료합니다.</value>
 	</data>
 	<data name="bossattack_Description" xml:space="preserve">

@@ -1,7 +1,9 @@
 ﻿namespace DiscordBot.Equip;
 
 /*
- 101010
+ 9999999
+ 레벨  경험치  보석  반지  무기
+ 99       99     9     9    9
  */
 
 public class EquipCalculator

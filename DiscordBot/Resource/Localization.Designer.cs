@@ -189,6 +189,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
+        /// </summary>
+        internal static string doexit_Description {
+            get {
+                return ResourceManager.GetString("doexit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gamble Funds. If you win, you take all the money collected..
         /// </summary>
         internal static string dofundsgamble_Description {
@@ -221,15 +230,6 @@ namespace DiscordBot.Resource {
         internal static string ErrorNotQueue {
             get {
                 return ResourceManager.GetString("ErrorNotQueue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
-        /// </summary>
-        internal static string exit_Description {
-            get {
-                return ResourceManager.GetString("exit_Description", resourceCulture);
             }
         }
         
@@ -627,6 +627,15 @@ namespace DiscordBot.Resource {
         internal static string UpNext {
             get {
                 return ResourceManager.GetString("UpNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show userinfo commands and descriptions.
+        /// </summary>
+        internal static string userinfohelp_Description {
+            get {
+                return ResourceManager.GetString("userinfohelp_Description", resourceCulture);
             }
         }
         

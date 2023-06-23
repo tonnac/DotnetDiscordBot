@@ -46,19 +46,25 @@ namespace DiscordBot.Commands
         [Command, Aliases("bh", "보스도움말"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task BossHelp(CommandContext ctx)
         {
-            await Help_Private(ctx, new List<string>{ "Boss", "UserGameInfo" });
+            await Help_Private(ctx, new List<string>{ "Boss" });
         }
         
         [Command, Aliases("fh", "낚시도움말"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task FishingHelp(CommandContext ctx)
         {
-            await Help_Private(ctx, new List<string>{ "Fishing", "UserGameInfo" });
+            await Help_Private(ctx, new List<string>{ "Fishing" });
         }
         
         [Command, Aliases("gh", "도박도움말"), Cooldown(1, 60, CooldownBucketType.User)]
         public async Task GambleHelp(CommandContext ctx)
         {
-            await Help_Private(ctx, new List<string>{ "Gamble", "UserGameInfo" });
+            await Help_Private(ctx, new List<string>{ "Gamble" });
+        }
+        
+        [Command, Aliases("uih", "유저정보도움말"), Cooldown(1, 60, CooldownBucketType.User)]
+        public async Task UserInfoHelp(CommandContext ctx)
+        {
+            await Help_Private(ctx, new List<string>{ "UserGameInfo" });
         }
 
         private async Task Help_Private(CommandContext ctx, List<string> category)
