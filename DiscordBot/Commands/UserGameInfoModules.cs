@@ -579,10 +579,15 @@ public class UserGameInfoModules : BaseCommandModule
             // xp
             await database.AddEquipValue(ctx, -(xp * EquipCalculator.LevelCutNum));
         }
+        else
+        {
+            // xp
+            await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum);
+        }
 
         GoldQuery query = new GoldQuery(-EquipCalculator.LevelUpgradeMoney);
         await database.UpdateUserGold(ctx, query);
         
-        await ctx.RespondAsync(VEmoji.Books + "!!");
+        await ctx.RespondAsync(VEmoji.Books + " ..!");
     }
 }

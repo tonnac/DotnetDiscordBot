@@ -117,7 +117,7 @@ public class EquipCalculator
             return 0;
         }
         
-        return equipValue / (EquipCutNum * EquipCutNum);
+        return (equipValue % LevelCutNum) / (EquipCutNum * EquipCutNum);
     }
     
     public static int GetLevel(int equipValue)
