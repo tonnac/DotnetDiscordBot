@@ -41,4 +41,8 @@ Documentation: https://docs.discatsharp.tech/articles/modules/commandsnext/intro
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
 
+  <Target Condition="'$(Configuration)' == 'Release' And '$(OS)' == 'Windows_NT'" Name="PostBuild" BeforeTargets="PostBuildEvent">
+    <Exec Command="copy $(OutDir)$(AssemblyName).dll $(ProjectDir)..\DiscordBot\" />
+  </Target>
+  
 </Project>

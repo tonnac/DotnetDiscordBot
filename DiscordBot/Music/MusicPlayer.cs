@@ -26,22 +26,130 @@ public class MusicPlayer
         Connection.PlaybackFinished += OnTrackFinished;
     }
 
-    public async Task Play(CommandContext ctx, string searchQuery, bool isLongPlay = false)
+    public async Task Play(Playlist playlist)
     {
-        LavalinkLoadResult? loadResult;
-        if (searchQuery.Contains("https://"))
+        if (Connection.IsConnected == false)
         {
-            loadResult = await Connection.Node.Rest.GetTracksAsync(new Uri(searchQuery));
-        }
-        else
-        {
-            loadResult = await Connection.Node.Rest.GetTracksAsync(searchQuery);
+            return;
         }
 
-        if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
-            || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
+        bool bPlayed = false;
+        
+        foreach (PlayingMusic playingMusic in playlist.List)
         {
-            await ctx.RespondAsync($"Track search failed for {searchQuery}.");
+            LavalinkLoadResult? loadResult = await GetLoadResult(playingMusic.Url);
+
+            if (loadResult == null)
+            {
+                continue;
+            }
+
+            Connection.Guild.Members.TryGetValue(playingMusic.MemberId, out DiscordMember? member);
+            Connection.Guild.Channels.TryGetValue(playingMusic.RequestChannel, out DiscordChannel? channel);
+
+            if (member == null || channel == null)
+            {
+                continue;
+            }
+
+            var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), false);
+            if (bPlayed == false && playingMusic.Time != null)
+            {
+                await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
+                bPlayed = true;
+            }
+
+            _trackList.Add(musicTrack);
+        }
+        
+        foreach (PlayingMusic playingMusic in playlist.LongPlaylist)
+        {
+            LavalinkLoadResult? loadResult = await GetLoadResult(playingMusic.Url);
+
+            if (loadResult == null)
+            {
+                continue;
+            }
+            Connection.Guild.Members.TryGetValue(playingMusic.MemberId, out DiscordMember? member);
+            Connection.Guild.Channels.TryGetValue(playingMusic.RequestChannel, out DiscordChannel? channel);
+
+            if (member == null || channel == null)
+            {
+                continue;
+            }
+            
+            var musicTrack = (LongPlayTrack)MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), true);
+            if (playingMusic.Time != null)
+            {
+                musicTrack.TimeSpan = (TimeSpan)playingMusic.Time;
+
+                if (bPlayed == false)
+                {
+                    await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
+                    bPlayed = true;
+                }
+            }
+
+            _lpTrackList.Add(musicTrack);
+        }
+    }
+
+    public Playlist GetPlayList()
+    {
+        var playList = new Playlist
+        {
+            Channel = Connection.Channel.Id,
+            List = new List<PlayingMusic>(),
+        };
+
+        foreach (MusicTrack musicTrack in _trackList)
+        {
+            var playingMusic = new PlayingMusic
+            {
+                Url = musicTrack.LavaLinkTrack.Uri.ToString(),
+                RequestChannel = musicTrack.Channel.Id,
+                MemberId = musicTrack.User.Id
+            };
+
+            if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
+            {
+                playingMusic.Time = Connection.CurrentState.PlaybackPosition;
+            }
+
+            playList.List.Add(playingMusic);
+        }
+        
+        foreach (MusicTrack musicTrack in _lpTrackList)
+        {
+            var playingMusic = new PlayingMusic
+            {
+                Url = musicTrack.LavaLinkTrack.Uri.ToString(),
+                MemberId = musicTrack.User.Id,
+                RequestChannel = musicTrack.Channel.Id
+            };
+
+            LongPlayTrack longPlayTrack = (LongPlayTrack)musicTrack;
+            if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
+            {
+                playingMusic.Time = Connection.CurrentState.PlaybackPosition;
+            }
+            else if (longPlayTrack.TimeSpan != TimeSpan.Zero)
+            {
+                playingMusic.Time = longPlayTrack.TimeSpan;
+            }
+            
+            playList.LongPlaylist.Add(playingMusic);
+        }
+
+        return playList;
+    }
+
+    public async Task Play(CommandContext ctx, string searchQuery, bool isLongPlay = false)
+    {
+        LavalinkLoadResult? loadResult = await GetLoadResult(searchQuery);
+
+        if (loadResult == null)
+        {
             return;
         }
 
@@ -276,6 +384,27 @@ public class MusicPlayer
             .WithColor(DiscordColor.PhthaloGreen)
             .WithAuthor("✅" + Localization.CheckDm);
         await ctx.RespondAsync(respondEmbed);
+    }
+
+    private async Task<LavalinkLoadResult?> GetLoadResult(string searchQuery)
+    {
+        LavalinkLoadResult? loadResult;
+        if (searchQuery.Contains("https://"))
+        {
+            loadResult = await Connection.Node.Rest.GetTracksAsync(new Uri(searchQuery));
+        }
+        else
+        {
+            loadResult = await Connection.Node.Rest.GetTracksAsync(searchQuery);
+        }
+
+        if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
+            || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
+        {
+            return null;
+        }
+
+        return loadResult;
     }
 
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
