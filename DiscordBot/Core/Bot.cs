@@ -19,6 +19,7 @@ public class Bot
 {
     private readonly DiscordClient _client;
     private readonly DiscordMessageHandler _messageHandler;
+    private readonly TerminateReceiver _terminateReceiver;
 
     public Bot()
     {
@@ -26,7 +27,7 @@ public class Bot
         Thread.Sleep(20000);
 #endif
         Localization.Culture = new CultureInfo(Config.Locale, false);
-        
+
         _client = new DiscordClient(new DiscordConfiguration
         {
             Token = Config.Token,
@@ -45,10 +46,17 @@ public class Bot
 
         var services = new ServiceCollection()
             .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
+            .AddSingleton<TerminateReceiver>()
             .AddSingleton(_client)
             .AddSingleton(_messageHandler)
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
+
+        var listener = services.GetService(typeof(TerminateReceiver));
+        if (listener != null)
+        {
+            _terminateReceiver = (TerminateReceiver)listener;
+        }
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
         {
@@ -64,6 +72,7 @@ public class Bot
         await _client.ConnectAsync();
         await _messageHandler.RunASync();
         await ConnectLaveLinkASync();
+        await _terminateReceiver.Run();
         await Task.Delay(-1);
     }
 
