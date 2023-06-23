@@ -7,25 +7,26 @@ namespace DiscordBot.Yacht;
 
 enum EYachtPointType : ushort 
 {
-Aces,
-Deuces,
-Threes,
-Fours,
-Fives,
-Sixes,
-Choice,
-FourOfaKind,
-FullHouse,
-SStraight,
-LStraight,
-Yacht,
-SubTotal,
-Bonus,
-Total,
+    Aces,
+    Deuces,
+    Threes,
+    Fours,
+    Fives,
+    Sixes,
+    Choice,
+    FourOfaKind,
+    FullHouse,
+    SStraight,
+    LStraight,
+    Yacht,
+    SubTotal,
+    Bonus,
+    Total,
 }
 
 public class YachtGame
 {
+    private readonly string[] _enNums = new string[] {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
     public DiscordUser? _1P;
     public DiscordUser? _2P;
     public DiscordThreadChannel? _yachtChannel;
@@ -43,13 +44,13 @@ public class YachtGame
 
 
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
-    public string? TurnName => _turn % 2 == 0 ? "2P" : "1P";
-    public async Task<bool> SetUi()
+    private string TurnName => _turn % 2 == 0 ? "2P" : "1P";
+    public async Task<bool> SetUi(DiscordClient discordClient)
     {
         if (_yachtDiceTrayUiMessage == null && _yachtScoreUiMessage == null)
         {
-            _yachtScoreUiMessage = await _yachtChannel?.SendMessageAsync(ScoreBoardVisualize())!;
-            _yachtDiceTrayUiMessage = await _yachtChannel?.SendMessageAsync(DiceTrayVisualize())!; 
+            _yachtScoreUiMessage = await _yachtChannel?.SendMessageAsync(ScoreBoardVisualize(discordClient))!;
+            _yachtDiceTrayUiMessage = await _yachtChannel?.SendMessageAsync(DiceTrayVisualize(discordClient!))!; 
             
             await _yachtDiceTrayUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("1️⃣"));
             await _yachtDiceTrayUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("2️⃣"));
@@ -60,19 +61,6 @@ public class YachtGame
             return false;
         }
         return true;
-    }
-    public static string DiceFaceEmojiCode(int diceNum)
-    {
-        switch (diceNum)
-        {
-           default: 
-           case 1 : return "\u2680"; 
-           case 2 : return "\u2681"; 
-           case 3 : return "\u2682"; 
-           case 4 : return "\u2683"; 
-           case 5 : return "\u2684"; 
-           case 6 : return "\u2685"; 
-        }
     }
     private void PointTempSettle()
     {
@@ -194,13 +182,16 @@ public class YachtGame
     {
 
     }
-    public async Task RefreshGameBoard()
+    public async Task RefreshGameBoard(DiscordClient discordClient)
     {
-
-        Optional<DiscordEmbed> scoreEmbed = new Optional<DiscordEmbed>(ScoreBoardVisualize());
-        await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
-        Optional<DiscordEmbed> diceTrayEmbed = new Optional<DiscordEmbed>(DiceTrayVisualize());
+        if (!await SetUi(discordClient))
+        {
+            return;
+        }
+        Optional<DiscordEmbed> diceTrayEmbed = new Optional<DiscordEmbed>(DiceTrayVisualize(discordClient));
         await _yachtDiceTrayUiMessage?.ModifyAsync(diceTrayEmbed)!;
+        Optional<DiscordEmbed> scoreEmbed = new Optional<DiscordEmbed>(ScoreBoardVisualize(discordClient));
+        await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
     }
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
@@ -234,25 +225,13 @@ public class YachtGame
                 _diceTarget[5] = true;  
                 break;
             case "🔄":
-                DiceRoll();
-                foreach (var variable in eventArgs.Message.Reactions)
-                {
-                }
-
-
+                DiceRoll(true);
+                await RefreshGameBoard(client);
                 await eventArgs.Message.DeleteReactionsEmojiAsync(eventArgs.Emoji);
+                if (_diceChance > 0)
+                    await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🔄"));
                 break;
         }
-  
-
-        // DiscordEmoji.FromName(client,"dice1");
-        // DiscordEmoji.FromName(client,"dice2");
-        // DiscordEmoji.FromName(client,"dice3");
-        // DiscordEmoji.FromName(client,"dice4");
-        // DiscordEmoji.FromName(client,"dice5");
-        // DiscordEmoji.FromName(client,"dice6");
-        
-        
     }
 
     public async Task DiceTrayMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
@@ -315,7 +294,7 @@ public class YachtGame
 
     }
 
-    void DiceRoll()
+    void DiceRoll(bool forceRoll)
     {
         if (_diceChance <= 0)
             return;
@@ -323,7 +302,7 @@ public class YachtGame
         Random rand = new Random();
         for (int i = 0 ; i<_dices.Length;i++)
         {
-            if (!_diceTarget[i] && _diceChance > 0)
+            if (!_diceTarget[i] && 0 < _diceChance && !forceRoll)
                 continue;
             _dices[i] = rand.Next(1, 7);
         }
@@ -339,31 +318,43 @@ public class YachtGame
 
     void DiceReset()
     {
+        _diceChance = 3;
         for (int i = 0; i < _dices.Length; i++)
         {
             _dices[i] = 0;
         }
     }
 
-    public DiscordEmbedBuilder ScoreBoardVisualize()
+    private DiscordEmbedBuilder ScoreBoardVisualize(DiscordClient discordClient)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithColor(DiscordColor.Orange)
-            .WithTitle("ScoreBoard");
+            .WithTitle("ScoreBoard")
+            .AddField(new DiscordEmbedField("ROUNDS", $"{_turn / 2 + (_turn % 2 == 1 ? 1 : 0)}", true))
+            .AddField(new DiscordEmbedField("1P", $"{_1P?.DisplayName}", true))
+            .AddField(new DiscordEmbedField("2P", $"{_2P?.DisplayName}", true));
+
+
+        DiscordEmbedField discordEmbedField = new DiscordEmbedField("","",false);
+
         return embedBuilder;
     }
 
-     public DiscordEmbedBuilder DiceTrayVisualize()
-     {
-         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-             .WithColor(DiscordColor.Green)
-             .WithTitle(TurnName + " : " + CurrPlayer?.Username);
+    private DiscordEmbedBuilder DiceTrayVisualize(DiscordClient discordClient)
+    {
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithColor(DiscordColor.Green)
+            .WithTitle($"{TurnName} : {CurrPlayer?.Username}")
+            .AddField(new DiscordEmbedField("ReRoll Count", $"{_diceChance}",true));
 
-         foreach (var diceNum in _dices)
-         {
-             embedBuilder.AddField(new DiscordEmbedField(diceNum.ToString(),DiceFaceEmojiCode(diceNum),true));
-         }
+        DiscordEmbedField discordEmbedField = new DiscordEmbedField("","",true);
+        for (int i = 0; i < _dices.Length; i++)
+        {
+            discordEmbedField.Name+= DiscordEmoji.FromName(discordClient, $":{_enNums[i + 1].ToLower()}:")+ " ";
+            discordEmbedField.Value += DiscordEmoji.FromName(discordClient, _dices[i] == 0 ? ":Empty:" : $":dice{_dices[i]}:") + " ";
+        }
+        embedBuilder.AddField(discordEmbedField);
 
-         return embedBuilder;
-     }
+        return embedBuilder;
+    }
 }

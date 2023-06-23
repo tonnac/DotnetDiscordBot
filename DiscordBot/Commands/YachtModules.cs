@@ -114,10 +114,7 @@ namespace DiscordBot.Commands
                     return;
                 }
 
-                if (await yachtGame.SetUi())
-                {
-                    await yachtGame.RefreshGameBoard();
-                }
+                await yachtGame.RefreshGameBoard(ctx.Client);
             }
 
         }
