@@ -113,31 +113,4 @@ public class FishingModules : BaseCommandModule
         
         await ctx.RespondAsync(embedBuilder);
     }
-    
-    [Command] // ToggleFishingChannel
-    public async Task Ffff(CommandContext ctx)
-    {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.FishingChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.FishingChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
-        if (result)
-        {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
-        }
-    }
 }
