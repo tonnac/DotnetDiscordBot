@@ -29,7 +29,7 @@ public class UserGameInfoModules : BaseCommandModule
         if (0 != xp)
         {
             float xpPercentageFloat = (float) xp / level;
-            xpPercentage = (int) xpPercentageFloat;   
+            xpPercentage = (int)(xpPercentageFloat * 100.0f);   
         }
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
