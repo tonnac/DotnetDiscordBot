@@ -300,4 +300,7 @@ This has a lower priority than music added with play.</value>
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
+	<data name="buyxp_Description" xml:space="preserve">
+		<value>Raise your experience. The level rises when the experience reaches a certain level.</value>
+	</data>
 </root>

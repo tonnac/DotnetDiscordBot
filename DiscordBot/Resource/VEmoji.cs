@@ -47,6 +47,8 @@ public class VEmoji
     public static readonly string Ring = "\uD83D\uDC8D"; // 💍
     public static readonly string Weapon = "\uD83D\uDDE1\uFE0F"; // 🗡️
     public static readonly string Gem = "\uD83D\uDC8E"; // 💎
+    public static readonly string Books = "\uD83D\uDCDA"; // 📚
+    public static readonly string Level = "\uD83D\uDCA0"; // 💠 
     
     public static readonly string GreenCircle = "\uD83D\uDFE2"; // 🟢
     public static readonly string RedCircle = "\uD83D\uDD34"; // 🔴

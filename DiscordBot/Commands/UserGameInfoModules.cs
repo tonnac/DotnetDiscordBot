@@ -23,12 +23,22 @@ public class UserGameInfoModules : BaseCommandModule
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(myUserDatabase.equipvalue);
         int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(myUserDatabase.equipvalue);
         int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(myUserDatabase.equipvalue);
+        int level = EquipCalculator.GetLevel(myUserDatabase.equipvalue);
+        int xp = EquipCalculator.GetXp(myUserDatabase.equipvalue);
+        int xpPercentage = 0;
+        if (0 != xp)
+        {
+            float xpPercentageFloat = (float) xp / level;
+            xpPercentage = (int) xpPercentageFloat;   
+        }
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
             .AddField(new DiscordEmbedField(VEmoji.Magnifier + " " + name, "───────────────", false))
-            .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), false))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Level + "  ]", "Lv " + Convert.ToString(level), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Books + "  ]", Convert.ToString(xpPercentage) + "%", true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Gem + "  ]", "+" + Convert.ToString(gemUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Ring + "  ]", "+" + Convert.ToString(ringUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
@@ -73,7 +83,16 @@ public class UserGameInfoModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
-        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
+        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue % EquipCalculator.LevelCutNum > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
+        {
+            if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
+            {
+                return Utility.GetMemberDisplayName(member);
+            }
+            return "X";
+        }, user => user.equipvalue);
+        
+        Dictionary<string, int> levelRankDictionary = users.Where(user => user.equipvalue / (EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum) > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
@@ -90,6 +109,8 @@ public class UserGameInfoModules : BaseCommandModule
         List<ulong> dealRankCount = new List<ulong>();
         List<string> equipRankUser = new List<string>();
         List<int> equipRankCount = new List<int>();
+        List<string> levelRankUser = new List<string>();
+        List<int> levelRankCount = new List<int>();
 
         for (int index = 0; index < 3; ++index)
         {
@@ -101,6 +122,8 @@ public class UserGameInfoModules : BaseCommandModule
             dealRankCount.Add(index+1 <= dealRankDictionary.Values.ToList().Count ? dealRankDictionary.Values.ToList()[index] : 0);
             equipRankUser.Add(index+1 <= equipRankDictionary.Keys.ToList().Count ? equipRankDictionary.Keys.ToList()[index] : "X");
             equipRankCount.Add(index+1 <= equipRankDictionary.Values.ToList().Count ? equipRankDictionary.Values.ToList()[index] : 0);
+            levelRankUser.Add(index+1 <= levelRankDictionary.Keys.ToList().Count ? levelRankDictionary.Keys.ToList()[index] : "X");
+            levelRankCount.Add(index+1 <= levelRankDictionary.Values.ToList().Count ? levelRankDictionary.Values.ToList()[index] : 0);
         }
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -110,6 +133,10 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
             .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Level + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + levelRankUser[0], "Lv " + Convert.ToString(EquipCalculator.GetLevel(levelRankCount[0])), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + levelRankUser[1], "Lv " + Convert.ToString(EquipCalculator.GetLevel(levelRankCount[1])), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + levelRankUser[2], "Lv " + Convert.ToString(EquipCalculator.GetLevel(levelRankCount[2])), true))
             .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Gem + ", " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
@@ -266,7 +293,7 @@ public class UserGameInfoModules : BaseCommandModule
                 {
                     case -1: // Broken
                     {
-                        await database.AddEquipValue(ctx, -(ringCurrentUpgrade * EquipCalculator.CutNum));
+                        await database.AddEquipValue(ctx, -(ringCurrentUpgrade * EquipCalculator.EquipCutNum));
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
@@ -298,7 +325,7 @@ public class UserGameInfoModules : BaseCommandModule
                     }
                     case 1: // Success
                     {
-                        await database.AddEquipValue(ctx, EquipCalculator.CutNum);
+                        await database.AddEquipValue(ctx, EquipCalculator.EquipCutNum);
 
                         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                             .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
@@ -360,7 +387,7 @@ public class UserGameInfoModules : BaseCommandModule
             {
                 case -1: // Broken
                 {
-                    await database.AddEquipValue(ctx, -(gemCurrentUpgrade * EquipCalculator.CutNum * EquipCalculator.CutNum));
+                    await database.AddEquipValue(ctx, -(gemCurrentUpgrade * EquipCalculator.EquipCutNum * EquipCalculator.EquipCutNum));
 
                     DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                         .WithThumbnail("https://social-phinf.pstatic.net/20210407_47/161775296734159xKI_GIF/1787c8c2dd04baebd123123312312.gif")
@@ -393,7 +420,7 @@ public class UserGameInfoModules : BaseCommandModule
                 }
                 case 1: // Success
                 {
-                    await database.AddEquipValue(ctx, EquipCalculator.CutNum * EquipCalculator.CutNum);
+                    await database.AddEquipValue(ctx, EquipCalculator.EquipCutNum * EquipCalculator.EquipCutNum);
 
                     DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                         .WithThumbnail("https://media.tenor.com/FBQM1OsZwwAAAAAd/gwent-gwentcard.gif")
@@ -527,5 +554,35 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField(VEmoji.Gem + " " + name, "[ + " + VEmoji.Money + Convert.ToString(gemPay) + " ]" ));
         
         await ctx.RespondAsync(embedBuilder);
+    }
+    
+    [Command, Aliases("bxp", "경험치구매")]
+    public async Task BuyXp(CommandContext ctx, [RemainingText] string? xpCommand)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        
+        if (EquipCalculator.LevelUpgradeMoney > userDatabase.gold)
+        {
+            await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark + "(" + Convert.ToString(EquipCalculator.LevelUpgradeMoney) + ")");
+            return;
+        }
+        
+        int level = EquipCalculator.GetLevel(userDatabase.equipvalue);
+        int xp = EquipCalculator.GetXp(userDatabase.equipvalue);
+
+        if (level <= xp + 1)
+        {
+            // level
+            await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum);
+            // xp
+            await database.AddEquipValue(ctx, -(xp * EquipCalculator.LevelCutNum));
+        }
+
+        GoldQuery query = new GoldQuery(-EquipCalculator.LevelUpgradeMoney);
+        await database.UpdateUserGold(ctx, query);
+        
+        await ctx.RespondAsync(VEmoji.Books + "!!");
     }
 }

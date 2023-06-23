@@ -108,6 +108,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Raise your experience. The level rises when the experience reaches a certain level..
+        /// </summary>
+        internal static string buyxp_Description {
+            get {
+                return ResourceManager.GetString("buyxp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check Your DMs!.
         /// </summary>
         internal static string CheckDm {
