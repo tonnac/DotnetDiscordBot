@@ -14,7 +14,7 @@ services:
       - mysql
     volumes:
       - ./DiscordBot/Config.cs:/app/Config.cs:ro
-      - ./DiscordBot/playlists.json:/app/playlists.json:ro
+      - ./DiscordBot/playlists.json:/app/playlists.json:rw
   
   lavalink:
     image: fredboat/lavalink:dev
