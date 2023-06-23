@@ -300,4 +300,7 @@
 	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
 	</data>
+	<data name="buyxp_Description" xml:space="preserve">
+		<value>경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
+	</data>
 </root>
