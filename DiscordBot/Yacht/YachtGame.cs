@@ -35,7 +35,7 @@ public class YachtGame
     private DiscordMessage? _yachtDiceTrayUiMessage;
 
     private int _turn = 1;
-    private int _diceChance = 100;
+    private int _diceChance = 3;
 
     private readonly int?[,] _points = new int?[2, 15];
     private readonly int[] _tempPoints = new int[15];
