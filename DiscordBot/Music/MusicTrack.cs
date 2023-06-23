@@ -22,10 +22,13 @@ public class MusicTrack
     {
         return $"[{LavaLinkTrack.Title}]({LavaLinkTrack.Uri})";
     }
-
     public static MusicTrack CreateMusicTrack(CommandContext ctx, LavalinkTrack track, bool isLongPlay)
     {
-        MusicTrack newMusicTrack = isLongPlay == false ? new MusicTrack(ctx.Member, ctx.Channel, track) : new LongPlayTrack(ctx.Member, ctx.Channel, track);
+        return CreateMusicTrack(ctx.Member, ctx.Channel, track, isLongPlay);
+    }
+    public static MusicTrack CreateMusicTrack(DiscordMember member, DiscordChannel channel, LavalinkTrack track, bool isLongPlay)
+    {
+        MusicTrack newMusicTrack = isLongPlay == false ? new MusicTrack(member, channel, track) : new LongPlayTrack(member, channel, track);
         return newMusicTrack;
     }
     

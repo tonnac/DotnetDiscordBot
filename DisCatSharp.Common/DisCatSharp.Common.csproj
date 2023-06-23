@@ -45,4 +45,7 @@ Common tools for DisCatSharp, like regexes and converters!
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
+  <Target Condition="'$(Configuration)' == 'Release' And '$(OS)' == 'Windows_NT'" Name="PostBuild" BeforeTargets="PostBuildEvent">
+    <Exec Command="copy $(OutDir)$(AssemblyName).dll $(ProjectDir)..\DiscordBot\" />
+  </Target>
 </Project>

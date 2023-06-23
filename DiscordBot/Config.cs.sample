@@ -6,6 +6,7 @@ public static class Config
     public static readonly string Token;
     public static readonly string Prefix;
     public static readonly string Locale;
+    public static readonly string Port;
     
     // LavaLink
     public static readonly string LavaLinkHostname;
