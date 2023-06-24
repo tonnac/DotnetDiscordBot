@@ -180,7 +180,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10).
+        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. rdn 1000), and a random key is automatically generated. (1~10).
         /// </summary>
         internal static string a6_randomdonation_Description {
             get {
