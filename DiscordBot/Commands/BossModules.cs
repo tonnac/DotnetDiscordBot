@@ -5,6 +5,7 @@ using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
@@ -13,9 +14,11 @@ namespace DiscordBot.Commands;
 public class BossModules : BaseCommandModule
 {   
     private readonly BossMonster _bossMonster;
+    private readonly ContentsChannels _contentsChannels;
 
-    public BossModules()
+    public BossModules(ContentsChannels contentsChannels)
     {
+        _contentsChannels = contentsChannels;
         var rand = new Random();
         int bossType = rand.Next((int)BossType.Start + 1, (int) BossType.End);
         _bossMonster = new BossMonster((BossType)bossType);
@@ -25,7 +28,8 @@ public class BossModules : BaseCommandModule
     [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!ContentsChannels.BossChannels.Contains(ctx.Channel.Id))
+        bool isBossGameChannel = await _contentsChannels.IsBossGameChannel(ctx);
+        if (isBossGameChannel == false)
         {
             var message = await ctx.RespondAsync("보스공격이 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -199,7 +203,7 @@ public class BossModules : BaseCommandModule
         //await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🧾"));
     }
 
-    [Command]
+    [Command, Hidden]
     public async Task ResetBossMonster(CommandContext ctx, [RemainingText] string? resetCommand)
     {
         bool result = false;
@@ -221,7 +225,7 @@ public class BossModules : BaseCommandModule
         }
     }
     
-    [Command]
+    [Command, Hidden]
     public async Task DataReset(CommandContext ctx, [RemainingText] string? resetCommand)
     {
         bool result = false;

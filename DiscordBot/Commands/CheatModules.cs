@@ -4,12 +4,14 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
+using DiscordBot.Core;
 using DiscordBot.Database;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
 namespace DiscordBot.Commands;
 
+[Hidden]
 public class CheatModules : BaseCommandModule
 {
     [Command]
@@ -234,108 +236,40 @@ public class CheatModules : BaseCommandModule
     [Command] // ToggleBossChannel
     public async Task Bbbb(CommandContext ctx)
     {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.BossChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.BossChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.BossChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
+        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.BossGame);
         if (result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
         }
     }
     
     [Command] // ToggleForgeChannel
     public async Task Uuuu(CommandContext ctx)
     {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.ForgeChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.ForgeChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
+        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Forge);
         if (result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
         }
     }
     
     [Command] // ToggleFishingChannel
     public async Task Ffff(CommandContext ctx)
     {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.FishingChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.FishingChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
+        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Fishing);
         if (result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
         }
     }
     
     [Command] // ToggleGambleChannel
     public async Task Gggg(CommandContext ctx)
     {
-        bool result = false;
-        string emoji = VEmoji.RedCrossMark;
-        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
-        {
-            if (ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
-            {
-                ContentsChannels.GambleChannels.Remove(ctx.Channel.Id);
-                emoji = VEmoji.RedCrossMark;
-            }
-            else
-            {
-                ContentsChannels.GambleChannels.Add(ctx.Channel.Id);
-                emoji = VEmoji.GreenCheckBox;
-            }
-
-            result = true;
-        }
-        
+        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Gamble);
         if (result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
         }
     }
 }

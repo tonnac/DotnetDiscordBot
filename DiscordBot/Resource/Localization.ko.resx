@@ -303,4 +303,7 @@
 	<data name="buyxp_Description" xml:space="preserve">
 		<value>경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
 	</data>
+	<data name="noticechannel_Description" xml:space="preserve">
+		<value>현재 채널을 봇 도움말 채널로 만듭니다.</value>
+	</data>
 </root>

@@ -4,6 +4,7 @@ using DisCatSharp.Entities;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
@@ -11,6 +12,13 @@ namespace DiscordBot.Commands;
 
 public class UserGameInfoModules : BaseCommandModule
 {   
+    private readonly ContentsChannels _contentsChannels;
+
+    public UserGameInfoModules(ContentsChannels contentsChannels)
+    {
+        _contentsChannels = contentsChannels;
+    }
+
     [Command, Aliases("mi", "내정보"), Cooldown(1, 5, CooldownBucketType.User)]
     public async Task MyInfo(CommandContext ctx)
     {
@@ -156,7 +164,8 @@ public class UserGameInfoModules : BaseCommandModule
     [Command, Aliases("uw", "무기강화")]
     public async Task UpgradeWeapon(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        bool isForgeChannel = await _contentsChannels.IsForgeChannel(ctx);
+        if (isForgeChannel == false)
         {
             var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -257,7 +266,8 @@ public class UserGameInfoModules : BaseCommandModule
     [Command, Aliases("ur", "반지강화")]
     public async Task UpgradeRing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        bool isForgeChannel = await _contentsChannels.IsForgeChannel(ctx);
+        if (isForgeChannel == false)
         {
             var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -356,7 +366,8 @@ public class UserGameInfoModules : BaseCommandModule
     [Command, Aliases("ug", "보석강화"), Cooldown(1, 1800, CooldownBucketType.UserAndChannel, true)]
     public async Task UpgradeGem(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!ContentsChannels.ForgeChannels.Contains(ctx.Channel.Id))
+        bool isForgeChannel = await _contentsChannels.IsForgeChannel(ctx);
+        if (isForgeChannel == false)
         {
             var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
             Task.Run(async () =>
