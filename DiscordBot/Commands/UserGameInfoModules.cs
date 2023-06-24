@@ -92,7 +92,15 @@ public class UserGameInfoModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
-        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(user => user.equipvalue % EquipCalculator.LevelCutNum).ToDictionary(user =>
+        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(
+            user =>
+            {
+                int trident = EquipCalculator.GetTridentUpgradeInfo(user.equipvalue);
+                int gem = EquipCalculator.GetGemUpgradeInfo(user.equipvalue);
+                int ring = EquipCalculator.GetRingUpgradeInfo(user.equipvalue);
+                int weapon = EquipCalculator.GetWeaponUpgradeInfo(user.equipvalue);
+                return trident * 27 + gem + ring + weapon;
+            }).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
