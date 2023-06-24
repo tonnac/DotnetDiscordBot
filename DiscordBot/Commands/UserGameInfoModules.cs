@@ -90,7 +90,7 @@ public class UserGameInfoModules : BaseCommandModule
                 return Utility.GetMemberDisplayName(member);
             }
             return "X";
-        }, user => user.equipvalue);
+        }, user => (user.equipvalue % EquipCalculator.LevelCutNum));
         
         Dictionary<string, int> levelRankDictionary = users.Where(user => user.equipvalue / (EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum) > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
         {
@@ -593,7 +593,7 @@ public class UserGameInfoModules : BaseCommandModule
         int afterLevel = EquipCalculator.GetLevel(userDatabase.equipvalue);
         int afterXp = EquipCalculator.GetXp(userDatabase.equipvalue);
         int xpPercentage = 0;
-        if (0 != xp)
+        if (0 != afterXp)
         {
             float xpPercentageFloat = (float) afterXp / afterLevel;
             xpPercentage = (int)(xpPercentageFloat * 100.0f);   
