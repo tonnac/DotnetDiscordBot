@@ -294,6 +294,9 @@
 	<data name="upgradegem_Description" xml:space="preserve">
 		<value>보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
 	</data>
+	<data name="upgradetrident_Description" xml:space="preserve">
+		<value>삼지창을 강화합니다. (삼지창 강화수치 만큼 무기,반지,보석에 최대강화수치 추가 증가)</value>
+	</data>
 	<data name="getgempay_Description" xml:space="preserve">
 		<value>보석 강화 수치만큼 돈을 지급받습니다.</value>
 	</data>

@@ -2,8 +2,8 @@
 
 /*
  99990999
- 레벨  경험치  ????  보석  반지  무기
- 99       99     0     9     9    9
+ 레벨  경험치  삼지창  보석  반지  무기
+ 99       99       0     9     9    9
  */
 
 public class EquipCalculator
@@ -118,6 +118,16 @@ public class EquipCalculator
         }
         
         return (equipValue % LevelCutNum) / (EquipCutNum * EquipCutNum);
+    }
+    
+    public static int GetTridentUpgradeInfo(int equipValue)
+    {
+        if (0 >= equipValue)
+        {
+            return 0;
+        }
+
+        return (equipValue / (EquipCutNum*EquipCutNum*EquipCutNum)) % EquipCutNum;
     }
     
     public static int GetLevel(int equipValue)

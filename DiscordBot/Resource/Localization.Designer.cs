@@ -604,7 +604,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enhance your gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        ///   Looks up a localized string similar to Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
         /// </summary>
         internal static string upgradegem_Description {
             get {
@@ -627,6 +627,15 @@ namespace DiscordBot.Resource {
         internal static string upgradesuccesspercentagelist_Description {
             get {
                 return ResourceManager.GetString("upgradesuccesspercentagelist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement).
+        /// </summary>
+        internal static string upgradetrident_Description {
+            get {
+                return ResourceManager.GetString("upgradetrident_Description", resourceCulture);
             }
         }
         
