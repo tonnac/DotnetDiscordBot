@@ -28,6 +28,7 @@ public class UserGameInfoModules : BaseCommandModule
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(myUserDatabase.equipvalue);
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(myUserDatabase.equipvalue);
         int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(myUserDatabase.equipvalue);
         int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(myUserDatabase.equipvalue);
@@ -43,10 +44,10 @@ public class UserGameInfoModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
-            .AddField(new DiscordEmbedField(VEmoji.Magnifier + " " + name, "───────────────", false))
-            .AddField(new DiscordEmbedField("[  " + VEmoji.Level + "  ]", "Lv " + Convert.ToString(level), true))
+            .AddField(new DiscordEmbedField(VEmoji.Magnifier + " " + name + "　|　Lv." + Convert.ToString(level), "─────────────────", false))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Books + "  ]", Convert.ToString(xpPercentage) + "%", true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Trident + "  ]", "+" + Convert.ToString(tridentUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Gem + "  ]", "+" + Convert.ToString(gemUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Ring + "  ]", "+" + Convert.ToString(ringUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
