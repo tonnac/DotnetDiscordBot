@@ -83,7 +83,7 @@ public class UserGameInfoModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
-        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue % EquipCalculator.LevelCutNum > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
+        Dictionary<string, int> equipRankDictionary = users.Where(user => (user.equipvalue % EquipCalculator.LevelCutNum) > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
@@ -588,6 +588,24 @@ public class UserGameInfoModules : BaseCommandModule
         GoldQuery query = new GoldQuery(-EquipCalculator.LevelUpgradeMoney);
         await database.UpdateUserGold(ctx, query);
         
-        await ctx.RespondAsync(VEmoji.Books + " ..!");
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+        
+        int afterLevel = EquipCalculator.GetLevel(userDatabase.equipvalue);
+        int afterXp = EquipCalculator.GetXp(userDatabase.equipvalue);
+        int xpPercentage = 0;
+        if (0 != xp)
+        {
+            float xpPercentageFloat = (float) afterXp / afterLevel;
+            xpPercentage = (int)(xpPercentageFloat * 100.0f);   
+        }
+
+        DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+            .WithThumbnail("https://upload2.inven.co.kr/upload/2017/04/12/bbs/i16195673110.gif")
+            .WithColor(DiscordColor.Green)
+            .AddField(new DiscordEmbedField(name + " " + VEmoji.Books + " ..!", "[ - " + VEmoji.Money + Convert.ToString(EquipCalculator.LevelUpgradeMoney) + " ]", false))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Level + "  ]", "Lv " + Convert.ToString(afterLevel), true))
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Books + "  ]", Convert.ToString(xpPercentage) + "%", true));
+        
+        await ctx.RespondAsync(embedBuilder);
     }
 }
