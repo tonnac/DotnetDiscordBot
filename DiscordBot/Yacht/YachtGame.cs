@@ -333,14 +333,16 @@ public class YachtGame
             bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
             bIsSumField |= yachtPointType == EYachtPointType.Bonus;
             bIsSumField |= yachtPointType == EYachtPointType.Total;
+            if (bIsSumField)
+                continue;
 
             if (emojiToIndex == index)
             {
                 await ChoicePoint(client, yachtPointType);
                 break;
             }
-            if (!bIsSumField)
-                index++;
+
+            index++;
         }
     }
     public async Task ScoreBoardMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
