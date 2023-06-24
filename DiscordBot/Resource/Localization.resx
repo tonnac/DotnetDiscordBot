@@ -303,4 +303,7 @@ This has a lower priority than music added with play.</value>
 	<data name="buyxp_Description" xml:space="preserve">
 		<value>Raise your experience. The level rises when the experience reaches a certain level.</value>
 	</data>
+	<data name="noticechannel_Description" xml:space="preserve">
+		<value>Make the current channel a bot help channel.</value>
+	</data>
 </root>

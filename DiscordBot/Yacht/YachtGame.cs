@@ -1,5 +1,4 @@
 using DisCatSharp;
-using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DiscordBot.Commands;
@@ -52,8 +51,13 @@ public class YachtGame
         if (_yachtDiceTrayUiMessage == null && _yachtScoreUiMessage == null)
         {
             _yachtScoreUiMessage = await _yachtChannel?.SendMessageAsync(ScoreBoardVisualize(discordClient))!;
+
+            for (int i = 0; i < 'm' - 'a'; i++)
+            {
+                await _yachtScoreUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode(Utility.GetRegionalIndicatorSymbolLetter(i)));
+            }
+
             _yachtDiceTrayUiMessage = await _yachtChannel?.SendMessageAsync(DiceTrayVisualize(discordClient))!; 
-            
             await _yachtDiceTrayUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("🆕"));
             return false;
         }
@@ -156,7 +160,7 @@ public class YachtGame
     private void PointSettle()
     {
         int topSum = 0;
-        int turn = _turn % 2;
+        int turn = TurnPlayerNum;
         for (int i = 0; i < 6; i++)
         {
             topSum += _points[turn, i] ?? 0;
@@ -195,11 +199,11 @@ public class YachtGame
         
         DiceReset();
         PointTempSettle();
+        PointSettle();
         _turn++;
         await _yachtDiceTrayUiMessage?.DeleteAllReactionsAsync()!;
         await _yachtDiceTrayUiMessage?.CreateReactionAsync(DiscordEmoji.FromUnicode("🆕"))!;
         
-        PointSettle();
         
         await RefreshGameBoard(discordClient);
     }
@@ -233,46 +237,32 @@ public class YachtGame
         if (CurrPlayer?.Id != eventArgs.User.Id)
             return;
 
-        switch (eventArgs.Emoji.Name)
+        if (eventArgs.Emoji.Name == "🆕")
         {
-            case "🆕":
-                DiceRoll(true);
-                await RefreshGameBoard(client);
-                await eventArgs.Message.DeleteReactionsEmojiAsync(eventArgs.Emoji);
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("1️⃣"));
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("2️⃣"));
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("3️⃣"));
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("4️⃣"));
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("5️⃣"));
-                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🔄"));
-                break;
-            case "1️⃣": 
-                _diceTarget[0] = true; 
-                break;
-            case "2️⃣": 
-                _diceTarget[1] = true; 
-                break;
-            case "3️⃣": 
-                _diceTarget[2] = true; 
-                break;
-            case "4️⃣": 
-                _diceTarget[3] = true; 
-                break;
-            case "5️⃣": 
-                _diceTarget[4] = true; 
-                break;
-            case "6️⃣": 
-                _diceTarget[5] = true;  
-                break;
-            case "🔄":
-                await eventArgs.Message.DeleteReactionsEmojiAsync(eventArgs.Emoji);
-                DiceRoll(false);
-                await RefreshGameBoard(client);
-                if (_diceChance > 0)
-                    await eventArgs.Message.CreateReactionAsync(eventArgs.Emoji);
+            DiceRoll(true);
+            await RefreshGameBoard(client);
+            await eventArgs.Message.DeleteReactionsEmojiAsync(eventArgs.Emoji);
+            for (int i = 0; i < 'f' - 'a'; i++)
+            {
+                await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(Utility.GetRegionalIndicatorSymbolLetter(i)));
+            }
 
-                break;
+            await eventArgs.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("🔄"));
+            return;
         }
+
+        if (eventArgs.Emoji.Name == "🔄")
+        {
+            await eventArgs.Message.DeleteReactionsEmojiAsync(eventArgs.Emoji);
+            DiceRoll(false);
+            await RefreshGameBoard(client);
+            if (_diceChance > 0)
+                await eventArgs.Message.CreateReactionAsync(eventArgs.Emoji);
+            return;
+        }
+
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+        _diceTarget[emojiToIndex] = true;
     }
 
     public async Task DiceTrayMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
@@ -285,28 +275,10 @@ public class YachtGame
 
         if (CurrPlayer?.Id != eventArgs.User.Id)
             return;
-
-        switch (eventArgs.Emoji.Name)
-        {
-            case "1️⃣":
-                _diceTarget[0] = false;
-                break;
-            case "2️⃣":
-                _diceTarget[1] = false;
-                break;
-            case "3️⃣":
-                _diceTarget[2] = false;
-                break;
-            case "4️⃣":
-                _diceTarget[3] = false;
-                break;
-            case "5️⃣":
-                _diceTarget[4] = false;
-                break;
-            case "6️⃣":
-                _diceTarget[5] = false;
-                break;
-        }
+        
+        
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+        _diceTarget[emojiToIndex] = false;
     }
     public async Task ScoreBoardMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
@@ -316,10 +288,30 @@ public class YachtGame
         if (eventArgs.Message.Id != _yachtScoreUiMessage!.Id)
             return;
 
-        if (CurrPlayer?.Id != eventArgs.Message.Author.Id)
+        if (CurrPlayer?.Id != eventArgs.User.Id)
             return;
 
 
+        int index = 0;
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+
+        foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
+        {
+            bool bIsSumField = false;
+            bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
+            bIsSumField |= yachtPointType == EYachtPointType.Bonus;
+            bIsSumField |= yachtPointType == EYachtPointType.Total;
+            if (bIsSumField)
+                continue;
+
+            if (emojiToIndex == index)
+            {
+                await ChoicePoint(client, yachtPointType);
+                break;
+            }
+
+            index++;
+        }
     }
     public async Task ScoreBoardMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
     {
@@ -375,13 +367,21 @@ public class YachtGame
             .WithTitle("ScoreBoard");
         string field01 = ""; 
         string field02 = ""; 
-        string field03 = ""; 
-        
+        string field03 = "";
+
+        int alphabetIndex = 0;
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
         {
-            field01 += yachtPointType.ToString() + "\n──────────\n";
-            field02 += (_points[0, (int)yachtPointType] != null ? $"[{_points[0, (int)yachtPointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[(int)yachtPointType] : "[empty]") + "\n──────────\n";
-            field03 += (_points[1, (int)yachtPointType] != null ? $"[{_points[1, (int)yachtPointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[(int)yachtPointType] : "[empty]") + "\n──────────\n";
+            int pointType = (int)yachtPointType;
+            bool bIsSumField = false;
+            bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
+            bIsSumField |= yachtPointType == EYachtPointType.Bonus;
+            bIsSumField |= yachtPointType == EYachtPointType.Total;
+            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : "") + yachtPointType + "\n──────────\n";
+            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
+            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
+            if (!bIsSumField)
+                alphabetIndex++;
         }
 
         embedBuilder.AddField(new DiscordEmbedField($"ROUNDS {Round}", field01, true));
@@ -400,15 +400,16 @@ public class YachtGame
 
         string name = "";
         string diceEmoji = "";
-        // string diceValue = "\n";
+        string diceValue = "\n";
         
         for (int i = 0; i < _dices.Length; i++)
         {
-            name += DiscordEmoji.FromName(discordClient, $":{_enNums[i + 1]}:") + " ";
+            name += DiscordEmoji.FromUnicode(Utility.GetRegionalIndicatorSymbolLetter(i)) + " ";
             diceEmoji += DiscordEmoji.FromName(discordClient, _dices[i] == 0 ? ":Empty:" : $":dice{_dices[i]}:") + " ";
-            // diceValue += $"{_dices[i]}, ";
+            diceValue += DiscordEmoji.FromUnicode(Utility.GetNumEmoji(_dices[i])) + " ";
         }
-        // diceEmoji += diceValue;
+
+        diceEmoji += diceValue;
         embedBuilder.AddField(new DiscordEmbedField(name, diceEmoji, true));
 
         return embedBuilder;

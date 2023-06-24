@@ -5,6 +5,7 @@ using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
@@ -31,6 +32,7 @@ namespace DiscordBot.Commands;
 
 public class GambleModules : BaseCommandModule
 {   
+    private readonly ContentsChannels _contentsChannels;
     private readonly FundsGamble _fundsGamble;
     private readonly DiceGamble _diceGamble;
 
@@ -42,8 +44,9 @@ public class GambleModules : BaseCommandModule
     private readonly int _diceGambleMinAnte = 500;
     private readonly int _diceGambleMaxAnte = 10000;
     
-    public GambleModules()
+    public GambleModules(ContentsChannels contentsChannels)
     {
+        _contentsChannels = contentsChannels;
         _donationMoney = 0;
         
         _randomDonationMoney = 0;
@@ -72,7 +75,8 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 2, CooldownBucketType.UserAndChannel)]
     public async Task DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
-        if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
+        bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
+        if (isGambleChannel == false)
         {
             var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
             Task.Run(async () =>
@@ -143,7 +147,8 @@ public class GambleModules : BaseCommandModule
     [Command, Aliases("dfg", "수금도박"), Cooldown(1, 4, CooldownBucketType.UserAndChannel, true, true, 5)]
     public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
-        if (!ContentsChannels.GambleChannels.Contains(ctx.Channel.Id))
+        bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
+        if (isGambleChannel == false)
         {
             var message = await ctx.RespondAsync("도박이 불가능한 곳입니다.");
             Task.Run(async () =>

@@ -5,6 +5,7 @@ using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
@@ -12,6 +13,9 @@ namespace DiscordBot.Commands;
 
 public class FishingModules : BaseCommandModule
 {
+    private readonly ContentsChannels _contentsChannels;
+    
+    
     public string fishEmoji_none = VEmoji.Shoe;
     public string fishEmoji_common = VEmoji.Fish;
     public string fishEmoji_rare = VEmoji.Blowfish;
@@ -29,12 +33,18 @@ public class FishingModules : BaseCommandModule
     public int rarePer = 30;
     public int epicPer = 10;
     public int legendaryPer = 5;
-    
+
+    public FishingModules(ContentsChannels contentsChannels)
+    {
+        _contentsChannels = contentsChannels;
+    }
+
     //[Command, Aliases("f")]
     [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
-        if (!ContentsChannels.FishingChannels.Contains(ctx.Channel.Id))
+        bool isFishingChannel = await _contentsChannels.IsFishingChannel(ctx);
+        if (isFishingChannel == false)
         {
             var message = await ctx.RespondAsync("낚시가 불가능한 곳입니다.");
             Task.Run(async () =>

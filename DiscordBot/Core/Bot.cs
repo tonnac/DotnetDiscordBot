@@ -3,11 +3,13 @@ using System.Reflection;
 using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Net;
+using DiscordBot.Channels;
 using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,7 @@ public class Bot
     private readonly DiscordClient _client;
     private readonly DiscordMessageHandler _messageHandler;
     private readonly TerminateReceiver _terminateReceiver;
+    private readonly ContentsChannels _contentsChannels;
 
     public Bot()
     {
@@ -37,6 +40,10 @@ public class Bot
         });
 
         _messageHandler = new DiscordMessageHandler(_client);
+        _contentsChannels = new ContentsChannels(_client);
+
+        Dictionary<DiscordGuild, MusicPlayer> musicPlayers = new Dictionary<DiscordGuild, MusicPlayer>();
+        _terminateReceiver = new TerminateReceiver(musicPlayers, _client);
 
         _client.UseInteractivity(new InteractivityConfiguration
         {
@@ -45,19 +52,15 @@ public class Bot
         });
 
         var services = new ServiceCollection()
-            .AddSingleton<Dictionary<DiscordGuild, MusicPlayer>>()
-            .AddSingleton<TerminateReceiver>()
+            .AddSingleton(musicPlayers)
+            .AddSingleton(_terminateReceiver)
+            .AddSingleton(_contentsChannels)
             .AddSingleton(_client)
             .AddSingleton(_messageHandler)
             .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
-
-        var receiver = services.GetService(typeof(TerminateReceiver));
-        if (receiver != null)
-        {
-            _terminateReceiver = (TerminateReceiver)receiver;
-            _client.GuildDownloadCompleted += (sender, args) => Task.Factory.StartNew(() => _terminateReceiver.Run());
-        }
+        
+        _client.GuildDownloadCompleted += ClientOnGuildDownloadCompleted;
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
         {
@@ -66,9 +69,15 @@ public class Bot
         });
         commandNext.UnregisterCommands(commandNext.FindCommand("help", out string _));
         commandNext.RegisterCommands(Assembly.GetExecutingAssembly());
-
     }
-    
+
+    private Task ClientOnGuildDownloadCompleted(DiscordClient sender, GuildDownloadCompletedEventArgs e)
+    {
+        Task.Factory.StartNew(() => _terminateReceiver.Run());
+        Task.Factory.StartNew(() => _contentsChannels.SendNotice());
+        return Task.CompletedTask;
+    }
+
     public async Task MainAsync()
     {
         await _client.ConnectAsync();

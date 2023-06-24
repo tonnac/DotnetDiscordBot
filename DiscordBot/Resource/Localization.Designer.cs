@@ -361,6 +361,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make the current channel a bot help channel..
+        /// </summary>
+        internal static string noticechannel_Description {
+            get {
+                return ResourceManager.GetString("noticechannel_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to join a voice channel first!.
         /// </summary>
         internal static string NotInChannel {

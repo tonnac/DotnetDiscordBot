@@ -54,5 +54,19 @@ public partial class DiscordBotDatabase : IDisposable
 
         return builder.ToString();
     }
+    // ReSharper disable once InconsistentNaming
+    private static string GetSHA256(DiscordGuild guild, DiscordChannel channel)
+    {
+        SHA256 sha256Hash = SHA256.Create();
+        byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes($"{guild.Id}{channel.Id}"));
+
+        StringBuilder builder = new StringBuilder();
+        foreach (var t in bytes)
+        {
+            builder.Append(t.ToString("x2"));
+        }
+
+        return builder.ToString();
+    }
 
 }
