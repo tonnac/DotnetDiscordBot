@@ -242,9 +242,9 @@ This has a lower priority than music added with play.</value>
 	</data>
 	<data name="a1_bossattack_Description" xml:space="preserve">
 		<value>Attempt to attack the boss. (Damage 1-100)
-   [⚔️]When attacking, gain gold equal to the damage dealt.
-   [☠️]When defeated, a certain amount of gold is paid to the last attacker.
-   [💥]When defeated, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
+ When attacking, gain gold equal to the damage dealt.
+ When defeated, a certain amount of gold is paid to the last attacker.
+ When defeated, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
 	</data>
 	<data name="a2_bosshuntinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>

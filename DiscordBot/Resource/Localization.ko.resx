@@ -242,9 +242,9 @@
 	</data>
 	<data name="a1_bossattack_Description" xml:space="preserve">
 		<value>보스에게 공격을 시도합니다. (데미지 1~100)
-   [⚔️]공격 시, 가한 데미지 만큼 골드를 얻습니다.
-   [☠️]처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
-   [💥]처치 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
+ 공격 시, 가한 데미지 만큼 골드를 얻습니다.
+ 처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
+ 처치 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
 	</data>
 	<data name="a2_bosshuntinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
