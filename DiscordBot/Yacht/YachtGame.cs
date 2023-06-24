@@ -1,5 +1,4 @@
 using DisCatSharp;
-using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DiscordBot.Commands;
@@ -52,8 +51,13 @@ public class YachtGame
         if (_yachtDiceTrayUiMessage == null && _yachtScoreUiMessage == null)
         {
             _yachtScoreUiMessage = await _yachtChannel?.SendMessageAsync(ScoreBoardVisualize(discordClient))!;
+
+            for (int i = 0; i < 'm' - 'a'; i++)
+            {
+                await _yachtScoreUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode(Utility.GetRegionalIndicatorSymbolLetter(i)));
+            }
+
             _yachtDiceTrayUiMessage = await _yachtChannel?.SendMessageAsync(DiceTrayVisualize(discordClient))!; 
-            
             await _yachtDiceTrayUiMessage.CreateReactionAsync(DiscordEmoji.FromUnicode("🆕"));
             return false;
         }
@@ -316,10 +320,28 @@ public class YachtGame
         if (eventArgs.Message.Id != _yachtScoreUiMessage!.Id)
             return;
 
-        if (CurrPlayer?.Id != eventArgs.Message.Author.Id)
+        if (CurrPlayer?.Id != eventArgs.User.Id)
             return;
 
 
+        int index = 0;
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+
+        foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
+        {
+            bool bIsSumField = false;
+            bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
+            bIsSumField |= yachtPointType == EYachtPointType.Bonus;
+            bIsSumField |= yachtPointType == EYachtPointType.Total;
+
+            if (emojiToIndex == index)
+            {
+                await ChoicePoint(client, yachtPointType);
+                break;
+            }
+            if (!bIsSumField)
+                index++;
+        }
     }
     public async Task ScoreBoardMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
     {
@@ -375,13 +397,21 @@ public class YachtGame
             .WithTitle("ScoreBoard");
         string field01 = ""; 
         string field02 = ""; 
-        string field03 = ""; 
-        
+        string field03 = "";
+
+        int alphabetIndex = 0;
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
         {
-            field01 += yachtPointType.ToString() + "\n──────────\n";
-            field02 += (_points[0, (int)yachtPointType] != null ? $"[{_points[0, (int)yachtPointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[(int)yachtPointType] : "[empty]") + "\n──────────\n";
-            field03 += (_points[1, (int)yachtPointType] != null ? $"[{_points[1, (int)yachtPointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[(int)yachtPointType] : "[empty]") + "\n──────────\n";
+            int pointType = (int)yachtPointType;
+            bool bIsSumField = false;
+            bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
+            bIsSumField |= yachtPointType == EYachtPointType.Bonus;
+            bIsSumField |= yachtPointType == EYachtPointType.Total;
+            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : "") + yachtPointType + "\n──────────\n";
+            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
+            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
+            if (!bIsSumField)
+                alphabetIndex++;
         }
 
         embedBuilder.AddField(new DiscordEmbedField($"ROUNDS {Round}", field01, true));

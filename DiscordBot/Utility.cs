@@ -140,4 +140,10 @@ public static class Utility
     {
         return string.IsNullOrEmpty(member.Nickname) ? member.Username : member.Nickname;
     }
+
+    public static string GetRegionalIndicatorSymbolLetter(int index)
+    {
+        int emojiCode = 0x1F1E6 + index;
+        return char.ConvertFromUtf32(emojiCode);
+    }
 }
