@@ -590,8 +590,9 @@ public class UserGameInfoModules : BaseCommandModule
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
-        int afterLevel = EquipCalculator.GetLevel(userDatabase.equipvalue);
-        int afterXp = EquipCalculator.GetXp(userDatabase.equipvalue);
+        DatabaseUser afterUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+        int afterLevel = EquipCalculator.GetLevel(afterUserDatabase.equipvalue);
+        int afterXp = EquipCalculator.GetXp(afterUserDatabase.equipvalue);
         int xpPercentage = 0;
         if (0 != afterXp)
         {
