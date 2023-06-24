@@ -53,7 +53,8 @@ public static class Help
 
         foreach (var copyCommand in copyCommands)
         {
-            var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+            //var commandsString = string.Join("\n", copyCommand.Select(x => $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}: {FindLocal(x.Name + "_Description")}"));
+            var commandsString = string.Join("", copyCommand.Select(x => x.Aliases.Count == 0 ? "" : $"`{x.Name}`{(x.Aliases.Count == 0 ? "" : $"(**{string.Join(", ", x.Aliases.Select((alias => alias)))}**)")}:\n- {FindLocal(x.Name + "_Description")}\n"));
             DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
                 .WithAuthor(copyCommand.Key)
                 .WithColor(DiscordColor.Azure)
