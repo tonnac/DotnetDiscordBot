@@ -1,30 +1,31 @@
 using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Interactivity.Extensions;
 using DiscordBot.Yacht;
 
 namespace DiscordBot.Commands
 {
     public class YachtModules : BaseCommandModule
     {
-        private readonly Dictionary<ulong, YachtGame?> _currPlayingYachtChannels = new();
-        private readonly DiscordClient _client;
+        private static readonly Dictionary<ulong, YachtGame?> CurrPlayingYachtChannels = new();
 
-        public YachtModules(DiscordClient client)
+        public static void RemoveChannel(ulong id)
         {
-            _client = client;
+            CurrPlayingYachtChannels.Remove(id);
         }
 
-        private bool IsYachtChannel(ulong channelId)
+        private static bool IsYachtChannel(ulong channelId)
         {
-            return _currPlayingYachtChannels.ContainsKey(channelId);
+            return CurrPlayingYachtChannels.ContainsKey(channelId);
         }
 
-        private bool IsYachtPlayer(ulong channelId, ulong userId)
+        private static bool IsYachtPlayer(ulong channelId, ulong userId)
         {
-            var user1P = _currPlayingYachtChannels[channelId]?._1P;
-            var user2P = _currPlayingYachtChannels[channelId]?._2P;
+            var user1P = CurrPlayingYachtChannels[channelId]?._1P;
+            var user2P = CurrPlayingYachtChannels[channelId]?._2P;
             return (user1P != null && user1P.Id == userId) || (user2P != null && user2P.Id == userId);
         }
 
@@ -36,8 +37,11 @@ namespace DiscordBot.Commands
                 _1P = ctx.User,
                 _yachtChannel = await ctx.Channel.CreateThreadAsync($"{ctx.User.Username}님의 야추방", ThreadAutoArchiveDuration.OneDay),
             };
-            _client.MessageReactionAdded += newGame.MessageReactionAdded;
-            if (_currPlayingYachtChannels.TryAdd(newGame._yachtChannel.Id, newGame))
+            ctx.Client.MessageReactionAdded += newGame.DiceTrayMessageReactionAdded;
+            ctx.Client.MessageReactionRemoved += newGame.DiceTrayMessageReactionRemoved;
+            ctx.Client.MessageReactionAdded += newGame.ScoreBoardMessageReactionAdded;
+            ctx.Client.MessageReactionRemoved += newGame.ScoreBoardMessageReactionRemoved;
+            if (CurrPlayingYachtChannels.TryAdd(newGame._yachtChannel.Id, newGame))
             {
                 await newGame._yachtChannel.SendMessageAsync($"{newGame._1P.Mention}님이 야추방을 만드셨습니다.");
             }
@@ -47,21 +51,21 @@ namespace DiscordBot.Commands
         [Command, Aliases("yj")]
         public async Task YachtJoin(CommandContext ctx)
         {
-            if (_currPlayingYachtChannels.ContainsKey(ctx.Channel.Id))
+            if (!IsYachtChannel(ctx.Channel.Id))
             {
-                if ( _currPlayingYachtChannels[ctx.Channel.Id]  != null &&  _currPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
-                {
-                    _currPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
-                    await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
-                }
-                else
-                {
-                    await ctx.RespondAsync("풀방임");
-                }
+                await ctx.RespondAsync("야추방이 아닌데요?");
+                return;
+            } 
+            
+            if ( CurrPlayingYachtChannels[ctx.Channel.Id]  != null &&  CurrPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
+            {
+                CurrPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
+                await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
+                await CurrPlayingYachtChannels[ctx.Channel.Id]!.RefreshGameBoard(ctx.Client);
             }
             else
             {
-                await ctx.RespondAsync("야추방이 아닌데요?");
+                await ctx.RespondAsync("풀방임");
             }
         }
 
@@ -79,13 +83,16 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync("플레이중이 아니신데요?");
                 return;
             }
-            _client.MessageReactionAdded -= _currPlayingYachtChannels[ctx.Channel.Id]!.MessageReactionAdded;
-            _currPlayingYachtChannels[ctx.Channel.Id]?.GameSettle();
-            _currPlayingYachtChannels.Remove(ctx.Channel.Id);
+            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionAdded;
+            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionRemoved;
+            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionAdded;
+            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionRemoved;
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.GameSettle()!;
             await ctx.RespondAsync("야추 종료");
         }
-        [Command, Aliases("ync")]
-        public async Task YachtNextCommand(CommandContext ctx)
+
+        [Command, Aliases("yc")]
+        public async Task YachtChoice(CommandContext ctx, [RemainingText] string? tempCommand)
         {
             if (!IsYachtChannel(ctx.Channel.Id))
             {
@@ -99,7 +106,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            if (_currPlayingYachtChannels.TryGetValue(ctx.Channel.Id, out YachtGame? yachtGame))
+            if (CurrPlayingYachtChannels.TryGetValue(ctx.Channel.Id, out YachtGame? yachtGame))
             {
                 if (yachtGame?.CurrPlayer?.Id != ctx.User.Id)
                 {
@@ -107,9 +114,11 @@ namespace DiscordBot.Commands
                     return;
                 }
 
-                await ctx.Channel.SendMessageAsync(yachtGame.DiceTrayVisualize());
+                if (Enum.TryParse(tempCommand, out EYachtPointType eYachtPointType))
+                {
+                    await yachtGame.ChoicePoint(ctx.Client, eYachtPointType);
+                }
             }
-
         }
     }
 }
