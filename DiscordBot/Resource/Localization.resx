@@ -280,7 +280,7 @@ This has a lower priority than music added with play.</value>
 		<value>Take your donation from the donation box.</value>
 	</data>
 	<data name="a6_randomdonation_Description" xml:space="preserve">
-		<value>Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10)</value>
+		<value>Donate to the random donation box. You can enter the amount (ex. rdn 1000), and a random key is automatically generated. (1~10)</value>
 	</data>
 	<data name="a7_randomthanks_Description" xml:space="preserve">
 		<value>Generates a random key and brings donations to the random donation box if correct.</value>
