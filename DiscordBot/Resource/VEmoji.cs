@@ -50,6 +50,7 @@ public class VEmoji
     public static readonly string Books = "\uD83D\uDCDA"; // 📚
     public static readonly string Level = "\uD83D\uDCA0"; // 💠
     public static readonly string Trident = "\uD83D\uDD31"; // 🔱
+    public static readonly string Stopwatch = "\u23F1\uFE0F"; // ⏱️
     
     public static readonly string GreenCircle = "\uD83D\uDFE2"; // 🟢
     public static readonly string RedCircle = "\uD83D\uDD34"; // 🔴
