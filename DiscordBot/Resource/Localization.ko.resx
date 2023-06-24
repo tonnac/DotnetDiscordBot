@@ -309,4 +309,7 @@
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>현재 채널을 봇 도움말 채널로 만듭니다.</value>
 	</data>
+	<data name="disablechat_Description" xml:space="preserve">
+		<value>현재 채널을 채팅 불가능한 채널로 변경합니다.</value>
+	</data>
 </root>

@@ -288,6 +288,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make the current channel disable chatting..
+        /// </summary>
+        internal static string disablechat_Description {
+            get {
+                return ResourceManager.GetString("disablechat_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnected.
         /// </summary>
         internal static string disconnected {

@@ -309,4 +309,7 @@ This has a lower priority than music added with play.</value>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>Make the current channel a bot help channel.</value>
 	</data>
+	<data name="disablechat_Description" xml:space="preserve">
+		<value>Make the current channel disable chatting.</value>
+	</data>
 </root>
