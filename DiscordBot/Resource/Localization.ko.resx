@@ -249,13 +249,13 @@
 	<data name="bosshuntinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
 	</data>
-	<data name="gameranking_Description" xml:space="preserve">
+	<data name="A2_gameranking_Description" xml:space="preserve">
 		<value>게임 랭킹보드를 표시합니다.</value>
 	</data>
 	<data name="bosslist_Description" xml:space="preserve">
 		<value>보스 리스트를 표시합니다.</value>
 	</data>
-	<data name="myinfo_Description" xml:space="preserve">
+	<data name="a1_myinfo_Description" xml:space="preserve">
 		<value>내 게임 정보를 표시합니다.</value>
 	</data>
 	<data name="fishing_Description" xml:space="preserve">
@@ -286,16 +286,16 @@
 		<value>랜덤키를 생성하여 맞을 경우 랜덤기부함 기부금을 가져옵니다.</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
-		<value>무기를 강화합니다. (데미지, 낚시확률 증가)</value>
+		<value>[🗡️] 무기를 강화합니다. (데미지, 낚시확률 증가)</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
-		<value>반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
+		<value>[💍] 반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
 	</data>
 	<data name="upgradegem_Description" xml:space="preserve">
-		<value>보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
+		<value>[💎] 보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
 	</data>
 	<data name="upgradetrident_Description" xml:space="preserve">
-		<value>삼지창을 강화합니다. (삼지창 강화수치 만큼 무기,반지,보석에 최대강화수치 추가 증가)</value>
+		<value>[🔱] 삼지창을 강화합니다. (삼지창 강화수치 만큼 무기,반지,보석에 최대강화수치 추가 증가)</value>
 	</data>
 	<data name="getgempay_Description" xml:space="preserve">
 		<value>보석 강화 수치만큼 돈을 지급받습니다.</value>
@@ -304,7 +304,7 @@
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
 	</data>
 	<data name="buyxp_Description" xml:space="preserve">
-		<value>경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
+		<value>[📚] 경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>현재 채널을 봇 도움말 채널로 만듭니다.</value>
