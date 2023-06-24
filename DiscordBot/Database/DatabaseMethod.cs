@@ -69,7 +69,7 @@ public partial class DiscordBotDatabase
         command.CommandText = $"select * FROM USER where id='{GetSHA256(guild, user)}'";
 
         var userList = await GetDatabaseTable<DatabaseUser>(command);
-        return userList.Count > 0 ? userList[0] : new DatabaseUser();
+        return userList.Count > 0 ? userList[0] : null;
     }
 
     private async Task<bool> ExecuteNonQueryASync(string query)
