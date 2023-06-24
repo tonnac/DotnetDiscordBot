@@ -292,7 +292,10 @@ This has a lower priority than music added with play.</value>
 		<value>Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
 	<data name="upgradegem_Description" xml:space="preserve">
-		<value>Enhance your gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
+		<value>Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
+	</data>
+	<data name="upgradetrident_Description" xml:space="preserve">
+		<value>Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement)</value>
 	</data>
 	<data name="getgempay_Description" xml:space="preserve">
 		<value>You receive money equal to the number of gem enhancements.</value>

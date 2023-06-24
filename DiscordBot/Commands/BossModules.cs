@@ -45,9 +45,10 @@ public class BossModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser attackUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_WeaponUpgradeMultiplier;
-        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Boss_RingUpgradeMultiplier;
-        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(attackUserDatabase.equipvalue) * EquipCalculator.Gold_GemUpgradeMultiplier;
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(attackUserDatabase.equipvalue) * 9;
+        int weaponUpgrade = (EquipCalculator.GetWeaponUpgradeInfo(attackUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Boss_WeaponUpgradeMultiplier;
+        int ringUpgrade = (EquipCalculator.GetRingUpgradeInfo(attackUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Boss_RingUpgradeMultiplier;
+        int gemUpgrade = (EquipCalculator.GetGemUpgradeInfo(attackUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Gold_GemUpgradeMultiplier;
         float gemPercentage = gemUpgrade / 100.0f;
         
         var rand = new Random();

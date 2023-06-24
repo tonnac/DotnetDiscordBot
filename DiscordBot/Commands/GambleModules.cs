@@ -90,7 +90,8 @@ public class GambleModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser gambleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(gambleUserDatabase.equipvalue) * EquipCalculator.Dice_RingUpgradeMultiplier;
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(gambleUserDatabase.equipvalue) * 9;
+        int ringUpgrade = (EquipCalculator.GetRingUpgradeInfo(gambleUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Dice_RingUpgradeMultiplier;
 
         int ante = 0;
         int result = 0;

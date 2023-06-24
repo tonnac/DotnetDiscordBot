@@ -91,16 +91,16 @@ public class UserGameInfoModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
-        Dictionary<string, int> equipRankDictionary = users.Where(user => (user.equipvalue % EquipCalculator.LevelCutNum) > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
+        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(user => user.equipvalue % EquipCalculator.LevelCutNum).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
                 return Utility.GetMemberDisplayName(member);
             }
             return "X";
-        }, user => (user.equipvalue % EquipCalculator.LevelCutNum));
+        }, user => user.equipvalue);
         
-        Dictionary<string, int> levelRankDictionary = users.Where(user => user.equipvalue / (EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum) > 0).OrderByDescending(user => user.equipvalue).ToDictionary(user =>
+        Dictionary<string, int> levelRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(user => user.equipvalue / EquipCalculator.LevelCutNum).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
@@ -145,10 +145,10 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + goldRankUser[0], Convert.ToString(goldRankCount[0]), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + goldRankUser[1], Convert.ToString(goldRankCount[1]), true))
             .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + goldRankUser[2], Convert.ToString(goldRankCount[2]), true))
-            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Gem + ", " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
-            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
-            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
-            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
+            .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Trident + ", " + VEmoji.Gem + ", " + VEmoji.Ring + ", " + VEmoji.Weapon + "  ]", false))
+            .AddField(new DiscordEmbedField(VEmoji.GoldMedal + equipRankUser[0], "+" + Convert.ToString(EquipCalculator.GetTridentUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[0])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[0])), true))
+            .AddField(new DiscordEmbedField(VEmoji.SilverMedal + equipRankUser[1], "+" + Convert.ToString(EquipCalculator.GetTridentUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[1])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[1])), true))
+            .AddField(new DiscordEmbedField(VEmoji.BronzeMedal + equipRankUser[2], "+" + Convert.ToString(EquipCalculator.GetTridentUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetGemUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetRingUpgradeInfo(equipRankCount[2])) + ", +" + Convert.ToString(EquipCalculator.GetWeaponUpgradeInfo(equipRankCount[2])), true))
             .AddField(new DiscordEmbedField("──────────", "[  " + VEmoji.Crossbones + "  ]", false))
             .AddField(new DiscordEmbedField(VEmoji.GoldMedal + killRankUser[0], Convert.ToString(killRankCount[0]), true))
             .AddField(new DiscordEmbedField(VEmoji.SilverMedal + killRankUser[1], Convert.ToString(killRankCount[1]), true))
@@ -160,7 +160,61 @@ public class UserGameInfoModules : BaseCommandModule
         
         await ctx.RespondAsync(embedBuilder);
     }
-    
+
+    [Command, Aliases("ut", "삼지창강화")]
+    public async Task UpgradeTrident(CommandContext ctx, [RemainingText] string? tempCommand)
+    {
+        bool isForgeChannel = await _contentsChannels.IsForgeChannel(ctx);
+        if (isForgeChannel == false)
+        {
+            var message = await ctx.RespondAsync("강화가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        DatabaseUser userDatabase = await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(userDatabase.equipvalue);
+        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(userDatabase.equipvalue);
+        int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(userDatabase.equipvalue);
+        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(userDatabase.equipvalue);
+
+        string name = Utility.GetMemberDisplayName(ctx.Member);
+        
+        if (9 <= tridentUpgrade)
+        {
+            await ctx.RespondAsync(ctx.Member.Mention + " " + VEmoji.ThumbsUp);
+        }
+        else
+        {
+            if (27 <= gemUpgrade + ringUpgrade + weaponUpgrade)
+            {
+                await database.AddEquipValue(ctx, 1);
+
+                DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
+                    .WithThumbnail("https://media.tenor.com/GGsOGJnPnvgAAAAM/aquaman-jason.gif")
+                    .WithColor(DiscordColor.Green)
+                    .AddField(new DiscordEmbedField(VEmoji.HammerAndPick + " " + name, "────────", false))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.Trident + " ]", "[ +️" + Convert.ToString(tridentUpgrade) + " ]", true))
+                    .AddField(new DiscordEmbedField("▶", "▶", true))
+                    .AddField(new DiscordEmbedField("[ " + VEmoji.Trident + " ]", "[ +️" + Convert.ToString(tridentUpgrade+1) + " ]", true));
+
+                var message = await ctx.RespondAsync(embedBuilder);
+                await message.PinAsync();
+            }
+            else
+            {
+                await ctx.RespondAsync(".." + VEmoji.QuestionMark + "(+9" + VEmoji.Gem + ", +9" + VEmoji.Ring + ", +9" + VEmoji.Weapon + ")");
+            }
+        }
+    }
+
     [Command, Aliases("uw", "무기강화")]
     public async Task UpgradeWeapon(CommandContext ctx, [RemainingText] string? tempCommand)
     {
@@ -549,8 +603,8 @@ public class UserGameInfoModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        
-        int gemCurrentUpgrade = EquipCalculator.GetGemUpgradeInfo(userDatabase.equipvalue);
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(userDatabase.equipvalue) * 9;
+        int gemCurrentUpgrade = EquipCalculator.GetGemUpgradeInfo(userDatabase.equipvalue) + tridentUpgrade;
 
         int gemPay = gemCurrentUpgrade * EquipCalculator.Pay_GemUpgradeMultiplier;
         

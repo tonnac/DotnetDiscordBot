@@ -65,8 +65,9 @@ public class FishingModules : BaseCommandModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         DatabaseUser fishUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Fish_WeaponUpgradeMultiplier;
-        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(fishUserDatabase.equipvalue) * EquipCalculator.Gold_GemUpgradeMultiplier;
+        int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(fishUserDatabase.equipvalue) * 9;
+        int weaponUpgrade = (EquipCalculator.GetWeaponUpgradeInfo(fishUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Fish_WeaponUpgradeMultiplier;
+        int gemUpgrade = (EquipCalculator.GetGemUpgradeInfo(fishUserDatabase.equipvalue) + tridentUpgrade) * EquipCalculator.Gold_GemUpgradeMultiplier;
         float gemPercentage = gemUpgrade / 100.0f;
         
         var rand = new Random();
