@@ -20,7 +20,7 @@ public class UserGameInfoModules : BaseCommandModule
     }
 
     [Command, Aliases("mi", "내정보"), Cooldown(1, 5, CooldownBucketType.User)]
-    public async Task MyInfo(CommandContext ctx)
+    public async Task A1_MyInfo(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -59,7 +59,7 @@ public class UserGameInfoModules : BaseCommandModule
     }
     
     [Command, Aliases("gr", "랭킹"), Cooldown(1, 10, CooldownBucketType.User)]
-    public async Task GameRanking(CommandContext ctx)
+    public async Task A2_GameRanking(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();

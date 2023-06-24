@@ -249,13 +249,13 @@ This has a lower priority than music added with play.</value>
 	<data name="bosshuntinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>
 	</data>
-	<data name="gameranking_Description" xml:space="preserve">
+	<data name="A2_gameranking_Description" xml:space="preserve">
 		<value>Shows the Game Ranking board.</value>
 	</data>
 	<data name="bosslist_Description" xml:space="preserve">
 		<value>Shows the boss list.</value>
 	</data>
-	<data name="myinfo_Description" xml:space="preserve">
+	<data name="a1_myinfo_Description" xml:space="preserve">
 		<value>Shows my game information.</value>
 	</data>
 	<data name="fishing_Description" xml:space="preserve">
@@ -286,16 +286,16 @@ This has a lower priority than music added with play.</value>
 		<value>Generates a random key and brings donations to the random donation box if correct.</value>
 	</data>
 	<data name="upgradeweapon_Description" xml:space="preserve">
-		<value>Strengthen your weapon. (Damage, fishing rate increase)</value>
+		<value>[🗡️] Strengthen your weapon. (Damage, fishing rate increase)</value>
 	</data>
 	<data name="upgradering_Description" xml:space="preserve">
-		<value>Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
+		<value>[💍] Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
 	<data name="upgradegem_Description" xml:space="preserve">
-		<value>Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
+		<value>[💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
 	</data>
 	<data name="upgradetrident_Description" xml:space="preserve">
-		<value>Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement)</value>
+		<value>[🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement)</value>
 	</data>
 	<data name="getgempay_Description" xml:space="preserve">
 		<value>You receive money equal to the number of gem enhancements.</value>
@@ -304,7 +304,7 @@ This has a lower priority than music added with play.</value>
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
 	<data name="buyxp_Description" xml:space="preserve">
-		<value>Raise your experience. The level rises when the experience reaches a certain level.</value>
+		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level.</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>Make the current channel a bot help channel.</value>

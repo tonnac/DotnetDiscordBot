@@ -60,6 +60,24 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows my game information..
+        /// </summary>
+        internal static string a1_myinfo_Description {
+            get {
+                return ResourceManager.GetString("a1_myinfo_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the Game Ranking board..
+        /// </summary>
+        internal static string A2_gameranking_Description {
+            get {
+                return ResourceManager.GetString("A2_gameranking_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Added to queue.
         /// </summary>
         internal static string addedQueue {
@@ -108,7 +126,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Raise your experience. The level rises when the experience reaches a certain level..
+        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level..
         /// </summary>
         internal static string buyxp_Description {
             get {
@@ -288,15 +306,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows the Game Ranking board..
-        /// </summary>
-        internal static string gameranking_Description {
-            get {
-                return ResourceManager.GetString("gameranking_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You receive money equal to the number of gem enhancements..
         /// </summary>
         internal static string getgempay_Description {
@@ -348,15 +357,6 @@ namespace DiscordBot.Resource {
         internal static string longplay_Description {
             get {
                 return ResourceManager.GetString("longplay_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shows my game information..
-        /// </summary>
-        internal static string myinfo_Description {
-            get {
-                return ResourceManager.GetString("myinfo_Description", resourceCulture);
             }
         }
         
@@ -604,7 +604,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
         /// </summary>
         internal static string upgradegem_Description {
             get {
@@ -613,7 +613,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen the ring. (Attack hit rate, dice gambling value increase).
+        ///   Looks up a localized string similar to [💍] Strengthen the ring. (Attack hit rate, dice gambling value increase).
         /// </summary>
         internal static string upgradering_Description {
             get {
@@ -631,7 +631,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement).
+        ///   Looks up a localized string similar to [🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement).
         /// </summary>
         internal static string upgradetrident_Description {
             get {
@@ -640,7 +640,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Strengthen your weapon. (Damage, fishing rate increase).
+        ///   Looks up a localized string similar to [🗡️] Strengthen your weapon. (Damage, fishing rate increase).
         /// </summary>
         internal static string upgradeweapon_Description {
             get {
