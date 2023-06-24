@@ -61,9 +61,9 @@ namespace DiscordBot.Resource {
         
         /// <summary>
         ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100)
-        ///   [⚔️]When attacking, gain gold equal to the damage dealt.
-        ///   [☠️]When defeated, a certain amount of gold is paid to the last attacker.
-        ///   [💥]When defeated, gold is paid to the person with the highest deal amount equal to the deal amount..
+        /// When attacking, gain gold equal to the damage dealt.
+        /// When defeated, a certain amount of gold is paid to the last attacker.
+        /// When defeated, gold is paid to the person with the highest deal amount equal to the deal amount..
         /// </summary>
         internal static string a1_bossattack_Description {
             get {
