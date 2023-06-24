@@ -55,7 +55,7 @@ namespace DiscordBot.Commands
         }
         
         
-        [Command, Hidden]
+        [Command]
         [RequireBotPermissions(Permissions.ManageMessages), RequirePermissions(Permissions.Administrator)]
         public async Task DisableChat(CommandContext ctx)
         {
