@@ -117,7 +117,7 @@ public class EquipCalculator
             return 0;
         }
         
-        return (equipValue % LevelCutNum) / (EquipCutNum * EquipCutNum);
+        return (equipValue / (EquipCutNum * EquipCutNum)) % EquipCutNum;
     }
     
     public static int GetTridentUpgradeInfo(int equipValue)
