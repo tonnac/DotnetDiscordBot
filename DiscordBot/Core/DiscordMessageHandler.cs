@@ -63,7 +63,7 @@ public class DiscordMessageHandler
             });
         }
 
-        if (IsDisableChatChannel(args.Channel) && args.Message.Content == string.Empty)
+        if (IsDisableChatChannel(args.Channel) && args.Message.Content != string.Empty)
         {
             DeleteMessage();
         }
