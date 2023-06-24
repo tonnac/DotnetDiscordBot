@@ -304,7 +304,7 @@
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
 	</data>
 	<data name="a3_buyxp_Description" xml:space="preserve">
-		<value>[📚] 경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
+		<value>[📚] 경험치를 올립니다. 경험치가 일정 이상되면 레벨(💠)이 오릅니다.</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>현재 채널을 봇 도움말 채널로 만듭니다.</value>

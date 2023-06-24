@@ -44,7 +44,7 @@ public class UserGameInfoModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
-            .AddField(new DiscordEmbedField(VEmoji.Magnifier + " " + name + "　|　Lv." + Convert.ToString(level), "─────────────────", false))
+            .AddField(new DiscordEmbedField(VEmoji.Magnifier + " " + name + "　|　Lv." + Convert.ToString(level) + " " + VEmoji.Level, "─────────────────", false))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Books + "  ]", Convert.ToString(xpPercentage) + "%", true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Money + "  ]", Convert.ToString(myUserDatabase.gold), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Trident + "  ]", "+" + Convert.ToString(tridentUpgrade), true))
@@ -92,7 +92,15 @@ public class UserGameInfoModules : BaseCommandModule
             return "X";
         }, user => user.bosstotaldamage);
         
-        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(user => user.equipvalue % EquipCalculator.LevelCutNum).ToDictionary(user =>
+        Dictionary<string, int> equipRankDictionary = users.Where(user => user.equipvalue > 0).OrderByDescending(
+            user =>
+            {
+                int trident = EquipCalculator.GetTridentUpgradeInfo(user.equipvalue);
+                int gem = EquipCalculator.GetGemUpgradeInfo(user.equipvalue);
+                int ring = EquipCalculator.GetRingUpgradeInfo(user.equipvalue);
+                int weapon = EquipCalculator.GetWeaponUpgradeInfo(user.equipvalue);
+                return trident * 27 + gem + ring + weapon;
+            }).ToDictionary(user =>
         {
             if (ctx.Guild.Members.TryGetValue(user.userid, out DiscordMember? member))
             {
