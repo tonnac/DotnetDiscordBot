@@ -240,19 +240,19 @@
 	<data name="doexit_Description" xml:space="preserve">
 		<value>현재 참여중인 음성채널 연결을 종료합니다.</value>
 	</data>
-	<data name="bossattack_Description" xml:space="preserve">
+	<data name="a1_bossattack_Description" xml:space="preserve">
 		<value>보스에게 공격을 시도합니다. (데미지 1~100)
-   공격 시, 가한 데미지 만큼 골드를 얻습니다.
-   처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
-   처지 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
+   [⚔️]공격 시, 가한 데미지 만큼 골드를 얻습니다.
+   [☠️]처치 시, 마지막 공격자에게 일정 골드를 지급합니다.
+   [💥]처치 시, 딜량 1위에게 딜량만큼 골드를 지급합니다.</value>
 	</data>
-	<data name="bosshuntinfo_Description" xml:space="preserve">
+	<data name="a2_bosshuntinfo_Description" xml:space="preserve">
 		<value>현재 보스 정보를 표시합니다.</value>
 	</data>
-	<data name="A2_gameranking_Description" xml:space="preserve">
+	<data name="a2_gameranking_Description" xml:space="preserve">
 		<value>게임 랭킹보드를 표시합니다.</value>
 	</data>
-	<data name="bosslist_Description" xml:space="preserve">
+	<data name="a3_bosslist_Description" xml:space="preserve">
 		<value>보스 리스트를 표시합니다.</value>
 	</data>
 	<data name="a1_myinfo_Description" xml:space="preserve">
@@ -264,46 +264,46 @@
 	<data name="fishlist_Description" xml:space="preserve">
 		<value>물고기 리스트를 표시합니다.</value>
 	</data>
-	<data name="gamblegamelist_Description" xml:space="preserve">
+	<data name="a3_gamblegamelist_Description" xml:space="preserve">
 		<value>도박 리스트를 표시합니다.</value>
 	</data>
-	<data name="dodicegamble_Description" xml:space="preserve">
-		<value>주사위 도박을 합니다. 금액 입력 가능(ex. 주사위도박 1000)</value>
+	<data name="a1_dodicegamble_Description" xml:space="preserve">
+		<value>[🎲]주사위 도박을 합니다. 금액 입력 가능(ex. 주사위도박 1000)</value>
 	</data>
-	<data name="dofundsgamble_Description" xml:space="preserve">
-		<value>수금도박을 합니다. 당첨 시 모인 돈을 전부 가져갑니다.</value>
+	<data name="a2_dofundsgamble_Description" xml:space="preserve">
+		<value>[🗃️] 수금도박을 합니다. 당첨 시 모인 돈을 전부 가져갑니다.</value>
 	</data>
-	<data name="donation_Description" xml:space="preserve">
+	<data name="a4_donation_Description" xml:space="preserve">
 		<value>기부함에 기부를 합니다. 금액 입력 가능(ex. 기부 1000)</value>
 	</data>
-	<data name="thanks_Description" xml:space="preserve">
+	<data name="a5_thanks_Description" xml:space="preserve">
 		<value>기부함에 있는 기부금을 가져갑니다.</value>
 	</data>
-	<data name="randomdonation_Description" xml:space="preserve">
+	<data name="a6_randomdonation_Description" xml:space="preserve">
 		<value>랜덤기부함에 기부를 합니다. 금액 입력 가능.(ex. 기부 1000), 랜덤 키가 자동생성됩니다. (1~10)</value>
 	</data>
-	<data name="randomthanks_Description" xml:space="preserve">
+	<data name="a7_randomthanks_Description" xml:space="preserve">
 		<value>랜덤키를 생성하여 맞을 경우 랜덤기부함 기부금을 가져옵니다.</value>
 	</data>
-	<data name="upgradeweapon_Description" xml:space="preserve">
+	<data name="a4_upgradeweapon_Description" xml:space="preserve">
 		<value>[🗡️] 무기를 강화합니다. (데미지, 낚시확률 증가)</value>
 	</data>
-	<data name="upgradering_Description" xml:space="preserve">
+	<data name="a5_upgradering_Description" xml:space="preserve">
 		<value>[💍] 반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
 	</data>
-	<data name="upgradegem_Description" xml:space="preserve">
+	<data name="a6_upgradegem_Description" xml:space="preserve">
 		<value>[💎] 보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
 	</data>
-	<data name="upgradetrident_Description" xml:space="preserve">
+	<data name="a7_upgradetrident_Description" xml:space="preserve">
 		<value>[🔱] 삼지창을 강화합니다. (삼지창 강화수치 만큼 무기,반지,보석에 최대강화수치 추가 증가)</value>
 	</data>
-	<data name="getgempay_Description" xml:space="preserve">
+	<data name="a8_getgempay_Description" xml:space="preserve">
 		<value>보석 강화 수치만큼 돈을 지급받습니다.</value>
 	</data>
-	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
+	<data name="a9_upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>강화 확률 리스트를 표시합니다. 단계 입력 가능(ex. ul 0)</value>
 	</data>
-	<data name="buyxp_Description" xml:space="preserve">
+	<data name="a3_buyxp_Description" xml:space="preserve">
 		<value>[📚] 경험치를 올립니다. 경험치가 일정 이상되면 레벨이 오릅니다.</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">

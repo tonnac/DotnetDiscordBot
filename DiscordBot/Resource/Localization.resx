@@ -240,19 +240,19 @@ This has a lower priority than music added with play.</value>
 	<data name="doexit_Description" xml:space="preserve">
 		<value>Leave voice channel you are currently participating in.</value>
 	</data>
-	<data name="bossattack_Description" xml:space="preserve">
+	<data name="a1_bossattack_Description" xml:space="preserve">
 		<value>Attempt to attack the boss. (Damage 1-100)
-   When attacking, gain gold equal to the damage dealt.
-   When defeated, a certain amount of gold is paid to the last attacker.
-   In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
+   [⚔️]When attacking, gain gold equal to the damage dealt.
+   [☠️]When defeated, a certain amount of gold is paid to the last attacker.
+   [💥]When defeated, gold is paid to the person with the highest deal amount equal to the deal amount.</value>
 	</data>
-	<data name="bosshuntinfo_Description" xml:space="preserve">
+	<data name="a2_bosshuntinfo_Description" xml:space="preserve">
 		<value>Shows current boss information.</value>
 	</data>
-	<data name="A2_gameranking_Description" xml:space="preserve">
+	<data name="a2_gameranking_Description" xml:space="preserve">
 		<value>Shows the Game Ranking board.</value>
 	</data>
-	<data name="bosslist_Description" xml:space="preserve">
+	<data name="a3_bosslist_Description" xml:space="preserve">
 		<value>Shows the boss list.</value>
 	</data>
 	<data name="a1_myinfo_Description" xml:space="preserve">
@@ -264,46 +264,46 @@ This has a lower priority than music added with play.</value>
 	<data name="fishlist_Description" xml:space="preserve">
 		<value>Shows the fish list.</value>
 	</data>
-	<data name="gamblegamelist_Description" xml:space="preserve">
+	<data name="a3_gamblegamelist_Description" xml:space="preserve">
 		<value>Shows the gamble list.</value>
 	</data>
-	<data name="dodicegamble_Description" xml:space="preserve">
-		<value>Do Dice Gambling. You can enter the amount (ex. ddg 1000)</value>
+	<data name="a1_dodicegamble_Description" xml:space="preserve">
+		<value>[🎲]Do Dice Gambling. You can enter the amount (ex. ddg 1000)</value>
 	</data>
-	<data name="dofundsgamble_Description" xml:space="preserve">
-		<value>Gamble Funds. If you win, you take all the money collected.</value>
+	<data name="a2_dofundsgamble_Description" xml:space="preserve">
+		<value>[🗃️]Gamble Funds. If you win, you take all the money collected.</value>
 	</data>
-	<data name="donation_Description" xml:space="preserve">
+	<data name="a4_donation_Description" xml:space="preserve">
 		<value>Donate to the donation box. You can enter the amount (ex. dn 1000)</value>
 	</data>
-	<data name="thanks_Description" xml:space="preserve">
+	<data name="a5_thanks_Description" xml:space="preserve">
 		<value>Take your donation from the donation box.</value>
 	</data>
-	<data name="randomdonation_Description" xml:space="preserve">
+	<data name="a6_randomdonation_Description" xml:space="preserve">
 		<value>Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10)</value>
 	</data>
-	<data name="randomthanks_Description" xml:space="preserve">
+	<data name="a7_randomthanks_Description" xml:space="preserve">
 		<value>Generates a random key and brings donations to the random donation box if correct.</value>
 	</data>
-	<data name="upgradeweapon_Description" xml:space="preserve">
+	<data name="a4_upgradeweapon_Description" xml:space="preserve">
 		<value>[🗡️] Strengthen your weapon. (Damage, fishing rate increase)</value>
 	</data>
-	<data name="upgradering_Description" xml:space="preserve">
+	<data name="a5_upgradering_Description" xml:space="preserve">
 		<value>[💍] Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
-	<data name="upgradegem_Description" xml:space="preserve">
+	<data name="a6_upgradegem_Description" xml:space="preserve">
 		<value>[💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
 	</data>
-	<data name="upgradetrident_Description" xml:space="preserve">
+	<data name="a7_upgradetrident_Description" xml:space="preserve">
 		<value>[🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement)</value>
 	</data>
-	<data name="getgempay_Description" xml:space="preserve">
+	<data name="a8_getgempay_Description" xml:space="preserve">
 		<value>You receive money equal to the number of gem enhancements.</value>
 	</data>
-	<data name="upgradesuccesspercentagelist_Description" xml:space="preserve">
+	<data name="a9_upgradesuccesspercentagelist_Description" xml:space="preserve">
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
-	<data name="buyxp_Description" xml:space="preserve">
+	<data name="a3_buyxp_Description" xml:space="preserve">
 		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level.</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">

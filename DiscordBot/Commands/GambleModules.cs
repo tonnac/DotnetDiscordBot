@@ -58,7 +58,7 @@ public class GambleModules : BaseCommandModule
     }
 
     [Command, Aliases("ggl", "도박리스트"), Cooldown(1, 10, CooldownBucketType.User)]
-    public async Task GambleGameList(CommandContext ctx, [RemainingText] string? gambleCommand)
+    public async Task A3_GambleGameList(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://img.freepik.com/premium-photo/classic-casino-roulette_103577-4040.jpg")
@@ -73,7 +73,7 @@ public class GambleModules : BaseCommandModule
     }
 
     [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 2, CooldownBucketType.UserAndChannel)]
-    public async Task DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
+    public async Task A1_DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
         if (isGambleChannel == false)
@@ -146,7 +146,7 @@ public class GambleModules : BaseCommandModule
     }
 
     [Command, Aliases("dfg", "수금도박"), Cooldown(1, 4, CooldownBucketType.UserAndChannel, true, true, 5)]
-    public async Task DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
+    public async Task A2_DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
         if (isGambleChannel == false)
@@ -239,7 +239,7 @@ public class GambleModules : BaseCommandModule
     }
 
     [Command, Aliases("dn", "기부", "사료")]
-    public async Task Donation(CommandContext ctx, [RemainingText] string? donationCommand)
+    public async Task A4_Donation(CommandContext ctx, [RemainingText] string? donationCommand)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -270,7 +270,7 @@ public class GambleModules : BaseCommandModule
     }
     
     [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
-    public async Task Thanks(CommandContext ctx)
+    public async Task A5_Thanks(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -301,7 +301,7 @@ public class GambleModules : BaseCommandModule
     }
     
     [Command, Aliases("rdn", "랜덤기부", "랜덤사료")]
-    public async Task RandomDonation(CommandContext ctx, [RemainingText] string? donationCommand)
+    public async Task A6_RandomDonation(CommandContext ctx, [RemainingText] string? donationCommand)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -335,7 +335,7 @@ public class GambleModules : BaseCommandModule
     }
     
     [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
-    public async Task RandomThanks(CommandContext ctx)
+    public async Task A7_RandomThanks(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();

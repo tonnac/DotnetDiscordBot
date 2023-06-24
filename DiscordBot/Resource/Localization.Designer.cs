@@ -60,6 +60,27 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100)
+        ///   [⚔️]When attacking, gain gold equal to the damage dealt.
+        ///   [☠️]When defeated, a certain amount of gold is paid to the last attacker.
+        ///   [💥]When defeated, gold is paid to the person with the highest deal amount equal to the deal amount..
+        /// </summary>
+        internal static string a1_bossattack_Description {
+            get {
+                return ResourceManager.GetString("a1_bossattack_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [🎲]Do Dice Gambling. You can enter the amount (ex. ddg 1000).
+        /// </summary>
+        internal static string a1_dodicegamble_Description {
+            get {
+                return ResourceManager.GetString("a1_dodicegamble_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows my game information..
         /// </summary>
         internal static string a1_myinfo_Description {
@@ -69,11 +90,146 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows current boss information..
+        /// </summary>
+        internal static string a2_bosshuntinfo_Description {
+            get {
+                return ResourceManager.GetString("a2_bosshuntinfo_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [🗃️]Gamble Funds. If you win, you take all the money collected..
+        /// </summary>
+        internal static string a2_dofundsgamble_Description {
+            get {
+                return ResourceManager.GetString("a2_dofundsgamble_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows the Game Ranking board..
         /// </summary>
-        internal static string A2_gameranking_Description {
+        internal static string a2_gameranking_Description {
             get {
-                return ResourceManager.GetString("A2_gameranking_Description", resourceCulture);
+                return ResourceManager.GetString("a2_gameranking_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the boss list..
+        /// </summary>
+        internal static string a3_bosslist_Description {
+            get {
+                return ResourceManager.GetString("a3_bosslist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level..
+        /// </summary>
+        internal static string a3_buyxp_Description {
+            get {
+                return ResourceManager.GetString("a3_buyxp_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the gamble list..
+        /// </summary>
+        internal static string a3_gamblegamelist_Description {
+            get {
+                return ResourceManager.GetString("a3_gamblegamelist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate to the donation box. You can enter the amount (ex. dn 1000).
+        /// </summary>
+        internal static string a4_donation_Description {
+            get {
+                return ResourceManager.GetString("a4_donation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [🗡️] Strengthen your weapon. (Damage, fishing rate increase).
+        /// </summary>
+        internal static string a4_upgradeweapon_Description {
+            get {
+                return ResourceManager.GetString("a4_upgradeweapon_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take your donation from the donation box..
+        /// </summary>
+        internal static string a5_thanks_Description {
+            get {
+                return ResourceManager.GetString("a5_thanks_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [💍] Strengthen the ring. (Attack hit rate, dice gambling value increase).
+        /// </summary>
+        internal static string a5_upgradering_Description {
+            get {
+                return ResourceManager.GetString("a5_upgradering_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10).
+        /// </summary>
+        internal static string a6_randomdonation_Description {
+            get {
+                return ResourceManager.GetString("a6_randomdonation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        /// </summary>
+        internal static string a6_upgradegem_Description {
+            get {
+                return ResourceManager.GetString("a6_upgradegem_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generates a random key and brings donations to the random donation box if correct..
+        /// </summary>
+        internal static string a7_randomthanks_Description {
+            get {
+                return ResourceManager.GetString("a7_randomthanks_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement).
+        /// </summary>
+        internal static string a7_upgradetrident_Description {
+            get {
+                return ResourceManager.GetString("a7_upgradetrident_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You receive money equal to the number of gem enhancements..
+        /// </summary>
+        internal static string a8_getgempay_Description {
+            get {
+                return ResourceManager.GetString("a8_getgempay_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0).
+        /// </summary>
+        internal static string a9_upgradesuccesspercentagelist_Description {
+            get {
+                return ResourceManager.GetString("a9_upgradesuccesspercentagelist_Description", resourceCulture);
             }
         }
         
@@ -87,50 +243,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100)
-        ///   When attacking, gain gold equal to the damage dealt.
-        ///   When defeated, a certain amount of gold is paid to the last attacker.
-        ///   In case of defeat, gold is paid to the person with the highest deal amount equal to the deal amount..
-        /// </summary>
-        internal static string bossattack_Description {
-            get {
-                return ResourceManager.GetString("bossattack_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Show boss commands and descriptions.
         /// </summary>
         internal static string bosshelp_Description {
             get {
                 return ResourceManager.GetString("bosshelp_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shows current boss information..
-        /// </summary>
-        internal static string bosshuntinfo_Description {
-            get {
-                return ResourceManager.GetString("bosshuntinfo_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shows the boss list..
-        /// </summary>
-        internal static string bosslist_Description {
-            get {
-                return ResourceManager.GetString("bosslist_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level..
-        /// </summary>
-        internal static string buyxp_Description {
-            get {
-                return ResourceManager.GetString("buyxp_Description", resourceCulture);
             }
         }
         
@@ -207,38 +324,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do Dice Gambling. You can enter the amount (ex. ddg 1000).
-        /// </summary>
-        internal static string dodicegamble_Description {
-            get {
-                return ResourceManager.GetString("dodicegamble_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Leave voice channel you are currently participating in..
         /// </summary>
         internal static string doexit_Description {
             get {
                 return ResourceManager.GetString("doexit_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gamble Funds. If you win, you take all the money collected..
-        /// </summary>
-        internal static string dofundsgamble_Description {
-            get {
-                return ResourceManager.GetString("dofundsgamble_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Donate to the donation box. You can enter the amount (ex. dn 1000).
-        /// </summary>
-        internal static string donation_Description {
-            get {
-                return ResourceManager.GetString("donation_Description", resourceCulture);
             }
         }
         
@@ -288,29 +378,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows the gamble list..
-        /// </summary>
-        internal static string gamblegamelist_Description {
-            get {
-                return ResourceManager.GetString("gamblegamelist_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Show gamble commands and descriptions.
         /// </summary>
         internal static string gamblehelp_Description {
             get {
                 return ResourceManager.GetString("gamblehelp_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You receive money equal to the number of gem enhancements..
-        /// </summary>
-        internal static string getgempay_Description {
-            get {
-                return ResourceManager.GetString("getgempay_Description", resourceCulture);
             }
         }
         
@@ -469,24 +541,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Donate to the random donation box. You can enter the amount (ex. Donation 1000), and a random key is automatically generated. (1~10).
-        /// </summary>
-        internal static string randomdonation_Description {
-            get {
-                return ResourceManager.GetString("randomdonation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Generates a random key and brings donations to the random donation box if correct..
-        /// </summary>
-        internal static string randomthanks_Description {
-            get {
-                return ResourceManager.GetString("randomthanks_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Remove song from the queue.
         /// </summary>
         internal static string remove_Description {
@@ -577,15 +631,6 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Take your donation from the donation box..
-        /// </summary>
-        internal static string thanks_Description {
-            get {
-                return ResourceManager.GetString("thanks_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Total Length.
         /// </summary>
         internal static string TotalLength {
@@ -600,51 +645,6 @@ namespace DiscordBot.Resource {
         internal static string TotalSongs {
             get {
                 return ResourceManager.GetString("TotalSongs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
-        /// </summary>
-        internal static string upgradegem_Description {
-            get {
-                return ResourceManager.GetString("upgradegem_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [💍] Strengthen the ring. (Attack hit rate, dice gambling value increase).
-        /// </summary>
-        internal static string upgradering_Description {
-            get {
-                return ResourceManager.GetString("upgradering_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0).
-        /// </summary>
-        internal static string upgradesuccesspercentagelist_Description {
-            get {
-                return ResourceManager.GetString("upgradesuccesspercentagelist_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement).
-        /// </summary>
-        internal static string upgradetrident_Description {
-            get {
-                return ResourceManager.GetString("upgradetrident_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [🗡️] Strengthen your weapon. (Damage, fishing rate increase).
-        /// </summary>
-        internal static string upgradeweapon_Description {
-            get {
-                return ResourceManager.GetString("upgradeweapon_Description", resourceCulture);
             }
         }
         

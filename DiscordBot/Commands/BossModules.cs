@@ -26,7 +26,7 @@ public class BossModules : BaseCommandModule
     
     //[Command, Aliases("ba")]
     [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
-    public async Task BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
+    public async Task A1_BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         bool isBossGameChannel = await _contentsChannels.IsBossGameChannel(ctx);
         if (isBossGameChannel == false)
@@ -39,7 +39,6 @@ public class BossModules : BaseCommandModule
             });
             return;
         }
-        
 
         // start,, calc final damage
         using var database = new DiscordBotDatabase();
@@ -157,7 +156,7 @@ public class BossModules : BaseCommandModule
     }
     
     [Command, Aliases("bi", "보스정보"), Cooldown(1, 3, CooldownBucketType.User)]
-    public async Task BossHuntInfo(CommandContext ctx)
+    public async Task A2_BossHuntInfo(CommandContext ctx)
     {
         KeyValuePair<ulong, BossUserInfo> bestDealerInfo = _bossMonster.GetBestDealer();
         string bestDealer = 0 == bestDealerInfo.Key ? "X" : Utility.GetMemberDisplayName(bestDealerInfo.Value.Member);
@@ -177,7 +176,7 @@ public class BossModules : BaseCommandModule
     }
     
     [Command, Aliases("bl", "보스리스트"), Cooldown(1, 10, CooldownBucketType.User)]
-    public async Task BossList(CommandContext ctx)
+    public async Task A3_BossList(CommandContext ctx)
     {
 
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
