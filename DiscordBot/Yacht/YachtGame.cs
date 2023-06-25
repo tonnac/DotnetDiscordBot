@@ -27,7 +27,6 @@ public enum EYachtPointType : ushort
 public class YachtGame
 {
     private const int A_CODE = 0x1F1E6;
-    private readonly string[] _enNums = new string[] {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
     public DiscordUser? _1P;
     public DiscordUser? _2P;
     public DiscordThreadChannel? _yachtChannel;
@@ -46,7 +45,9 @@ public class YachtGame
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
     private string TurnPlayer => _turn % 2 == 0 ? "2P" : "1P";
     private int TurnPlayerNum  => _turn % 2 == 0 ? 1 : 0;
-    private int Round => _turn / 2 + (_turn % 2 == 1 ? 1 : 0);
+    private int Round => _turn / 2 + _turn % 2 / 1;
+    
+    
 
     private async Task<bool> SetUi(DiscordClient discordClient)
     {
@@ -222,10 +223,10 @@ public class YachtGame
             _yachtDiceTrayUiMessage = null;
             await GameSettle();
         }
-        
-        Optional<DiscordEmbed> diceTrayEmbed = new Optional<DiscordEmbed>(DiceTrayVisualize(discordClient));
+
+        Optional<DiscordEmbed> diceTrayEmbed = Optional.Some<DiscordEmbed>(DiceTrayVisualize(discordClient));
         await _yachtDiceTrayUiMessage?.ModifyAsync(diceTrayEmbed)!;
-        Optional<DiscordEmbed> scoreEmbed = new Optional<DiscordEmbed>(ScoreBoardVisualize(discordClient));
+        Optional<DiscordEmbed> scoreEmbed = Optional.Some<DiscordEmbed>(ScoreBoardVisualize(discordClient));
         await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
     }
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
@@ -266,7 +267,6 @@ public class YachtGame
         int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
         _diceTarget[emojiToIndex] = true;
     }
-
     public async Task DiceTrayMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
     {
         if (_yachtChannel!.Id != eventArgs.ChannelId)
@@ -327,7 +327,6 @@ public class YachtGame
             return;
 
     }
-
     void DiceRoll(bool forceRoll)
     {
         if (_diceChance <= 0)
@@ -350,8 +349,6 @@ public class YachtGame
             PointTempSettle();
         }
     }
-    
-
     void DiceReset()
     {
         _diceChance = 3;
@@ -361,7 +358,6 @@ public class YachtGame
             _diceTarget[i] = false;
         }
     }
-
     private DiscordEmbedBuilder ScoreBoardVisualize(DiscordClient discordClient)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -393,7 +389,6 @@ public class YachtGame
 
         return embedBuilder;
     }
-
     private DiscordEmbedBuilder DiceTrayVisualize(DiscordClient discordClient)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
