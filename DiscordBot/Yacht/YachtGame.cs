@@ -26,7 +26,7 @@ public enum EYachtPointType : ushort
 
 public class YachtGame
 {
-    private readonly string[] _enNums = new string[] {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+    private const int A_CODE = 0x1F1E6;
     public DiscordUser? _1P;
     public DiscordUser? _2P;
     public DiscordThreadChannel? _yachtChannel;
@@ -45,8 +45,11 @@ public class YachtGame
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
     private string TurnPlayer => _turn % 2 == 0 ? "2P" : "1P";
     private int TurnPlayerNum  => _turn % 2 == 0 ? 1 : 0;
-    private int Round => _turn / 2 + (_turn % 2 == 1 ? 1 : 0);
-    public async Task<bool> SetUi(DiscordClient discordClient)
+    private int Round => _turn / 2 + _turn % 2 / 1;
+    
+    
+
+    private async Task<bool> SetUi(DiscordClient discordClient)
     {
         if (_yachtDiceTrayUiMessage == null && _yachtScoreUiMessage == null)
         {
@@ -220,10 +223,10 @@ public class YachtGame
             _yachtDiceTrayUiMessage = null;
             await GameSettle();
         }
-        
-        Optional<DiscordEmbed> diceTrayEmbed = new Optional<DiscordEmbed>(DiceTrayVisualize(discordClient));
+
+        Optional<DiscordEmbed> diceTrayEmbed = Optional.Some<DiscordEmbed>(DiceTrayVisualize(discordClient));
         await _yachtDiceTrayUiMessage?.ModifyAsync(diceTrayEmbed)!;
-        Optional<DiscordEmbed> scoreEmbed = new Optional<DiscordEmbed>(ScoreBoardVisualize(discordClient));
+        Optional<DiscordEmbed> scoreEmbed = Optional.Some<DiscordEmbed>(ScoreBoardVisualize(discordClient));
         await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
     }
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
@@ -264,7 +267,6 @@ public class YachtGame
         int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
         _diceTarget[emojiToIndex] = true;
     }
-
     public async Task DiceTrayMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
     {
         if (_yachtChannel!.Id != eventArgs.ChannelId)
@@ -277,7 +279,7 @@ public class YachtGame
             return;
         
         
-        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - A_CODE;
         _diceTarget[emojiToIndex] = false;
     }
     public async Task ScoreBoardMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
@@ -325,7 +327,6 @@ public class YachtGame
             return;
 
     }
-
     void DiceRoll(bool forceRoll)
     {
         if (_diceChance <= 0)
@@ -335,7 +336,7 @@ public class YachtGame
         int diceTargetCount = 0;
         for (int i = 0 ; i<_dices.Length;i++)
         {
-            if (!_diceTarget[i] && 0 < _diceChance && !forceRoll)
+            if (!_diceTarget[i] && !forceRoll)
                 continue;
 
             diceTargetCount++;
@@ -348,8 +349,6 @@ public class YachtGame
             PointTempSettle();
         }
     }
-    
-
     void DiceReset()
     {
         _diceChance = 3;
@@ -359,15 +358,15 @@ public class YachtGame
             _diceTarget[i] = false;
         }
     }
-
     private DiscordEmbedBuilder ScoreBoardVisualize(DiscordClient discordClient)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithColor(DiscordColor.Orange)
             .WithTitle("ScoreBoard");
-        string field01 = ""; 
-        string field02 = ""; 
-        string field03 = "";
+        string field01 = string.Empty; 
+        string field02 = string.Empty;
+        string field03 = string.Empty;
+
 
         int alphabetIndex = 0;
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
@@ -377,7 +376,7 @@ public class YachtGame
             bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
             bIsSumField |= yachtPointType == EYachtPointType.Bonus;
             bIsSumField |= yachtPointType == EYachtPointType.Total;
-            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : "") + yachtPointType + "\n──────────\n";
+            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : string.Empty) + yachtPointType + "\n──────────\n";
             field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
             field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
             if (!bIsSumField)
@@ -390,7 +389,6 @@ public class YachtGame
 
         return embedBuilder;
     }
-
     private DiscordEmbedBuilder DiceTrayVisualize(DiscordClient discordClient)
     {
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -398,19 +396,23 @@ public class YachtGame
             .WithTitle($"{TurnPlayer} : {CurrPlayer?.Username}  ReRoll Count {_diceChance}")
             .AddField(new DiscordEmbedField("DiceIndex:", "Dice:"/*+"\nDiceValue:"*/, true));
 
-        string name = "";
-        string diceEmoji = "";
-        string diceValue = "\n";
+        string name = string.Empty;
+        string diceEmojis = string.Empty;
+        string diceValues = "\n";
         
         for (int i = 0; i < _dices.Length; i++)
         {
             name += DiscordEmoji.FromUnicode(Utility.GetRegionalIndicatorSymbolLetter(i)) + " ";
-            diceEmoji += DiscordEmoji.FromName(discordClient, _dices[i] == 0 ? ":Empty:" : $":dice{_dices[i]}:") + " ";
-            diceValue += DiscordEmoji.FromUnicode(Utility.GetNumEmoji(_dices[i])) + " ";
+            diceEmojis += DiscordEmoji.TryFromName(discordClient, _dices[i] == 0 ? ":Empty:" : $":dice{_dices[i]}:", out var discordDiceEmoji) ? discordDiceEmoji + " " : string.Empty;
+            diceValues += DiscordEmoji.FromUnicode(Utility.GetNumEmoji(_dices[i])) + " ";
         }
 
-        diceEmoji += diceValue;
-        embedBuilder.AddField(new DiscordEmbedField(name, diceEmoji, true));
+        if (string.IsNullOrEmpty(diceEmojis))
+            diceEmojis = diceValues;
+        else
+            diceEmojis += diceValues;
+        
+        embedBuilder.AddField(new DiscordEmbedField(name, diceEmojis, true));
 
         return embedBuilder;
     }
