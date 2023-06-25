@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DiscordBot.Database;
+namespace DiscordBot.Database.Tables;
 
 public class DatabaseUser
 {

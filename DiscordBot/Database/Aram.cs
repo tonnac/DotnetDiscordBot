@@ -1,5 +1,6 @@
 ﻿using MySqlConnector;
 using DisCatSharp.CommandsNext;
+using DiscordBot.Database.Tables;
 
 namespace DiscordBot.Database;
 
@@ -23,6 +24,6 @@ public partial class DiscordBotDatabase
         command.Parameters.AddWithValue("@guildid", ctx.Guild.Id);
         command.Parameters.AddWithValue("@aram", 1);
 
-        return await GetDatabaseUsers(command);
+        return await GetDatabaseTable<DatabaseUser>(command);
     }
 }
