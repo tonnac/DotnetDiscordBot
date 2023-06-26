@@ -1,6 +1,7 @@
 ﻿using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
+using DiscordBot.Channels;
 using DiscordBot.Equip;
 using DiscordBot.Resource;
 
@@ -8,9 +9,28 @@ namespace DiscordBot.Commands;
 
 public class BattleModules : BaseCommandModule
 {
+    private readonly ContentsChannels _contentsChannels;
+    
+    public BattleModules(ContentsChannels contentsChannels)
+    {
+        _contentsChannels = contentsChannels;
+    }
+    
     [Command, Aliases("br", "전투초기화")]
     public async Task A3_BattleReset(CommandContext ctx)
     {
+        bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
+        if (isBattleChannel == false)
+        {
+            var message = await ctx.RespondAsync("전투가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         BattleSystem.IsFighting = false;
         BattleSystem.IsA_Ready = false;
         BattleSystem.IsB_Ready = false;
@@ -21,6 +41,18 @@ public class BattleModules : BaseCommandModule
     [Command, Aliases("bj", "전투참여")]
     public async Task A1_BattleJoin(CommandContext ctx)
     {
+        bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
+        if (isBattleChannel == false)
+        {
+            var message = await ctx.RespondAsync("전투가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         if (BattleSystem.IsA_Ready && BattleSystem.IsB_Ready)
         {
             await ctx.RespondAsync(VEmoji.CrossSword + " all ready... ");
@@ -44,6 +76,18 @@ public class BattleModules : BaseCommandModule
     [Command, Aliases("bs", "전투시작")]
     public async Task A2_BattleStart(CommandContext ctx)
     {
+        bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
+        if (isBattleChannel == false)
+        {
+            var message = await ctx.RespondAsync("전투가 불가능한 곳입니다.");
+            Task.Run(async () =>
+            {
+                await Task.Delay(4000);
+                await message.DeleteAsync();
+            });
+            return;
+        }
+        
         if (BattleSystem.IsFighting)
         {
             await ctx.RespondAsync(VEmoji.CrossSword + " ing... ");

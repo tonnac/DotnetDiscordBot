@@ -245,6 +245,18 @@ public class CheatModules : BaseCommandModule
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
+    [Command] // ToggleBattleChannel
+    public async Task Pppp(CommandContext ctx)
+    {
+        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Battle);
+        string emoji = VEmoji.RedCrossMark;
+        if ("+" == result)
+        {
+            emoji = VEmoji.GreenCheckBox;
+        }
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+    }
+    
     [Command] // ToggleForgeChannel
     public async Task Uuuu(CommandContext ctx)
     {
