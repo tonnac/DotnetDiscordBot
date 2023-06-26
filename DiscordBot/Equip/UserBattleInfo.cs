@@ -6,12 +6,25 @@ namespace DiscordBot.Equip;
 
 public class UserBattleInfo
 {
+    public DiscordGuild Guild = null as DiscordGuild;
+    public DiscordUser User = null as DiscordUser;
     public string Name;
     public int EquipValue;
     
     public int Level;
     public int MaxHp;
     public int CurrentHp;
+
+    public void Reset()
+    {
+        Guild = null as DiscordGuild;
+        User = null as DiscordUser;
+        Name = "";
+        EquipValue = 0;
+        Level = 0;
+        MaxHp = 0;
+        CurrentHp = 0;
+    }
 
     public async void SetUserBattleInfo(DiscordGuild guild, DiscordUser user, DiscordMember member)
     {
@@ -24,7 +37,7 @@ public class UserBattleInfo
         EquipValue = battleUserDatabase.equipvalue;
 
         Level = EquipCalculator.GetLevel(EquipValue);
-        MaxHp = CurrentHp = Level * 100 + 1000;
+        MaxHp = CurrentHp = (Level * 100) + EquipCalculator.GetGemUpgradeInfo(EquipValue) * EquipCalculator.Battle_GemUpgradeMultiplier + 1000;
     }
 
     public void GetAttackDamage(out int baseDamage, out int weaponDamage, out bool isCritical)

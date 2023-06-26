@@ -20,6 +20,7 @@ public class EquipCalculator
 
     public static int Gold_GemUpgradeMultiplier = 5;
     public static int Pay_GemUpgradeMultiplier = 1000;
+    public static int Battle_GemUpgradeMultiplier = 50;
 
     public static int EquipCutNum = 10;
 
@@ -71,6 +72,10 @@ public class EquipCalculator
     public static void SetPay_GemUpgradeMultiplier(int value)
     {
         Pay_GemUpgradeMultiplier = value;
+    }
+    public static void SetBattle_GemUpgradeMultiplier(int value)
+    {
+        Battle_GemUpgradeMultiplier = value;
     }
 
     public static int Upgrade(int currentUpgradeNum)

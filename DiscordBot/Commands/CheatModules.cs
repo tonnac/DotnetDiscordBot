@@ -208,6 +208,30 @@ public class CheatModules : BaseCommandModule
     }
     
     [Command]
+    public async Task SetGemBattleMultiplier(CommandContext ctx, [RemainingText] string? setCommand)
+    {
+        bool result = false;
+        string emoji = VEmoji.RedCrossMark;
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            int value = 0;
+            if( !string.IsNullOrEmpty(setCommand))
+            {
+                Int32.TryParse(setCommand, out value);
+            }
+
+            EquipCalculator.SetBattle_GemUpgradeMultiplier(value);
+            result = true;
+            emoji = VEmoji.GreenCheckBox;
+        }
+        
+        if (result)
+        {
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
+    }
+    
+    [Command]
     public async Task AddMoneyAdmin(CommandContext ctx, [RemainingText] string? testMoneyCommand)
     {
         bool result = false;

@@ -292,7 +292,7 @@
 		<value>[💍] 반지를 강화합니다. (공격적중확률, 주사위도박 수치 증가)</value>
 	</data>
 	<data name="a6_upgradegem_Description" xml:space="preserve">
-		<value>[💎] 보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가)</value>
+		<value>[💎] 보석을 강화합니다. (도박제외 골드수급증가, 보석수급 금액 증가, 전투 체력증가)</value>
 	</data>
 	<data name="a7_upgradetrident_Description" xml:space="preserve">
 		<value>[🔱] 삼지창을 강화합니다. (삼지창 강화수치 만큼 무기,반지,보석에 최대강화수치 추가 증가)</value>

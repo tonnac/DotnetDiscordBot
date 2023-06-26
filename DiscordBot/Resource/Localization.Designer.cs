@@ -216,7 +216,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand, increase combat hp).
         /// </summary>
         internal static string a6_upgradegem_Description {
             get {
