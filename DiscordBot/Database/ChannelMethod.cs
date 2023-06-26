@@ -54,7 +54,7 @@ public partial class DiscordBotDatabase
 
     public delegate void ChannelContentsChanged(ChannelContents channelContents);
 
-    public static ChannelContentsChanged OnChannelContentsChanged;
+    public static ChannelContentsChanged OnChannelContentsChanged = null!;
 
     public async Task<string> ToggleChannelContents(DiscordChannel channel, ContentsFlag flag)
     {
