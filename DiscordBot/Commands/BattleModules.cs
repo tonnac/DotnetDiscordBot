@@ -209,6 +209,7 @@ public class BattleModules : BaseCommandModule
         DiscordMessage battleBoard = await ctx.RespondAsync(embedBuilder);
 
         bool isUserAWin = false;
+        bool isDraw = false;
         int turn = 0;
         while (0 < BattleSystem.User_A.CurrentHp && 0 < BattleSystem.User_B.CurrentHp && BattleSystem.IsFighting)
         {
@@ -238,7 +239,7 @@ public class BattleModules : BaseCommandModule
             if (0 >= BattleSystem.User_A.CurrentHp || 0 >= BattleSystem.User_B.CurrentHp)
             {
                 isUserAWin = BattleSystem.User_A.CurrentHp > BattleSystem.User_B.CurrentHp;
-                bool isDraw = 0 == BattleSystem.User_A.CurrentHp && 0 == BattleSystem.User_B.CurrentHp;
+                isDraw = 0 == BattleSystem.User_A.CurrentHp && 0 == BattleSystem.User_B.CurrentHp;
                 userA_WinText = isDraw ? " ..DRAW.." : isUserAWin ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;
                 userB_WinText = isDraw ? " ..DRAW.." : !isUserAWin ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;
                 if (0 != BattleSystem.FightMoney)
@@ -277,7 +278,7 @@ public class BattleModules : BaseCommandModule
             await battleBoard.ModifyAsync(modifyEmbedBuilder);
         }
 
-        await BattleSystem.CalculateFightMoney(isUserAWin);
+        await BattleSystem.CalculateFightMoney(isUserAWin, isDraw);
         BattleSystem.ResetSystem();
     }
 }

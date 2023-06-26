@@ -41,25 +41,47 @@ public class BattleSystem
         FightMoney = 0;
     }
 
-    public static async Task CalculateFightMoney(bool isUserAWin)
+    public static async Task CalculateFightMoney(bool isUserAWin, bool isDraw)
     {
-        if (isUserAWin)
+        if (isDraw)
         {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            await database.GetDatabaseUser(User_A.Guild, User_A.User);
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_A.Guild, User_A.User);
             
-            GoldQuery query = new GoldQuery(FightMoney*2);
-            await database.UpdateUserGold(User_A.Guild, User_A.User, query);
+                GoldQuery query = new GoldQuery(FightMoney);
+                await database.UpdateUserGold(User_A.Guild, User_A.User, query);
+            }
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_B.Guild, User_B.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney);
+                await database.UpdateUserGold(User_B.Guild, User_B.User, query);
+            }
         }
         else
         {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            await database.GetDatabaseUser(User_B.Guild, User_B.User);
+            if (isUserAWin)
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_A.Guild, User_A.User);
             
-            GoldQuery query = new GoldQuery(FightMoney*2);
-            await database.UpdateUserGold(User_B.Guild, User_B.User, query);
+                GoldQuery query = new GoldQuery(FightMoney*2);
+                await database.UpdateUserGold(User_A.Guild, User_A.User, query);
+            }
+            else
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_B.Guild, User_B.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney*2);
+                await database.UpdateUserGold(User_B.Guild, User_B.User, query);
+            }
         }
     }
     
