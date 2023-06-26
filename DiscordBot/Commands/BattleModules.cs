@@ -176,7 +176,7 @@ public class BattleModules : BaseCommandModule
             Int32.TryParse(battleCommand, out turnDelay);
         }
 
-        turnDelay = Math.Clamp(turnDelay, 700, 2000);
+        turnDelay = Math.Clamp(turnDelay, 500, 2000);
 
         string turnText = "!  FIGHT  !";
 
