@@ -216,18 +216,17 @@ public class YachtGame
         {
             return;
         }
-
+        Optional<DiscordEmbed> scoreEmbed = Optional.Some<DiscordEmbed>(ScoreBoardVisualize(discordClient));
+        await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
+        Optional<DiscordEmbed> diceTrayEmbed = Optional.Some<DiscordEmbed>(DiceTrayVisualize(discordClient));
+        await _yachtDiceTrayUiMessage?.ModifyAsync(diceTrayEmbed)!;
+        
         if (Round > 12)
         {
             await _yachtDiceTrayUiMessage?.DeleteAsync()!;
             _yachtDiceTrayUiMessage = null;
             await GameSettle();
         }
-
-        Optional<DiscordEmbed> diceTrayEmbed = Optional.Some<DiscordEmbed>(DiceTrayVisualize(discordClient));
-        await _yachtDiceTrayUiMessage?.ModifyAsync(diceTrayEmbed)!;
-        Optional<DiscordEmbed> scoreEmbed = Optional.Some<DiscordEmbed>(ScoreBoardVisualize(discordClient));
-        await _yachtScoreUiMessage?.ModifyAsync(scoreEmbed)!;
     }
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
@@ -369,6 +368,7 @@ public class YachtGame
 
 
         int alphabetIndex = 0;
+        string normalBorder = "\n──────────\n"; 
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
         {
             int pointType = (int)yachtPointType;
@@ -376,9 +376,10 @@ public class YachtGame
             bIsSumField |= yachtPointType == EYachtPointType.SubTotal;
             bIsSumField |= yachtPointType == EYachtPointType.Bonus;
             bIsSumField |= yachtPointType == EYachtPointType.Total;
-            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : string.Empty) + yachtPointType + "\n──────────\n";
-            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
-            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + "\n──────────\n";
+            
+            field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : string.Empty) + yachtPointType + normalBorder;
+            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + normalBorder;
+            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + normalBorder;
             if (!bIsSumField)
                 alphabetIndex++;
         }
