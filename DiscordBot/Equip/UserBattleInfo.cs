@@ -32,6 +32,8 @@ public class UserBattleInfo
         await database.ConnectASync();
         DatabaseUser battleUserDatabase= await database.GetDatabaseUser(guild, user);
 
+        Guild = guild;
+        User = user;
         Name = Utility.GetMemberDisplayName(member);
         
         EquipValue = battleUserDatabase.equipvalue;

@@ -60,7 +60,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to join the battle. It starts with 2 people..
+        ///   Looks up a localized string similar to join the battle. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000).
         /// </summary>
         internal static string a1_battlejoin_Description {
             get {
@@ -99,7 +99,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Let the battle begin..
+        ///   Looks up a localized string similar to Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds).
         /// </summary>
         internal static string a2_battlestart_Description {
             get {
