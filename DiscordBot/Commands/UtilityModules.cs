@@ -29,11 +29,13 @@ namespace DiscordBot.Commands
         [RequireBotPermissions(Permissions.ManageMessages), RequirePermissions(Permissions.Administrator)]
         public async Task NoticeChannel(CommandContext ctx)
         {
-            bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Notice);
-            if (result)
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Notice);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
             {
-                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+                emoji = VEmoji.GreenCheckBox;
             }
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
 
         [Command, Aliases("g")]
@@ -73,11 +75,13 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.DisableChat);
-            if (result)
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.DisableChat);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
             {
-                await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+                emoji = VEmoji.GreenCheckBox;
             }
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
 
         [Command, Aliases("wd", "와우주사위")]

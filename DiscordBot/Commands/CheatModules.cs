@@ -236,40 +236,48 @@ public class CheatModules : BaseCommandModule
     [Command] // ToggleBossChannel
     public async Task Bbbb(CommandContext ctx)
     {
-        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.BossGame);
-        if (result)
+        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.BossGame);
+        string emoji = VEmoji.RedCrossMark;
+        if ("+" == result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            emoji = VEmoji.GreenCheckBox;
         }
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleForgeChannel
     public async Task Uuuu(CommandContext ctx)
     {
-        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Forge);
-        if (result)
+        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Forge);
+        string emoji = VEmoji.RedCrossMark;
+        if ("+" == result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            emoji = VEmoji.GreenCheckBox;
         }
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleFishingChannel
     public async Task Ffff(CommandContext ctx)
     {
-        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Fishing);
-        if (result)
+        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Fishing);
+        string emoji = VEmoji.RedCrossMark;
+        if ("+" == result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            emoji = VEmoji.GreenCheckBox;
         }
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleGambleChannel
     public async Task Gggg(CommandContext ctx)
     {
-        bool result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Gamble);
-        if (result)
+        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Gamble);
+        string emoji = VEmoji.RedCrossMark;
+        if ("+" == result)
         {
-            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+            emoji = VEmoji.GreenCheckBox;
         }
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
 }
