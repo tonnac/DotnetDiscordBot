@@ -34,8 +34,9 @@ public class BattleSystem
 
     public static string GetDamageText(int damage, int weaponDamage, bool isCritical)
     {
+        string weaponText = 0 == weaponDamage ? "" : " +" + Convert.ToString(weaponDamage) + VEmoji.Weapon;
         string attackTypeEmoji = isCritical ? VEmoji.Fire : VEmoji.Boom;
-        return 0 == damage ? VEmoji.SpiralEyes + " 0" : attackTypeEmoji + " " + Convert.ToString(damage) + " +" + Convert.ToString(weaponDamage) + VEmoji.Weapon;
+        return 0 == damage ? VEmoji.SpiralEyes + " 0" : attackTypeEmoji + " " + Convert.ToString(damage) + weaponText;
     }
 
     public static string GetEquipText(int equipValue)

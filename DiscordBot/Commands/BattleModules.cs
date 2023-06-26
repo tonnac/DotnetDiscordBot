@@ -14,6 +14,8 @@ public class BattleModules : BaseCommandModule
         BattleSystem.IsFighting = false;
         BattleSystem.IsA_Ready = false;
         BattleSystem.IsB_Ready = false;
+        
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(VEmoji.GreenCheckBox));
     }
 
     [Command, Aliases("bj", "전투참여")]
@@ -29,11 +31,13 @@ public class BattleModules : BaseCommandModule
         {
             BattleSystem.User_A.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member);
             BattleSystem.IsA_Ready = true;
+            await ctx.RespondAsync(VEmoji.A + "️ Ready !");
         }
         else if (!BattleSystem.IsB_Ready)
         {
             BattleSystem.User_B.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member);
             BattleSystem.IsB_Ready = true;
+            await ctx.RespondAsync(VEmoji.B + "️ Ready !");
         }
     }
 
@@ -137,7 +141,7 @@ public class BattleModules : BaseCommandModule
             
             Optional<DiscordEmbed> modifyEmbedBuilder = Optional.Some<DiscordEmbed>(embedBuilder1);
             
-            await Task.Delay(1200);
+            await Task.Delay(1000);
             await battleBoard.ModifyAsync(modifyEmbedBuilder);
         }
         
