@@ -378,8 +378,8 @@ public class YachtGame
             bIsSumField |= yachtPointType == EYachtPointType.Total;
             
             field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : string.Empty) + yachtPointType + normalBorder;
-            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? _tempPoints[pointType] : "[empty]") + normalBorder;
-            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? _tempPoints[pointType] : "[empty]") + normalBorder;
+            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? DiscordEmoji.FromUnicode("➡️") + _tempPoints[pointType] : "[empty]") + normalBorder;
+            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? DiscordEmoji.FromUnicode("➡️") + _tempPoints[pointType] : "[empty]") + normalBorder;
             if (!bIsSumField)
                 alphabetIndex++;
         }
