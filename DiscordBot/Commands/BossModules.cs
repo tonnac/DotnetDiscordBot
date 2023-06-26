@@ -56,39 +56,39 @@ public class BossModules : BaseCommandModule
         int critPer = 15;
         int massacrePer = 1;
         int attackPer = 100 - missPer - critPer - massacrePer;
-        int FinalDamage = rand.Next(1, 101);
-        int AttackChance = rand.Next(1, 101);
-        string CritAddText = "";
-        string DamageTypeEmojiCode = VEmoji.Boom + " ";
-        string AttackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
+        int finalDamage = rand.Next(1, 101);
+        int attackChance = rand.Next(1, 101);
+        string critAddText = "";
+        string damageTypeEmojiCode = VEmoji.Boom + " ";
+        string attackGifurl = "https://media.tenor.com/D5tuK7HmI3YAAAAi/dark-souls-knight.gif";
         
 
-        if (missPer >= AttackChance + ringUpgrade) // miss
+        if (missPer >= attackChance + ringUpgrade) // miss
         {
             weaponUpgrade = 0;
-            FinalDamage = 0;
-            DamageTypeEmojiCode = VEmoji.SpiralEyes + " ";
-            AttackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
+            finalDamage = 0;
+            damageTypeEmojiCode = VEmoji.SpiralEyes + " ";
+            attackGifurl = "https://media.tenor.com/ov3Jx6Fu-6kAAAAM/dark-souls-dance.gif";
         }
         else
         {
             // attack
             
-            if (missPer + attackPer < AttackChance + ringUpgrade) // critical
+            if (missPer + attackPer < attackChance + ringUpgrade) // critical
             {
                 weaponUpgrade *= 2;
-                FinalDamage = FinalDamage * 2 + 100;
-                CritAddText = " !";
-                DamageTypeEmojiCode = VEmoji.Fire + " ";
-                AttackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
+                finalDamage = finalDamage * 2 + 100;
+                critAddText = " !";
+                damageTypeEmojiCode = VEmoji.Fire + " ";
+                attackGifurl = "https://media.tenor.com/dhGo-zgViLoAAAAM/soul-dark.gif";
                 
-                if (missPer + attackPer + critPer < AttackChance) // massacre
+                if (missPer + attackPer + critPer < attackChance) // massacre
                 {
                     weaponUpgrade = 0;
-                    FinalDamage = 9999;
-                    CritAddText = " !!";
+                    finalDamage = 9999;
+                    critAddText = " !!";
                     //DamageTypeEmojiCode = VEmoji.Fire + " ";
-                    AttackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
+                    attackGifurl = "https://media.tenor.com/8ZdT_rjqHzcAAAAd/dark-souls-gwyn.gif";
                 }
             }
         }
@@ -96,21 +96,21 @@ public class BossModules : BaseCommandModule
         
         string weaponUpgradePlusText = 0 < weaponUpgrade ? " +" + Convert.ToString(weaponUpgrade) + "🗡️": "";
         
-        bool bIsOverKill = (FinalDamage + weaponUpgrade) >= _bossMonster.CurrentHp;
+        bool bIsOverKill = (finalDamage + weaponUpgrade) >= _bossMonster.CurrentHp;
 
         string name = Utility.GetMemberDisplayName(ctx.Member);
 
         // hit embed
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
-            .WithThumbnail(AttackGifurl)
+            .WithThumbnail(attackGifurl)
             .WithColor(DiscordColor.HotPink)
             .WithAuthor(VEmoji.CrossSword + " " + name + "    +" + VEmoji.Money)
-            .AddField(new DiscordEmbedField(DamageTypeEmojiCode + Convert.ToString(FinalDamage) + CritAddText + weaponUpgradePlusText,
-                _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - (FinalDamage + weaponUpgrade)) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
+            .AddField(new DiscordEmbedField(damageTypeEmojiCode + Convert.ToString(finalDamage) + critAddText + weaponUpgradePlusText,
+                _bossMonster.BossEmojiCode + " " + Convert.ToString(bIsOverKill ? 0 : _bossMonster.CurrentHp - (finalDamage + weaponUpgrade)) + "/" + Convert.ToString(_bossMonster.CurrentMaxHp), false));
         await ctx.RespondAsync(embedBuilder);
 
         // add parser
-        int validDamage = bIsOverKill ? _bossMonster.CurrentHp : (FinalDamage + weaponUpgrade);
+        int validDamage = bIsOverKill ? _bossMonster.CurrentHp : (finalDamage + weaponUpgrade);
         
         // dead check
         int hitCount = _bossMonster.HitCount;
@@ -122,7 +122,7 @@ public class BossModules : BaseCommandModule
         attackerInfo.Guild = ctx.Guild;
         attackerInfo.User = ctx.User;
         attackerInfo.Member = ctx.Member;
-        attackerInfo.TotalDamage = FinalDamage + weaponUpgrade;
+        attackerInfo.TotalDamage = finalDamage + weaponUpgrade;
         
         if( _bossMonster.IsKilledByDamage(attackerInfo, out bestDealerInfo) )
         {
