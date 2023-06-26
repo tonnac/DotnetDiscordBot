@@ -29,7 +29,7 @@ public class BattleSystem
 
     public static string GetHpText(int currentHp, int maxHp)
     {
-        return VEmoji.Heart + " " + Convert.ToString(currentHp) + "/" + Convert.ToString(maxHp);
+        return VEmoji.Heart + " " + Convert.ToString(currentHp) + " / " + Convert.ToString(maxHp);
     }
 
     public static string GetDamageText(int damage, int weaponDamage, bool isCritical)

@@ -159,8 +159,8 @@ public class BattleModules : BaseCommandModule
             if (0 >= BattleSystem.User_A.CurrentHp || 0 >= BattleSystem.User_B.CurrentHp)
             {
                 bool isDraw = 0 == BattleSystem.User_A.CurrentHp && 0 == BattleSystem.User_B.CurrentHp;
-                userA_WinText = isDraw ? "DRAW.." : BattleSystem.User_A.CurrentHp > BattleSystem.User_B.CurrentHp ? VEmoji.Trophy + " WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " LOSE.. " + VEmoji.Crossbones;
-                userB_WinText = isDraw ? "DRAW.." : BattleSystem.User_A.CurrentHp < BattleSystem.User_B.CurrentHp ? VEmoji.Trophy + " WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " LOSE.. " + VEmoji.Crossbones;   
+                userA_WinText = isDraw ? " ..DRAW.." : BattleSystem.User_A.CurrentHp > BattleSystem.User_B.CurrentHp ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;
+                userB_WinText = isDraw ? " ..DRAW.." : BattleSystem.User_A.CurrentHp < BattleSystem.User_B.CurrentHp ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;   
             }
             else
             {
@@ -169,18 +169,18 @@ public class BattleModules : BaseCommandModule
             }
             
             DiscordEmbedBuilder embedBuilder1 = new DiscordEmbedBuilder()
-                .WithColor(DiscordColor.Red)
+                .WithColor(DiscordColor.Magenta)
                 .AddField(new DiscordEmbedField("[ " + BattleSystem.User_A.Name + " ]　" + BattleSystem.GetHpBarString((int)userA_hpPercentage), userA_HpText, true))
                 .AddField(new DiscordEmbedField("!　V S　!", turnText, true))
                 .AddField(new DiscordEmbedField(BattleSystem.GetHpBarString((int)userB_hpPercentage, true) + "　[ " + BattleSystem.User_B.Name + " ]", userB_HpText, true))
                 .AddField(new DiscordEmbedField(userA_DamageText, ".", true))
-                .AddField(new DiscordEmbedField("|　　　 |", "|　　　 |", true))
+                .AddField(new DiscordEmbedField("|　 🇧 　|", "|　 🇦 　|", true))
                 .AddField(new DiscordEmbedField(userB_DamageText, ".", true))
                 .AddField(new DiscordEmbedField(userA_WinText, "──────────────", true))
-                .AddField(new DiscordEmbedField("|　　　 |", "|　　　 |", true))
+                .AddField(new DiscordEmbedField("|　 🇹 　|", "|　 🇹 　|", true))
                 .AddField(new DiscordEmbedField(userB_WinText, "──────────────", true))
                 .AddField(new DiscordEmbedField(VEmoji.Level + " Lv." + BattleSystem.User_A.Level, userA_EquipText, true))
-                .AddField(new DiscordEmbedField("|　　　 |", "|　　　 |", true))
+                .AddField(new DiscordEmbedField("|　 🇱 　|", "|　 🇪 　|", true))
                 .AddField(new DiscordEmbedField(VEmoji.Level + " Lv." + BattleSystem.User_B.Level, userB_EquipText, true));
             
             Optional<DiscordEmbed> modifyEmbedBuilder = Optional.Some<DiscordEmbed>(embedBuilder1);

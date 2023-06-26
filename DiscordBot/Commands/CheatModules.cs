@@ -236,60 +236,80 @@ public class CheatModules : BaseCommandModule
     [Command] // ToggleBossChannel
     public async Task Bbbb(CommandContext ctx)
     {
-        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.BossGame);
-        string emoji = VEmoji.RedCrossMark;
-        if ("+" == result)
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            emoji = VEmoji.GreenCheckBox;
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.BossGame);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+            
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleBattleChannel
     public async Task Pppp(CommandContext ctx)
     {
-        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Battle);
-        string emoji = VEmoji.RedCrossMark;
-        if ("+" == result)
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            emoji = VEmoji.GreenCheckBox;
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Battle);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleForgeChannel
     public async Task Uuuu(CommandContext ctx)
     {
-        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Forge);
-        string emoji = VEmoji.RedCrossMark;
-        if ("+" == result)
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            emoji = VEmoji.GreenCheckBox;
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Forge);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+            
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleFishingChannel
     public async Task Ffff(CommandContext ctx)
     {
-        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Fishing);
-        string emoji = VEmoji.RedCrossMark;
-        if ("+" == result)
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            emoji = VEmoji.GreenCheckBox;
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Fishing);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
     
     [Command] // ToggleGambleChannel
     public async Task Gggg(CommandContext ctx)
     {
-        string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Gamble);
-        string emoji = VEmoji.RedCrossMark;
-        if ("+" == result)
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
         {
-            emoji = VEmoji.GreenCheckBox;
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Gamble);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
         }
-        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
     }
 }
