@@ -52,12 +52,33 @@ public partial class DiscordBotDatabase
         }
     }
 
-    public async Task<bool> ToggleChannelContents(DiscordChannel channel, ContentsFlag flag)
+    public delegate void ChannelContentsChanged(ChannelContents channelContents);
+
+    public static ChannelContentsChanged OnChannelContentsChanged = null!;
+
+    public async Task<string> ToggleChannelContents(DiscordChannel channel, ContentsFlag flag)
     {
         ChannelContents channelContent = await GetChannelContent(channel);
-        string symbol = ((ContentsFlag)channelContent.contentsvalue).HasFlag(flag) ? "-" : "+";
-        return await ExecuteNonQueryASync(
+        bool hasFlag = ((ContentsFlag)channelContent.contentsvalue).HasFlag(flag);
+        
+        string symbol = hasFlag ? "-" : "+";
+        bool result = await ExecuteNonQueryASync(
             $"update CHANNEL set contentsvalue = contentsvalue{symbol}{(ulong)flag} where id='{GetSHA256(channel.Guild, channel)}'");
+        
+        if (result)
+        {
+            if (hasFlag)
+            {
+                channelContent.contentsvalue -= (ulong)flag;
+            }
+            else
+            {
+                channelContent.contentsvalue += (ulong)flag;
+            }
+        
+            OnChannelContentsChanged(channelContent);
+        }
+        return result ? symbol : "";
     }
 
     private async Task<bool> ChannelRegister(DiscordChannel channel)

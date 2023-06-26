@@ -16,7 +16,7 @@ public class ContentsChannels
     {
         _client = client;
     }
-    public static async Task<bool> ToggleChannelContent(DiscordChannel channel, ContentsFlag contentsFlag)
+    public static async Task<string> ToggleChannelContent(DiscordChannel channel, ContentsFlag contentsFlag)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
