@@ -312,4 +312,13 @@ This has a lower priority than music added with play.</value>
 	<data name="disablechat_Description" xml:space="preserve">
 		<value>Make the current channel disable chatting.</value>
 	</data>
+	<data name="a1_battlejoin_Description" xml:space="preserve">
+		<value>join the battle. It starts with 2 people.</value>
+	</data>
+	<data name="a2_battlestart_Description" xml:space="preserve">
+		<value>Let the battle begin.</value>
+	</data>
+	<data name="a3_battlereset_Description" xml:space="preserve">
+		<value>Reset the battle.</value>
+	</data>
 </root>

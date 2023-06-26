@@ -62,6 +62,9 @@ public class VEmoji
     public static readonly string Magnifier = "\uD83D\uDD0D"; // 🔍
     public static readonly string CrossSword = "\u2694\uFE0F"; // ⚔️
     public static readonly string Crossbones = "\u2620\uFE0F"; // ☠️
+    
+    public static readonly string A = "\uD83C\uDD70\uFE0F"; // 🅰️
+    public static readonly string B = "\uD83C\uDD71\uFE0F"; // 🅱️
 
     public static readonly string FishingPole = "\uD83C\uDFA3"; // 🎣
     public static readonly string Hook = "\uD83E\uDE9D"; // 🪝

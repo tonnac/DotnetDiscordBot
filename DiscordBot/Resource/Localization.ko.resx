@@ -312,4 +312,13 @@
 	<data name="disablechat_Description" xml:space="preserve">
 		<value>현재 채널을 채팅 불가능한 채널로 변경합니다.</value>
 	</data>
+	<data name="a1_battlejoin_Description" xml:space="preserve">
+		<value>전투에 참여합니다. 2명이 모여야 시작합니다.</value>
+	</data>
+	<data name="a2_battlestart_Description" xml:space="preserve">
+		<value>전투를 시작합니다.</value>
+	</data>
+	<data name="a3_battlereset_Description" xml:space="preserve">
+		<value>전투를 초기화 합니다.</value>
+	</data>
 </root>
