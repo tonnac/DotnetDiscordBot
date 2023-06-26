@@ -60,6 +60,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to join the battle. It starts with 2 people..
+        /// </summary>
+        internal static string a1_battlejoin_Description {
+            get {
+                return ResourceManager.GetString("a1_battlejoin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempt to attack the boss. (Damage 1-100)
         /// When attacking, gain gold equal to the damage dealt.
         /// When defeated, a certain amount of gold is paid to the last attacker.
@@ -90,6 +99,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Let the battle begin..
+        /// </summary>
+        internal static string a2_battlestart_Description {
+            get {
+                return ResourceManager.GetString("a2_battlestart_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shows current boss information..
         /// </summary>
         internal static string a2_bosshuntinfo_Description {
@@ -113,6 +131,15 @@ namespace DiscordBot.Resource {
         internal static string a2_gameranking_Description {
             get {
                 return ResourceManager.GetString("a2_gameranking_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the battle..
+        /// </summary>
+        internal static string a3_battlereset_Description {
+            get {
+                return ResourceManager.GetString("a3_battlereset_Description", resourceCulture);
             }
         }
         

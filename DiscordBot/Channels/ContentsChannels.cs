@@ -16,7 +16,7 @@ public class ContentsChannels
     {
         _client = client;
     }
-    public static async Task<bool> ToggleChannelContent(DiscordChannel channel, ContentsFlag contentsFlag)
+    public static async Task<string> ToggleChannelContent(DiscordChannel channel, ContentsFlag contentsFlag)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -73,6 +73,10 @@ public class ContentsChannels
     public async Task<bool> IsForgeChannel(CommandContext ctx)
     {
         return await IsAvailableContents(ctx.Channel, ContentsFlag.Forge);
+    }
+    public async Task<bool> IsBattleChannel(CommandContext ctx)
+    {
+        return await IsAvailableContents(ctx.Channel, ContentsFlag.Battle);
     }
     public async Task<bool> IsDisableChatChannel(CommandContext ctx)
     {

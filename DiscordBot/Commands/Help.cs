@@ -16,6 +16,7 @@ public static class Help
         { "Fishing", "https://i.pinimg.com/550x/ec/4f/da/ec4fda8ea3d3a52ba561e9e54d3c81fc.jpg" },
         { "Gamble", "https://img.freepik.com/free-photo/casino-games-backdrop-banner-3d-illustration-with-casino-elements-craps-roulette-and-poker-cards-generative-ai_91128-2286.jpg?w=2000" },
         { "UserGameInfo", "https://cdn-icons-png.flaticon.com/512/943/943579.png" },
+        { "Battle", "https://i.ytimg.com/vi/Kcd7qnnGOUs/maxresdefault.jpg" },
         { "Utility", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcjtzAEQMDdcnf_VmHJ9RcQSzP50VulGw7lazLNV189n-PsSEvOAYJWaaObqTReXMr7s4&usqp=CAU" }
     };
 

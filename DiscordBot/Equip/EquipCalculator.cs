@@ -16,7 +16,7 @@ public class EquipCalculator
     public static int Boss_RingUpgradeMultiplier = 1;
     
     public static int Fish_WeaponUpgradeMultiplier = 1;
-    public static int Dice_RingUpgradeMultiplier = 2;
+    public static int Dice_RingUpgradeMultiplier = 1;
 
     public static int Gold_GemUpgradeMultiplier = 5;
     public static int Pay_GemUpgradeMultiplier = 1000;

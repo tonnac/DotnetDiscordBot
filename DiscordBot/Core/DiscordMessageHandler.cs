@@ -2,6 +2,7 @@
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 
 namespace DiscordBot.Core;
 
@@ -12,6 +13,29 @@ public class DiscordMessageHandler
     public DiscordMessageHandler(DiscordClient client)
     {
         client.MessageCreated += MessageCreated;
+        
+        DiscordBotDatabase.OnChannelContentsChanged += OnChannelContentsChanged;
+    }
+
+    private void OnChannelContentsChanged(ChannelContents channel)
+    {
+        if (_disableChatChannels.Contains(channel.channelid) && ((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.DisableChat) == false)
+        {
+            _disableChatChannels.Remove(channel.channelid);
+        }
+        else if (_noticeChannels.Contains(channel.channelid) &&
+                 ((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Notice) == false)
+        {
+            _noticeChannels.Remove(channel.channelid);
+        }
+        else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.DisableChat))
+        {
+            _disableChatChannels.Add(channel.channelid);
+        }
+        else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Notice))
+        {
+            _noticeChannels.Add(channel.channelid);
+        }
     }
 
     public bool IsDisableChatChannel(DiscordChannel discordChannel)
