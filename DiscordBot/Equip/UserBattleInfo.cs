@@ -26,7 +26,7 @@ public class UserBattleInfo
         CurrentHp = 0;
     }
 
-    public async void SetUserBattleInfo(DiscordGuild guild, DiscordUser user, DiscordMember member)
+    public async void SetUserBattleInfo(DiscordGuild guild, DiscordUser user, DiscordMember member, bool isItemBattle)
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
@@ -35,10 +35,10 @@ public class UserBattleInfo
         Guild = guild;
         User = user;
         Name = Utility.GetMemberDisplayName(member);
-        
-        EquipValue = battleUserDatabase.equipvalue;
 
-        Level = EquipCalculator.GetLevel(EquipValue);
+        EquipValue = isItemBattle ? battleUserDatabase.equipvalue : 0;
+
+        Level = isItemBattle ? EquipCalculator.GetLevel(EquipValue) : 0;
         MaxHp = CurrentHp = (Level * 100) + EquipCalculator.GetGemUpgradeInfo(EquipValue) * EquipCalculator.Battle_GemUpgradeMultiplier + 1000;
     }
 

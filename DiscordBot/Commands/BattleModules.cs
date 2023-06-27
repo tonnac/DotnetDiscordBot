@@ -20,7 +20,7 @@ public class BattleModules : BaseCommandModule
     }
     
     [Command, Aliases("br", "전투초기화")]
-    public async Task A3_BattleReset(CommandContext ctx)
+    public async Task A4_BattleReset(CommandContext ctx)
     {
         bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
         if (isBattleChannel == false)
@@ -69,6 +69,17 @@ public class BattleModules : BaseCommandModule
 
     [Command, Aliases("bj", "전투참여")]
     public async Task A1_BattleJoin(CommandContext ctx, [RemainingText] string? battleCommand)
+    {
+        BattleJoin(ctx, battleCommand, true);
+    }
+    
+    [Command, Aliases("bbj", "기본전투참여")]
+    public async Task A2_BasicBattleJoin(CommandContext ctx, [RemainingText] string? battleCommand)
+    {
+        BattleJoin(ctx, battleCommand, false);
+    }
+
+    public async void BattleJoin(CommandContext ctx, [RemainingText] string? battleCommand, bool isItemBattle)
     {
         bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
         if (isBattleChannel == false)
@@ -129,20 +140,20 @@ public class BattleModules : BaseCommandModule
         
         if (!BattleSystem.IsA_Ready)
         {
-            BattleSystem.User_A.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member);
+            BattleSystem.User_A.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member, isItemBattle);
             BattleSystem.IsA_Ready = true;
             await ctx.RespondAsync(VEmoji.A + "️ Ready !" + fightMoneyText);
         }
         else if (!BattleSystem.IsB_Ready)
         {
-            BattleSystem.User_B.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member);
+            BattleSystem.User_B.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member, isItemBattle);
             BattleSystem.IsB_Ready = true;
             await ctx.RespondAsync(VEmoji.B + "️ Ready !" + fightMoneyText);
         }
     }
 
     [Command, Aliases("bs", "전투시작")]
-    public async Task A2_BattleStart(CommandContext ctx, [RemainingText] string? battleCommand)
+    public async Task A3_BattleStart(CommandContext ctx, [RemainingText] string? battleCommand)
     {
         bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
         if (isBattleChannel == false)
