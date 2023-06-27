@@ -41,7 +41,8 @@ public class UserGameInfoModules : BaseCommandModule
             xpPercentage = (int)(xpPercentageFloat * 100.0f);   
         }
 
-        //string yatchWinLoseText = "[ " + VEmoji.Dice + " ]　" + "1W / 2L / 3D";// + "\n" + "─────────────────";
+        string yatchWinLoseText = "[ " + VEmoji.Dice + " ]　" + Convert.ToString(myUserDatabase.yachtwin) + "W / " + Convert.ToString(myUserDatabase.yachtlose) + "L / " + Convert.ToString(myUserDatabase.yachtdraw) + "D";
+        
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
@@ -54,8 +55,8 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Crossbones + "  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.CrossSword + "  ]", Convert.ToString(myUserDatabase.combatcount), true))
-            .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
-            //.AddField(new DiscordEmbedField("─────────────────", yatchWinLoseText, true));
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true))
+            .AddField(new DiscordEmbedField("─────────────────", yatchWinLoseText, true));
         
         await ctx.RespondAsync(embedBuilder);
     }
