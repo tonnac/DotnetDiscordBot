@@ -324,4 +324,13 @@ This has a lower priority than music added with play.</value>
 	<data name="a4_battlereset_Description" xml:space="preserve">
 		<value>Reset the battle.</value>
 	</data>
+	<data name="yachtjoin_Description" xml:space="preserve">
+		<value>If channel is a Yacht thread channel, join the Yacht</value>
+	</data>
+	<data name="yachtopen_Description" xml:space="preserve">
+		<value>Open the Yacht Thread Channel</value>
+	</data>
+	<data name="yachtstop_Description" xml:space="preserve">
+		<value>End the Yacht and settle the score</value>
+	</data>
 </root>

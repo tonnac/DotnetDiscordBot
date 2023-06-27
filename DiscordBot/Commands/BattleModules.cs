@@ -101,13 +101,21 @@ public class BattleModules : BaseCommandModule
 
         if (0 == BattleSystem.FightMoney && !BattleSystem.IsA_Ready && !string.IsNullOrEmpty(battleCommand))
         {
-            int tempFightMoney = 0;
-            Int32.TryParse(battleCommand, out tempFightMoney);
-            tempFightMoney = Math.Max(0, tempFightMoney);
-            
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             DatabaseUser battleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+            int tempFightMoney = 0;
+            if ("all" == battleCommand || "전부" == battleCommand)
+            {
+                tempFightMoney = battleUserDatabase.gold;
+            }
+            else
+            {
+                Int32.TryParse(battleCommand, out tempFightMoney);    
+            }
+            
+            tempFightMoney = Math.Max(0, tempFightMoney);
 
             if (tempFightMoney > battleUserDatabase.gold)
             {
@@ -240,7 +248,7 @@ public class BattleModules : BaseCommandModule
             float userA_hpPercentage = 0 == BattleSystem.User_A.CurrentHp ? 0.0f : ((float)BattleSystem.User_A.CurrentHp / BattleSystem.User_A.MaxHp) * 100.0f;
             float userB_hpPercentage = 0 == BattleSystem.User_B.CurrentHp ? 0.0f : ((float)BattleSystem.User_B.CurrentHp / BattleSystem.User_B.MaxHp) * 100.0f;
 
-            turnText = "⚔️[ " + Convert.ToString(++turn) + " ]⚔️";
+            turnText = VEmoji.CrossSword + "[ " + Convert.ToString(++turn) + " ]" + VEmoji.CrossSword;
 
             userA_HpText = BattleSystem.GetHpText(BattleSystem.User_A.CurrentHp, BattleSystem.User_A.MaxHp);
             userB_HpText = BattleSystem.GetHpText(BattleSystem.User_B.CurrentHp, BattleSystem.User_B.MaxHp);
@@ -256,8 +264,8 @@ public class BattleModules : BaseCommandModule
                 userB_WinText = isDraw ? " ..DRAW.." : !isUserAWin ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;
                 if (0 != BattleSystem.FightMoney)
                 {
-                    userA_WinMoneyText = (isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";
-                    userB_WinMoneyText = (!isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";   
+                    userA_WinMoneyText = isDraw ? "[ .. " + VEmoji.Money + " .. ]" : (isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";
+                    userB_WinMoneyText = isDraw ? "[ .. " + VEmoji.Money + " .. ]" : (!isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";   
                 }
             }
             else

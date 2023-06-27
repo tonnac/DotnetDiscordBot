@@ -324,4 +324,13 @@
 	<data name="a4_battlereset_Description" xml:space="preserve">
 		<value>전투를 초기화 합니다.</value>
 	</data>
+	<data name="yachtjoin_Description" xml:space="preserve">
+		<value>야추 채널이라면 추에 입장합니다.</value>
+	</data>
+	<data name="yachtopen_Description" xml:space="preserve">
+		<value>야추 스래드 채널을 엽니다.</value>
+	</data>
+	<data name="yachtstop_Description" xml:space="preserve">
+		<value>야추를 종료하고 점수를 정산합니다.</value>
+	</data>
 </root>
