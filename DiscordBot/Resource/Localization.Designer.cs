@@ -99,11 +99,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds).
+        ///   Looks up a localized string similar to join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000).
         /// </summary>
-        internal static string a2_battlestart_Description {
+        internal static string a2_basicbattlejoin_Description {
             get {
-                return ResourceManager.GetString("a2_battlestart_Description", resourceCulture);
+                return ResourceManager.GetString("a2_basicbattlejoin_Description", resourceCulture);
             }
         }
         
@@ -135,11 +135,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset the battle..
+        ///   Looks up a localized string similar to Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds).
         /// </summary>
-        internal static string a3_battlereset_Description {
+        internal static string a3_battlestart_Description {
             get {
-                return ResourceManager.GetString("a3_battlereset_Description", resourceCulture);
+                return ResourceManager.GetString("a3_battlestart_Description", resourceCulture);
             }
         }
         
@@ -167,6 +167,15 @@ namespace DiscordBot.Resource {
         internal static string a3_gamblegamelist_Description {
             get {
                 return ResourceManager.GetString("a3_gamblegamelist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the battle..
+        /// </summary>
+        internal static string a4_battlereset_Description {
+            get {
+                return ResourceManager.GetString("a4_battlereset_Description", resourceCulture);
             }
         }
         
