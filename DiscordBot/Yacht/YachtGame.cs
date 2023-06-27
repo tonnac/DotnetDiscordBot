@@ -2,6 +2,8 @@ using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DiscordBot.Commands;
+using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 
 namespace DiscordBot.Yacht;
 
@@ -180,18 +182,39 @@ public class YachtGame
         _points[turn,(int)EYachtPointType.Total] = totalSum;
        
     }
-    public async Task GameSettle()
+    public async Task GameSettle(DiscordClient discordClient)
     {
         int player1Total = _points[0, (int)EYachtPointType.Total] ?? 0;
         int player2Total = _points[1, (int)EYachtPointType.Total] ?? 0;
-        YachtModules.RemoveChannel(_yachtChannel!.Id);
-        if (player1Total == player2Total)
+        YachtModules.RemoveChannel(discordClient, _yachtChannel!.Id);
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        if (_1P != null && _2P != null)
         {
-            await _yachtChannel?.SendMessageAsync("Draw")!;
+            if (player1Total == player2Total)
+            {
+                await _yachtChannel?.SendMessageAsync("Draw")!;
+                if (Round > 12)
+                {
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _1P);
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _2P);
+                }
+            }
+            else
+            {
+                await _yachtChannel?.SendMessageAsync($"Player {(player1Total < player2Total ? _2P : _1P)?.Username} Win")!;
+                if (Round > 12)
+                {
+                    await database.UpdateYachtLose(_yachtChannel.Guild, player1Total < player2Total ? _1P : _2P);
+                    await database.UpdateYachtWin(_yachtChannel.Guild, player1Total < player2Total ? _2P : _1P);
+                }
+            }
+
+      
             return;
         }
+        await _yachtChannel?.SendMessageAsync("플레이어가 없습니다 게임을 종료합니다.")!;
 
-        await _yachtChannel?.SendMessageAsync($"Player {(player1Total < player2Total ? _2P : _1P)?.Username} Win")!;
     }
     public async Task ChoicePoint(DiscordClient discordClient, EYachtPointType eYachtPointType)
     {
@@ -225,7 +248,7 @@ public class YachtGame
         {
             await _yachtDiceTrayUiMessage?.DeleteAsync()!;
             _yachtDiceTrayUiMessage = null;
-            await GameSettle();
+            await GameSettle(discordClient);
         }
     }
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
@@ -294,7 +317,7 @@ public class YachtGame
 
 
         int index = 0;
-        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - A_CODE;
 
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
         {

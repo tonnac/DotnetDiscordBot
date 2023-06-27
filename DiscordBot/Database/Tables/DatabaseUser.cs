@@ -11,4 +11,7 @@ public class DatabaseUser
     [JsonProperty] public int gold;
     [JsonProperty] public int combatcount;
     [JsonProperty] public int equipvalue;
+    [JsonProperty] public int yachtwin;
+    [JsonProperty] public int yachtdraw;
+    [JsonProperty] public int yachtlose;
 }

@@ -153,7 +153,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level(💠)..
+        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level(💠). The number of purchases can be specified by command (ex. bxp 2) (1~10).
         /// </summary>
         internal static string a3_buyxp_Description {
             get {
