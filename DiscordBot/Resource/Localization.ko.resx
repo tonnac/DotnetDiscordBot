@@ -316,7 +316,7 @@
 		<value>전투에 참여합니다. 2명이 모여야 시작 가능합니다. 명령어로 숫자 입력 시 골드를 걸고 합니다.(ex. bj 1000)</value>
 	</data>
 	<data name="a2_basicbattlejoin_Description" xml:space="preserve">
-		<value>기본전투를 참여합니다. 아이템 및 레벨이 기본값으로 세팅됩니다. 2명이 모여야 시작 가능합니다. 명령어로 숫자 입력 시 골드를 걸고 합니다.(ex. bj 1000)</value>
+		<value>기본전투를 참여합니다. 아이템 및 레벨이 기본값으로 세팅됩니다. 2명이 모여야 시작 가능합니다. 명령어로 숫자 입력 시 골드를 걸고 합니다.(ex. bbj 1000)</value>
 	</data>
 	<data name="a3_battlestart_Description" xml:space="preserve">
 		<value>전투를 시작합니다. 명령어로 턴 딜레이 시간 조절이 가능합니다. (ex. bs 1500)(1500 = 1.5초, 기본 0.7초)</value>

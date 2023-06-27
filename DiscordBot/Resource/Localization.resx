@@ -316,7 +316,7 @@ This has a lower priority than music added with play.</value>
 		<value>join the battle. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000)</value>
 	</data>
 	<data name="a2_basicbattlejoin_Description" xml:space="preserve">
-		<value>join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000)</value>
+		<value>join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bbj 1000)</value>
 	</data>
 	<data name="a3_battlestart_Description" xml:space="preserve">
 		<value>Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds)</value>
