@@ -728,5 +728,32 @@ namespace DiscordBot.Resource {
                 return ResourceManager.GetString("wrongDice", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If channel is a Yacht thread channel, join the Yacht.
+        /// </summary>
+        internal static string yachtjoin_Description {
+            get {
+                return ResourceManager.GetString("yachtjoin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the Yacht Thread Channel.
+        /// </summary>
+        internal static string yachtopen_Description {
+            get {
+                return ResourceManager.GetString("yachtopen_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End the Yacht and settle the score.
+        /// </summary>
+        internal static string yachtstop_Description {
+            get {
+                return ResourceManager.GetString("yachtstop_Description", resourceCulture);
+            }
+        }
     }
 }
