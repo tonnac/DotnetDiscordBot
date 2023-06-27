@@ -194,8 +194,11 @@ public class YachtGame
             if (player1Total == player2Total)
             {
                 await _yachtChannel?.SendMessageAsync("Draw")!;
-                await database.UpdateYachtDraw(_yachtChannel.Guild, _1P);
-                await database.UpdateYachtDraw(_yachtChannel.Guild, _2P);
+                if (Round > 12)
+                {
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _1P);
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _2P);
+                }
             }
             else
             {
