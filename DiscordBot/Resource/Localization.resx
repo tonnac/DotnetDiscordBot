@@ -304,7 +304,7 @@ This has a lower priority than music added with play.</value>
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
 	<data name="a3_buyxp_Description" xml:space="preserve">
-		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level(💠).</value>
+		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level(💠). The number of purchases can be specified by command (ex. bxp 2) (1~10)</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>Make the current channel a bot help channel.</value>

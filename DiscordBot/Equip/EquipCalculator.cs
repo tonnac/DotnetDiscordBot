@@ -142,7 +142,7 @@ public class EquipCalculator
             return 0;
         }
         
-        return equipValue / (LevelCutNum * XpCutNum);
+        return (equipValue / (LevelCutNum * XpCutNum)) % XpCutNum;
     }
     
     public static int GetXp(int equipValue)
