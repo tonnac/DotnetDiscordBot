@@ -101,13 +101,21 @@ public class BattleModules : BaseCommandModule
 
         if (0 == BattleSystem.FightMoney && !BattleSystem.IsA_Ready && !string.IsNullOrEmpty(battleCommand))
         {
-            int tempFightMoney = 0;
-            Int32.TryParse(battleCommand, out tempFightMoney);
-            tempFightMoney = Math.Max(0, tempFightMoney);
-            
             using var database = new DiscordBotDatabase();
             await database.ConnectASync();
             DatabaseUser battleUserDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+
+            int tempFightMoney = 0;
+            if ("all" == battleCommand || "전부" == battleCommand)
+            {
+                tempFightMoney = battleUserDatabase.gold;
+            }
+            else
+            {
+                Int32.TryParse(battleCommand, out tempFightMoney);    
+            }
+            
+            tempFightMoney = Math.Max(0, tempFightMoney);
 
             if (tempFightMoney > battleUserDatabase.gold)
             {
