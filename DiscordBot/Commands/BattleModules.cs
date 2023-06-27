@@ -1,6 +1,7 @@
 ﻿using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DiscordBot.Boss;
 using DiscordBot.Channels;
 using DiscordBot.Database;
@@ -18,9 +19,20 @@ public class BattleModules : BaseCommandModule
     {
         _contentsChannels = contentsChannels;
     }
-    
+
+    [Command, Aliases("fbr", "강제전투초기화"), Hidden]
+    public async Task ForceBattleReset(CommandContext ctx, [RemainingText] string? battleCommand)
+    {
+        if (0 != (ctx.Member.Permissions & Permissions.Administrator))
+        {
+            BattleSystem.ResetSystem();
+
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(VEmoji.GreenCheckBox));
+        }
+    }
+
     [Command, Aliases("br", "전투초기화")]
-    public async Task A4_BattleReset(CommandContext ctx)
+    public async Task A4_BattleReset(CommandContext ctx, [RemainingText] string? battleCommand)
     {
         bool isBattleChannel = await _contentsChannels.IsBattleChannel(ctx);
         if (isBattleChannel == false)
