@@ -72,7 +72,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 2, CooldownBucketType.UserAndChannel)]
+    [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 1, CooldownBucketType.UserAndChannel)]
     public async Task A1_DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
