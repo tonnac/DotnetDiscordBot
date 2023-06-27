@@ -1,3 +1,4 @@
+using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Enums;
@@ -9,9 +10,16 @@ namespace DiscordBot.Commands
     {
         private static readonly Dictionary<ulong, YachtGame?> CurrPlayingYachtChannels = new();
 
-        public static void RemoveChannel(ulong id)
+        public static void RemoveChannel(DiscordClient discordClient, ulong channelId)
         {
-            CurrPlayingYachtChannels.Remove(id);
+            if (!CurrPlayingYachtChannels.ContainsKey(channelId))
+                return;
+
+            discordClient.MessageReactionAdded -= CurrPlayingYachtChannels[channelId]!.DiceTrayMessageReactionAdded;
+            discordClient.MessageReactionRemoved -= CurrPlayingYachtChannels[channelId]!.DiceTrayMessageReactionRemoved;
+            discordClient.MessageReactionAdded -= CurrPlayingYachtChannels[channelId]!.ScoreBoardMessageReactionAdded;
+            discordClient.MessageReactionRemoved -= CurrPlayingYachtChannels[channelId]!.ScoreBoardMessageReactionRemoved;
+            CurrPlayingYachtChannels.Remove(channelId);
         }
 
         private static bool IsYachtChannel(ulong channelId)
@@ -80,11 +88,8 @@ namespace DiscordBot.Commands
                 await ctx.RespondAsync("플레이중이 아니신데요?");
                 return;
             }
-            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionAdded;
-            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionRemoved;
-            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionAdded;
-            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionRemoved;
-            await CurrPlayingYachtChannels[ctx.Channel.Id]?.GameSettle()!;
+
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.GameSettle(ctx.Client)!;
             await ctx.RespondAsync("야추 종료");
         }
 
