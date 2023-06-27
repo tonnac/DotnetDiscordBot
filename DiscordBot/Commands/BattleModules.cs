@@ -248,7 +248,7 @@ public class BattleModules : BaseCommandModule
             float userA_hpPercentage = 0 == BattleSystem.User_A.CurrentHp ? 0.0f : ((float)BattleSystem.User_A.CurrentHp / BattleSystem.User_A.MaxHp) * 100.0f;
             float userB_hpPercentage = 0 == BattleSystem.User_B.CurrentHp ? 0.0f : ((float)BattleSystem.User_B.CurrentHp / BattleSystem.User_B.MaxHp) * 100.0f;
 
-            turnText = "⚔️[ " + Convert.ToString(++turn) + " ]⚔️";
+            turnText = VEmoji.CrossSword + "[ " + Convert.ToString(++turn) + " ]" + VEmoji.CrossSword;
 
             userA_HpText = BattleSystem.GetHpText(BattleSystem.User_A.CurrentHp, BattleSystem.User_A.MaxHp);
             userB_HpText = BattleSystem.GetHpText(BattleSystem.User_B.CurrentHp, BattleSystem.User_B.MaxHp);
