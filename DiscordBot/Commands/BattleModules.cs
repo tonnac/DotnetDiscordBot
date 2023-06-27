@@ -256,8 +256,8 @@ public class BattleModules : BaseCommandModule
                 userB_WinText = isDraw ? " ..DRAW.." : !isUserAWin ? VEmoji.Trophy + " ! WIN ! " + VEmoji.Trophy : VEmoji.Crossbones + " ..LOSE.. " + VEmoji.Crossbones;
                 if (0 != BattleSystem.FightMoney)
                 {
-                    userA_WinMoneyText = (isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";
-                    userB_WinMoneyText = (!isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";   
+                    userA_WinMoneyText = isDraw ? "[ .. " + VEmoji.Money + " .. ]" : (isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";
+                    userB_WinMoneyText = isDraw ? "[ .. " + VEmoji.Money + " .. ]" : (!isUserAWin ? "[ + " : "[ - ") + VEmoji.Money + Convert.ToString(BattleSystem.FightMoney) + " ]";   
                 }
             }
             else
