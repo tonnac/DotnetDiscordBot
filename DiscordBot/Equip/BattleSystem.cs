@@ -14,6 +14,8 @@ public class BattleSystem
     public static bool IsFighting = false;
 
     public static int FightMoney = 0;
+
+    public static bool IsA_BasicReady = false;
     
 
     /*

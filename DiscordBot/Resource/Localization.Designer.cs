@@ -99,7 +99,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000).
+        ///   Looks up a localized string similar to join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bbj 1000).
         /// </summary>
         internal static string a2_basicbattlejoin_Description {
             get {

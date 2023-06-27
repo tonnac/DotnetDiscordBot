@@ -140,13 +140,14 @@ public class BattleModules : BaseCommandModule
         
         if (!BattleSystem.IsA_Ready)
         {
+            BattleSystem.IsA_BasicReady = !isItemBattle;
             BattleSystem.User_A.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member, isItemBattle);
             BattleSystem.IsA_Ready = true;
             await ctx.RespondAsync(VEmoji.A + "️ Ready !" + fightMoneyText);
         }
         else if (!BattleSystem.IsB_Ready)
         {
-            BattleSystem.User_B.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member, isItemBattle);
+            BattleSystem.User_B.SetUserBattleInfo(ctx.Guild, ctx.User, ctx.Member, BattleSystem.IsA_BasicReady ? false : isItemBattle);
             BattleSystem.IsB_Ready = true;
             await ctx.RespondAsync(VEmoji.B + "️ Ready !" + fightMoneyText);
         }
