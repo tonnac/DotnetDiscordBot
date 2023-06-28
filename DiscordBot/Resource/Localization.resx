@@ -333,4 +333,10 @@ This has a lower priority than music added with play.</value>
 	<data name="yachtstop_Description" xml:space="preserve">
 		<value>End the Yacht and settle the score</value>
 	</data>
+	<data name="yachtboradrecreate_Description" xml:space="preserve">
+		<value>Recreate YachtBoard</value>
+	</data>
+	<data name="yachtsurrender_Description" xml:space="preserve">
+		<value>Surrender</value>
+	</data>
 </root>
