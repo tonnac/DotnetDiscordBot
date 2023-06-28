@@ -10,15 +10,13 @@ namespace DiscordBot.Commands
     {
         private static readonly Dictionary<ulong, YachtGame?> CurrPlayingYachtChannels = new();
 
-        public static void RemoveChannel(DiscordClient discordClient, ulong channelId)
+        public static void AddChannel(ulong channelId, YachtGame? yachtGame)
         {
-            if (!CurrPlayingYachtChannels.ContainsKey(channelId))
-                return;
+            CurrPlayingYachtChannels.TryAdd(channelId, yachtGame);
+        }
 
-            discordClient.MessageReactionAdded -= CurrPlayingYachtChannels[channelId]!.DiceTrayMessageReactionAdded;
-            discordClient.MessageReactionRemoved -= CurrPlayingYachtChannels[channelId]!.DiceTrayMessageReactionRemoved;
-            discordClient.MessageReactionAdded -= CurrPlayingYachtChannels[channelId]!.ScoreBoardMessageReactionAdded;
-            discordClient.MessageReactionRemoved -= CurrPlayingYachtChannels[channelId]!.ScoreBoardMessageReactionRemoved;
+        public static void RemoveChannel(ulong channelId)
+        {
             CurrPlayingYachtChannels.Remove(channelId);
         }
 
@@ -46,6 +44,7 @@ namespace DiscordBot.Commands
             ctx.Client.MessageReactionRemoved += newGame.DiceTrayMessageReactionRemoved;
             ctx.Client.MessageReactionAdded += newGame.ScoreBoardMessageReactionAdded;
             ctx.Client.MessageReactionRemoved += newGame.ScoreBoardMessageReactionRemoved;
+            ctx.Client.ThreadDeleted += newGame.ThreadDeleted;
             if (CurrPlayingYachtChannels.TryAdd(newGame._yachtChannel.Id, newGame))
             {
                 await newGame._yachtChannel.SendMessageAsync($"{newGame._1P.Mention}님이 야추방을 만드셨습니다.");
@@ -75,7 +74,7 @@ namespace DiscordBot.Commands
         }
 
         [Command, Aliases("ys")]
-        public async Task YachtStop(CommandContext ctx)
+        public async Task YachtSurrender(CommandContext ctx)
         {
             if (!IsYachtChannel(ctx.Channel.Id))
             {
@@ -89,7 +88,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            await CurrPlayingYachtChannels[ctx.Channel.Id]?.GameSettle(ctx.Client)!;
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.Surrender(ctx.Client, ctx)!;
             await ctx.RespondAsync("야추 종료");
         }
 
