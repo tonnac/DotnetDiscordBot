@@ -14,6 +14,8 @@ public class UserGameInfoModules : BaseCommandModule
 {   
     private readonly ContentsChannels _contentsChannels;
 
+    private readonly int _upgradePinMessageGrade = 8;
+
     public UserGameInfoModules(ContentsChannels contentsChannels)
     {
         _contentsChannels = contentsChannels;
@@ -297,7 +299,7 @@ public class UserGameInfoModules : BaseCommandModule
 
                         var message = await ctx.RespondAsync(embedBuilder);
                         
-                        if (message != null && 7 <= weaponCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade <= weaponCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -330,7 +332,7 @@ public class UserGameInfoModules : BaseCommandModule
 
                         var message = await ctx.RespondAsync(embedBuilder);
                         
-                        if (message != null && 6 <= weaponCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade - 1 <= weaponCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -398,7 +400,7 @@ public class UserGameInfoModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️0 ]", true));
 
                         var message = await ctx.RespondAsync(embedBuilder);
-                        if (message != null && 7 <= ringCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade <= ringCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -430,7 +432,7 @@ public class UserGameInfoModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
 
                         var message = await ctx.RespondAsync(embedBuilder);
-                        if (message != null && 6 <= ringCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade - 1 <= ringCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -493,7 +495,7 @@ public class UserGameInfoModules : BaseCommandModule
                         .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️0 ]", true));
 
                     var message = await ctx.RespondAsync(embedBuilder);
-                    if (message != null && 7 <= gemCurrentUpgrade)
+                    if (message != null && _upgradePinMessageGrade <= gemCurrentUpgrade)
                     {
                         await message.PinAsync();
                     }
@@ -526,7 +528,7 @@ public class UserGameInfoModules : BaseCommandModule
                         .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade + 1) + " ]", true));
 
                     var message = await ctx.RespondAsync(embedBuilder);
-                    if (message != null && 6 <= gemCurrentUpgrade)
+                    if (message != null && _upgradePinMessageGrade - 1 <= gemCurrentUpgrade)
                     {
                         await message.PinAsync();
                     }
