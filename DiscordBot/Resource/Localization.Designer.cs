@@ -730,6 +730,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recreate YachtBoard.
+        /// </summary>
+        internal static string yachtboradrecreate_Description {
+            get {
+                return ResourceManager.GetString("yachtboradrecreate_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to If channel is a Yacht thread channel, join the Yacht.
         /// </summary>
         internal static string yachtjoin_Description {
@@ -753,6 +762,15 @@ namespace DiscordBot.Resource {
         internal static string yachtstop_Description {
             get {
                 return ResourceManager.GetString("yachtstop_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Surrender.
+        /// </summary>
+        internal static string yachtsurrender_Description {
+            get {
+                return ResourceManager.GetString("yachtsurrender_Description", resourceCulture);
             }
         }
     }

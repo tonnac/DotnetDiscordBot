@@ -218,7 +218,7 @@ public class YachtGame
 
     public async Task Surrender(DiscordClient discordClient, CommandContext ctx)
     {
-        FinishGame(discordClient);
+        await FinishGame(discordClient);
         if (_1P != null && _2P != null)
         {
             using var database = new DiscordBotDatabase();
@@ -271,6 +271,14 @@ public class YachtGame
             _yachtDiceTrayUiMessage = null;
             await GameSettle(discordClient);
         }
+    }
+    public async Task RecreateGameBoard(DiscordClient discordClient)
+    {
+        await _yachtDiceTrayUiMessage?.DeleteAsync()!;
+        await _yachtScoreUiMessage?.DeleteAsync()!;
+        _yachtDiceTrayUiMessage = null;
+        _yachtScoreUiMessage = null;
+        await SetUi(discordClient);
     }
 
     public async Task ThreadDeleted(DiscordClient client, ThreadDeleteEventArgs eventArgs)

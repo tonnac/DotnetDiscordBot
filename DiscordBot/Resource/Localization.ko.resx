@@ -333,4 +333,10 @@
 	<data name="yachtstop_Description" xml:space="preserve">
 		<value>야추를 종료하고 점수를 정산합니다.</value>
 	</data>
+	<data name="yachtboradrecreate_Description" xml:space="preserve">
+		<value>야추 보드를 재생성합니다.</value>
+	</data>
+	<data name="yachtsurrender_Description" xml:space="preserve">
+		<value>항복</value>
+	</data>
 </root>

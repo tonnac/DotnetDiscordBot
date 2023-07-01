@@ -59,9 +59,9 @@ namespace DiscordBot.Commands
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
-            
-            if ( CurrPlayingYachtChannels[ctx.Channel.Id]  != null &&  CurrPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
+            }
+
+            if (CurrPlayingYachtChannels[ctx.Channel.Id] != null && CurrPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
             {
                 CurrPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
                 await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
@@ -80,7 +80,7 @@ namespace DiscordBot.Commands
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
+            }
 
             if (!IsYachtPlayer(ctx.Channel.Id, ctx.User.Id))
             {
@@ -92,14 +92,14 @@ namespace DiscordBot.Commands
             await ctx.RespondAsync("야추 종료");
         }
 
-        [Command, Aliases("yc")]
-        public async Task YachtChoice(CommandContext ctx, [RemainingText] string? tempCommand)
+        [Command, Aliases("ybr")]
+        public async Task YachtBoardRecreate(CommandContext ctx)
         {
             if (!IsYachtChannel(ctx.Channel.Id))
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
+            }
 
             if (!IsYachtPlayer(ctx.Channel.Id, ctx.User.Id))
             {
@@ -107,19 +107,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            if (CurrPlayingYachtChannels.TryGetValue(ctx.Channel.Id, out YachtGame? yachtGame))
-            {
-                if (yachtGame?.CurrPlayer?.Id != ctx.User.Id)
-                {
-                    await ctx.RespondAsync("니차례 아님");
-                    return;
-                }
-
-                if (Enum.TryParse(tempCommand, out EYachtPointType eYachtPointType))
-                {
-                    await yachtGame.ChoicePoint(ctx.Client, eYachtPointType);
-                }
-            }
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.RecreateGameBoard(ctx.Client)!;
         }
     }
 }
