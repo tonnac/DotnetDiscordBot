@@ -292,7 +292,7 @@ This has a lower priority than music added with play.</value>
 		<value>[💍] Strengthen the ring. (Attack hit rate, dice gambling value increase)</value>
 	</data>
 	<data name="a6_upgradegem_Description" xml:space="preserve">
-		<value>[💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand)</value>
+		<value>[💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand, increase combat hp)</value>
 	</data>
 	<data name="a7_upgradetrident_Description" xml:space="preserve">
 		<value>[🔱] Strengthens the trident. (Maximum enhancement value for weapons, rings, and jewels is additionally increased by the amount of trident enhancement)</value>
@@ -304,7 +304,7 @@ This has a lower priority than music added with play.</value>
 		<value>Shows a list of upgrade equip probabilities. Step input possible (ex. ul 0)</value>
 	</data>
 	<data name="a3_buyxp_Description" xml:space="preserve">
-		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level(💠).</value>
+		<value>[📚] Raise your experience. The level rises when the experience reaches a certain level(💠). The number of purchases can be specified by command (ex. bxp 2) (1~10)</value>
 	</data>
 	<data name="noticechannel_Description" xml:space="preserve">
 		<value>Make the current channel a bot help channel.</value>
@@ -313,12 +313,30 @@ This has a lower priority than music added with play.</value>
 		<value>Make the current channel disable chatting.</value>
 	</data>
 	<data name="a1_battlejoin_Description" xml:space="preserve">
-		<value>join the battle. It starts with 2 people.</value>
+		<value>join the battle. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000)</value>
 	</data>
-	<data name="a2_battlestart_Description" xml:space="preserve">
-		<value>Let the battle begin.</value>
+	<data name="a2_basicbattlejoin_Description" xml:space="preserve">
+		<value>join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bbj 1000)</value>
 	</data>
-	<data name="a3_battlereset_Description" xml:space="preserve">
+	<data name="a3_battlestart_Description" xml:space="preserve">
+		<value>Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds)</value>
+	</data>
+	<data name="a4_battlereset_Description" xml:space="preserve">
 		<value>Reset the battle.</value>
+	</data>
+	<data name="yachtjoin_Description" xml:space="preserve">
+		<value>If channel is a Yacht thread channel, join the Yacht</value>
+	</data>
+	<data name="yachtopen_Description" xml:space="preserve">
+		<value>Open the Yacht Thread Channel</value>
+	</data>
+	<data name="yachtstop_Description" xml:space="preserve">
+		<value>End the Yacht and settle the score</value>
+	</data>
+	<data name="yachtboradrecreate_Description" xml:space="preserve">
+		<value>Recreate YachtBoard</value>
+	</data>
+	<data name="yachtsurrender_Description" xml:space="preserve">
+		<value>Surrender</value>
 	</data>
 </root>

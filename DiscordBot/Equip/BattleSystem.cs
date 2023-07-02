@@ -1,4 +1,5 @@
-﻿using DisCatSharp.Entities;
+﻿using DiscordBot.Boss;
+using DiscordBot.Database;
 using DiscordBot.Resource;
 
 namespace DiscordBot.Equip;
@@ -11,6 +12,10 @@ public class BattleSystem
     public static bool IsA_Ready = false;
     public static bool IsB_Ready = false;
     public static bool IsFighting = false;
+
+    public static int FightMoney = 0;
+
+    public static bool IsA_BasicReady = false;
     
 
     /*
@@ -27,24 +32,81 @@ public class BattleSystem
   - 🟥🟥🟥🟥🟥 91~100
     */
 
+    public static void ResetSystem()
+    {
+        User_A.Reset();
+        User_B.Reset();
+
+        IsA_Ready = false;
+        IsB_Ready = false;
+        IsFighting = false;
+        FightMoney = 0;
+    }
+
+    public static async Task CalculateFightMoney(bool isUserAWin, bool isDraw)
+    {
+        if (isDraw)
+        {
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_A.Guild, User_A.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney);
+                await database.UpdateUserGold(User_A.Guild, User_A.User, query);
+            }
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_B.Guild, User_B.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney);
+                await database.UpdateUserGold(User_B.Guild, User_B.User, query);
+            }
+        }
+        else
+        {
+            if (isUserAWin)
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_A.Guild, User_A.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney*2);
+                await database.UpdateUserGold(User_A.Guild, User_A.User, query);
+            }
+            else
+            {
+                using var database = new DiscordBotDatabase();
+                await database.ConnectASync();
+                await database.GetDatabaseUser(User_B.Guild, User_B.User);
+            
+                GoldQuery query = new GoldQuery(FightMoney*2);
+                await database.UpdateUserGold(User_B.Guild, User_B.User, query);
+            }
+        }
+    }
+    
     public static string GetHpText(int currentHp, int maxHp)
     {
-        return VEmoji.Heart + " " + Convert.ToString(currentHp) + "/" + Convert.ToString(maxHp);
+        return VEmoji.Heart + " " + Convert.ToString(currentHp) + " / " + Convert.ToString(maxHp);
     }
 
     public static string GetDamageText(int damage, int weaponDamage, bool isCritical)
     {
+        string weaponText = 0 == weaponDamage ? "" : " +" + Convert.ToString(weaponDamage) + VEmoji.Weapon;
         string attackTypeEmoji = isCritical ? VEmoji.Fire : VEmoji.Boom;
-        return 0 == damage ? VEmoji.SpiralEyes + " 0" : attackTypeEmoji + " " + Convert.ToString(damage) + " +" + Convert.ToString(weaponDamage) + VEmoji.Weapon;
+        return 0 == damage ? VEmoji.SpiralEyes + " 0" : attackTypeEmoji + " " + Convert.ToString(damage) + weaponText;
     }
 
     public static string GetEquipText(int equipValue)
     {
         int tridentUpgrade = EquipCalculator.GetTridentUpgradeInfo(equipValue);
+        int gemUpgrade = EquipCalculator.GetGemUpgradeInfo(equipValue);
         int ringUpgrade = EquipCalculator.GetRingUpgradeInfo(equipValue);
         int weaponUpgrade = EquipCalculator.GetWeaponUpgradeInfo(equipValue);
 
-        return "+" + Convert.ToString(tridentUpgrade) + VEmoji.Trident + ", +" + Convert.ToString(ringUpgrade) + VEmoji.Ring + ", +" + Convert.ToString(weaponUpgrade) + VEmoji.Weapon;
+        return "+" + Convert.ToString(tridentUpgrade) + VEmoji.Trident + ", +" + Convert.ToString(gemUpgrade) + VEmoji.Gem + ", +" + Convert.ToString(ringUpgrade) + VEmoji.Ring + ", +" + Convert.ToString(weaponUpgrade) + VEmoji.Weapon;
     }
     
     public static string GetHpBarString(int hpPercentage, bool bRightSide = false)

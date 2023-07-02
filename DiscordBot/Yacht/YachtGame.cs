@@ -1,7 +1,9 @@
 using DisCatSharp;
+using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DiscordBot.Commands;
+using DiscordBot.Database;
 
 namespace DiscordBot.Yacht;
 
@@ -44,7 +46,7 @@ public class YachtGame
 
     public DiscordUser? CurrPlayer => _turn % 2 == 0 ? _2P : _1P;
     private string TurnPlayer => _turn % 2 == 0 ? "2P" : "1P";
-    private int TurnPlayerNum  => _turn % 2 == 0 ? 1 : 0;
+    private int PlayerIndex  => _turn % 2 == 0 ? 1 : 0;
     private int Round => _turn / 2 + _turn % 2 / 1;
     
     
@@ -140,7 +142,6 @@ public class YachtGame
             {
                 straightCheck++;
             }
-
         }
 
         if (straightCheck == 0)
@@ -163,40 +164,83 @@ public class YachtGame
     private void PointSettle()
     {
         int topSum = 0;
-        int turn = TurnPlayerNum;
+        int playerId = PlayerIndex;
         for (int i = 0; i < 6; i++)
         {
-            topSum += _points[turn, i] ?? 0;
+            topSum += _points[playerId, i] ?? 0;
         }
 
-        _points[turn,(int)EYachtPointType.SubTotal] = topSum;
-        _points[turn, (int)EYachtPointType.Bonus] = topSum >= 63 ? 35 : 0;
+        _points[playerId,(int)EYachtPointType.SubTotal] = topSum;
+        _points[playerId, (int)EYachtPointType.Bonus] = topSum >= 63 ? 35 : 0;
         
         int totalSum = 0;
         for (int i = (int)EYachtPointType.SubTotal; i < (int)EYachtPointType.Total; i++)
         {
-            totalSum += _points[turn, i] ?? 0;
+            totalSum += _points[playerId, i] ?? 0;
         }
-        _points[turn,(int)EYachtPointType.Total] = totalSum;
+        _points[playerId,(int)EYachtPointType.Total] = totalSum;
        
     }
-    public async Task GameSettle()
+    public async Task GameSettle(DiscordClient discordClient)
     {
+        await FinishGame(discordClient);
+
         int player1Total = _points[0, (int)EYachtPointType.Total] ?? 0;
         int player2Total = _points[1, (int)EYachtPointType.Total] ?? 0;
-        YachtModules.RemoveChannel(_yachtChannel!.Id);
-        if (player1Total == player2Total)
+
+        if (_1P != null && _2P != null)
         {
-            await _yachtChannel?.SendMessageAsync("Draw")!;
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await _yachtChannel?.Parent.SendMessageAsync(ScoreBoardVisualize(discordClient))!;
+            if (player1Total == player2Total)
+            {
+                await _yachtChannel?.Parent.SendMessageAsync("Draw")!;
+                if (Round > 12)
+                {
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _1P);
+                    await database.UpdateYachtDraw(_yachtChannel.Guild, _2P);
+                }
+            }
+            else
+            {
+                await _yachtChannel?.Parent.SendMessageAsync($"Player {(player1Total < player2Total ? _2P : _1P)?.Username} Win")!;
+                if (Round > 12)
+                {
+                    await database.UpdateYachtLose(_yachtChannel.Guild, player1Total < player2Total ? _1P : _2P);
+                    await database.UpdateYachtWin(_yachtChannel.Guild, player1Total < player2Total ? _2P : _1P);
+                }
+            }
+            return;
+        }
+        await _yachtChannel?.SendMessageAsync("상대 플레이어가 없습니다 게임을 종료합니다.")!;
+    }
+
+    public async Task Surrender(DiscordClient discordClient, CommandContext ctx)
+    {
+        await FinishGame(discordClient);
+        if (_1P != null && _2P != null)
+        {
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            bool bIsPlayer01sRequest = ctx.User.Id == _1P.Id;
+            if (_yachtChannel != null) 
+            {
+                await database.UpdateYachtLose(_yachtChannel.Guild, bIsPlayer01sRequest ? _1P : _2P);
+                await database.UpdateYachtWin(_yachtChannel.Guild, bIsPlayer01sRequest ?_2P : _1P);
+            }
+
+            await _yachtChannel?.Parent.SendMessageAsync($"Player {(bIsPlayer01sRequest ? _1P : _2P)?.Username} Surrendered {(bIsPlayer01sRequest ? _2P : _1P)?.Username}  Win")!;
             return;
         }
 
-        await _yachtChannel?.SendMessageAsync($"Player {(player1Total < player2Total ? _2P : _1P)?.Username} Win")!;
+        await _yachtChannel?.SendMessageAsync("상대 플레이어가 없습니다 게임을 종료합니다.")!;
     }
+
     public async Task ChoicePoint(DiscordClient discordClient, EYachtPointType eYachtPointType)
     {
-        if (_points[TurnPlayerNum, (int)eYachtPointType] == null)
-            _points[TurnPlayerNum, (int)eYachtPointType] = _tempPoints[(int)eYachtPointType];
+        if (_points[PlayerIndex, (int)eYachtPointType] == null)
+            _points[PlayerIndex, (int)eYachtPointType] = _tempPoints[(int)eYachtPointType];
         else
             return;
         
@@ -225,9 +269,41 @@ public class YachtGame
         {
             await _yachtDiceTrayUiMessage?.DeleteAsync()!;
             _yachtDiceTrayUiMessage = null;
-            await GameSettle();
+            await GameSettle(discordClient);
         }
     }
+    public async Task RecreateGameBoard(DiscordClient discordClient)
+    {
+        await _yachtDiceTrayUiMessage?.DeleteAsync()!;
+        await _yachtScoreUiMessage?.DeleteAsync()!;
+        _yachtDiceTrayUiMessage = null;
+        _yachtScoreUiMessage = null;
+        await SetUi(discordClient);
+    }
+
+    public async Task ThreadDeleted(DiscordClient client, ThreadDeleteEventArgs eventArgs)
+    {
+        if (eventArgs.Thread.Id == _yachtChannel?.Id)
+            return;
+
+        await FinishGame(client);
+    }
+
+    private async Task FinishGame(DiscordClient client)
+    {
+        if (_yachtChannel != null)
+        {
+            if (_1P != null) await _yachtChannel.RemoveMemberAsync(_1P.Id);
+            if (_2P != null) await _yachtChannel.RemoveMemberAsync(_2P.Id);
+            YachtModules.RemoveChannel(_yachtChannel.Id);
+        }
+        client.MessageReactionAdded -= DiceTrayMessageReactionAdded;
+        client.MessageReactionRemoved -= DiceTrayMessageReactionRemoved;
+        client.MessageReactionAdded -= ScoreBoardMessageReactionAdded;
+        client.MessageReactionRemoved -= ScoreBoardMessageReactionRemoved;
+        client.ThreadDeleted -= ThreadDeleted;
+    }
+
     public async Task DiceTrayMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs eventArgs)
     {
         if (_yachtChannel!.Id != eventArgs.ChannelId)
@@ -294,7 +370,7 @@ public class YachtGame
 
 
         int index = 0;
-        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - 0x1F1E6;
+        int emojiToIndex = char.ConvertToUtf32(eventArgs.Emoji, 0) - A_CODE;
 
         foreach (EYachtPointType yachtPointType in Enum.GetValues(typeof(EYachtPointType)))
         {
@@ -378,10 +454,16 @@ public class YachtGame
             bIsSumField |= yachtPointType == EYachtPointType.Total;
             
             field01 += (!bIsSumField ? Utility.GetRegionalIndicatorSymbolLetter(alphabetIndex) : string.Empty) + yachtPointType + normalBorder;
-            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : TurnPlayerNum == 0 ? DiscordEmoji.FromUnicode("➡️") + _tempPoints[pointType] : "[empty]") + normalBorder;
-            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : TurnPlayerNum == 1 ? DiscordEmoji.FromUnicode("➡️") + _tempPoints[pointType] : "[empty]") + normalBorder;
+
+            DiscordEmoji? pointPositionEmoji = null;
             if (!bIsSumField)
+            {
+                pointPositionEmoji = DiscordEmoji.FromUnicode("➡️");
                 alphabetIndex++;
+            }
+
+            field02 += (_points[0, pointType] != null ? $"[{_points[0, pointType].ToString()}]" : PlayerIndex == 0 ? $"{pointPositionEmoji} {_tempPoints[pointType]}" : "[empty]") + normalBorder;
+            field03 += (_points[1, pointType] != null ? $"[{_points[1, pointType].ToString()}]" : PlayerIndex == 1 ? $"{pointPositionEmoji} {_tempPoints[pointType]}" : "[empty]") + normalBorder;
         }
 
         embedBuilder.AddField(new DiscordEmbedField($"ROUNDS {Round}", field01, true));

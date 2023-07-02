@@ -1,3 +1,4 @@
+using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Enums;
@@ -9,9 +10,14 @@ namespace DiscordBot.Commands
     {
         private static readonly Dictionary<ulong, YachtGame?> CurrPlayingYachtChannels = new();
 
-        public static void RemoveChannel(ulong id)
+        public static void AddChannel(ulong channelId, YachtGame? yachtGame)
         {
-            CurrPlayingYachtChannels.Remove(id);
+            CurrPlayingYachtChannels.TryAdd(channelId, yachtGame);
+        }
+
+        public static void RemoveChannel(ulong channelId)
+        {
+            CurrPlayingYachtChannels.Remove(channelId);
         }
 
         private static bool IsYachtChannel(ulong channelId)
@@ -38,6 +44,7 @@ namespace DiscordBot.Commands
             ctx.Client.MessageReactionRemoved += newGame.DiceTrayMessageReactionRemoved;
             ctx.Client.MessageReactionAdded += newGame.ScoreBoardMessageReactionAdded;
             ctx.Client.MessageReactionRemoved += newGame.ScoreBoardMessageReactionRemoved;
+            ctx.Client.ThreadDeleted += newGame.ThreadDeleted;
             if (CurrPlayingYachtChannels.TryAdd(newGame._yachtChannel.Id, newGame))
             {
                 await newGame._yachtChannel.SendMessageAsync($"{newGame._1P.Mention}님이 야추방을 만드셨습니다.");
@@ -52,9 +59,9 @@ namespace DiscordBot.Commands
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
-            
-            if ( CurrPlayingYachtChannels[ctx.Channel.Id]  != null &&  CurrPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
+            }
+
+            if (CurrPlayingYachtChannels[ctx.Channel.Id] != null && CurrPlayingYachtChannels[ctx.Channel.Id]?._2P == null)
             {
                 CurrPlayingYachtChannels[ctx.Channel.Id]!._2P = ctx.User;
                 await ctx.RespondAsync($"{ctx.User.Mention}:HERE COMES A NEW CHALLENGER");
@@ -67,35 +74,32 @@ namespace DiscordBot.Commands
         }
 
         [Command, Aliases("ys")]
-        public async Task YachtStop(CommandContext ctx)
+        public async Task YachtSurrender(CommandContext ctx)
         {
             if (!IsYachtChannel(ctx.Channel.Id))
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
+            }
 
             if (!IsYachtPlayer(ctx.Channel.Id, ctx.User.Id))
             {
                 await ctx.RespondAsync("플레이중이 아니신데요?");
                 return;
             }
-            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionAdded;
-            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.DiceTrayMessageReactionRemoved;
-            ctx.Client.MessageReactionAdded -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionAdded;
-            ctx.Client.MessageReactionRemoved -= CurrPlayingYachtChannels[ctx.Channel.Id]!.ScoreBoardMessageReactionRemoved;
-            await CurrPlayingYachtChannels[ctx.Channel.Id]?.GameSettle()!;
+
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.Surrender(ctx.Client, ctx)!;
             await ctx.RespondAsync("야추 종료");
         }
 
-        [Command, Aliases("yc")]
-        public async Task YachtChoice(CommandContext ctx, [RemainingText] string? tempCommand)
+        [Command, Aliases("ybr")]
+        public async Task YachtBoardRecreate(CommandContext ctx)
         {
             if (!IsYachtChannel(ctx.Channel.Id))
             {
                 await ctx.RespondAsync("야추방이 아닌데요?");
                 return;
-            } 
+            }
 
             if (!IsYachtPlayer(ctx.Channel.Id, ctx.User.Id))
             {
@@ -103,19 +107,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            if (CurrPlayingYachtChannels.TryGetValue(ctx.Channel.Id, out YachtGame? yachtGame))
-            {
-                if (yachtGame?.CurrPlayer?.Id != ctx.User.Id)
-                {
-                    await ctx.RespondAsync("니차례 아님");
-                    return;
-                }
-
-                if (Enum.TryParse(tempCommand, out EYachtPointType eYachtPointType))
-                {
-                    await yachtGame.ChoicePoint(ctx.Client, eYachtPointType);
-                }
-            }
+            await CurrPlayingYachtChannels[ctx.Channel.Id]?.RecreateGameBoard(ctx.Client)!;
         }
     }
 }

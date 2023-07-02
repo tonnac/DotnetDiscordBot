@@ -74,6 +74,10 @@ public class ContentsChannels
     {
         return await IsAvailableContents(ctx.Channel, ContentsFlag.Forge);
     }
+    public async Task<bool> IsBattleChannel(CommandContext ctx)
+    {
+        return await IsAvailableContents(ctx.Channel, ContentsFlag.Battle);
+    }
     public async Task<bool> IsDisableChatChannel(CommandContext ctx)
     {
         return await IsAvailableContents(ctx.Channel, ContentsFlag.DisableChat);

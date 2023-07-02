@@ -14,6 +14,8 @@ public class UserGameInfoModules : BaseCommandModule
 {   
     private readonly ContentsChannels _contentsChannels;
 
+    private readonly int _upgradePinMessageGrade = 8;
+
     public UserGameInfoModules(ContentsChannels contentsChannels)
     {
         _contentsChannels = contentsChannels;
@@ -41,6 +43,8 @@ public class UserGameInfoModules : BaseCommandModule
             xpPercentage = (int)(xpPercentageFloat * 100.0f);   
         }
 
+        string yatchWinLoseText = "[ " + VEmoji.Dice + " ]　" + Convert.ToString(myUserDatabase.yachtwin) + "W / " + Convert.ToString(myUserDatabase.yachtlose) + "L / " + Convert.ToString(myUserDatabase.yachtdraw) + "D";
+        
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
             .WithThumbnail("https://cdn-icons-png.flaticon.com/512/943/943579.png")
             .WithColor(DiscordColor.Black)
@@ -53,7 +57,8 @@ public class UserGameInfoModules : BaseCommandModule
             .AddField(new DiscordEmbedField("[  " + VEmoji.Weapon + "  ]", "+" + Convert.ToString(weaponUpgrade), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.Crossbones + "  ]", Convert.ToString(myUserDatabase.bosskillcount), true))
             .AddField(new DiscordEmbedField("[  " + VEmoji.CrossSword + "  ]", Convert.ToString(myUserDatabase.combatcount), true))
-            .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true));
+            .AddField(new DiscordEmbedField("[  " + VEmoji.Boom + "  ]", Convert.ToString(myUserDatabase.bosstotaldamage), true))
+            .AddField(new DiscordEmbedField("─────────────────", yatchWinLoseText, true));
         
         await ctx.RespondAsync(embedBuilder);
     }
@@ -175,32 +180,50 @@ public class UserGameInfoModules : BaseCommandModule
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
-        
-        if (EquipCalculator.LevelUpgradeMoney > userDatabase.gold)
-        {
-            await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark + "(" + Convert.ToString(EquipCalculator.LevelUpgradeMoney) + ")");
-            return;
-        }
-        
-        int level = EquipCalculator.GetLevel(userDatabase.equipvalue);
-        int xp = EquipCalculator.GetXp(userDatabase.equipvalue);
 
-        if (level <= xp + 1)
+        int buyCount = 1;
+        if( !string.IsNullOrEmpty(xpCommand))
         {
-            // level
-            await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum);
-            // xp
-            await database.AddEquipValue(ctx, -(xp * EquipCalculator.LevelCutNum));
-        }
-        else
-        {
-            // xp
-            await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum);
+            Int32.TryParse(xpCommand, out buyCount);
         }
 
-        GoldQuery query = new GoldQuery(-EquipCalculator.LevelUpgradeMoney);
-        await database.UpdateUserGold(ctx, query);
+        buyCount = Math.Clamp(buyCount, 1, 10);
+        
+        for (int i = 0; i < buyCount; i++)
+        {
+            DatabaseUser userDatabase= await database.GetDatabaseUser(ctx.Guild, ctx.User);
+            
+            if (EquipCalculator.LevelUpgradeMoney > userDatabase.gold)
+            {
+                await ctx.RespondAsync(VEmoji.Money + ".. " + VEmoji.QuestionMark + "(" + Convert.ToString(EquipCalculator.LevelUpgradeMoney) + ")");
+                return;
+            }
+        
+            int level = EquipCalculator.GetLevel(userDatabase.equipvalue);
+            int xp = EquipCalculator.GetXp(userDatabase.equipvalue);
+
+            if (99 <= level)
+            {
+                await ctx.RespondAsync(ctx.Member.Mention + " " + VEmoji.ThumbsUp);
+                return;
+            }
+
+            if (level <= xp + 1)
+            {
+                // level
+                await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum * EquipCalculator.XpCutNum);
+                // xp
+                await database.AddEquipValue(ctx, -(xp * EquipCalculator.LevelCutNum));
+            }
+            else
+            {
+                // xp
+                await database.AddEquipValue(ctx, EquipCalculator.LevelCutNum);
+            }
+
+            GoldQuery query = new GoldQuery(-EquipCalculator.LevelUpgradeMoney);
+            await database.UpdateUserGold(ctx, query);
+        }
         
         string name = Utility.GetMemberDisplayName(ctx.Member);
         
@@ -276,7 +299,7 @@ public class UserGameInfoModules : BaseCommandModule
 
                         var message = await ctx.RespondAsync(embedBuilder);
                         
-                        if (message != null && 7 <= weaponCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade <= weaponCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -309,7 +332,7 @@ public class UserGameInfoModules : BaseCommandModule
 
                         var message = await ctx.RespondAsync(embedBuilder);
                         
-                        if (message != null && 6 <= weaponCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade - 1 <= weaponCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -377,7 +400,7 @@ public class UserGameInfoModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️0 ]", true));
 
                         var message = await ctx.RespondAsync(embedBuilder);
-                        if (message != null && 7 <= ringCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade <= ringCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -409,7 +432,7 @@ public class UserGameInfoModules : BaseCommandModule
                             .AddField(new DiscordEmbedField("[ " + VEmoji.Ring + " ]", "[ +️" + Convert.ToString(ringCurrentUpgrade+1) + " ]", true));
 
                         var message = await ctx.RespondAsync(embedBuilder);
-                        if (message != null && 6 <= ringCurrentUpgrade)
+                        if (message != null && _upgradePinMessageGrade - 1 <= ringCurrentUpgrade)
                         {
                             await message.PinAsync();
                         }
@@ -472,7 +495,7 @@ public class UserGameInfoModules : BaseCommandModule
                         .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️0 ]", true));
 
                     var message = await ctx.RespondAsync(embedBuilder);
-                    if (message != null && 7 <= gemCurrentUpgrade)
+                    if (message != null && _upgradePinMessageGrade <= gemCurrentUpgrade)
                     {
                         await message.PinAsync();
                     }
@@ -505,7 +528,7 @@ public class UserGameInfoModules : BaseCommandModule
                         .AddField(new DiscordEmbedField("[ " + VEmoji.Gem + " ]", "[ +️" + Convert.ToString(gemCurrentUpgrade + 1) + " ]", true));
 
                     var message = await ctx.RespondAsync(embedBuilder);
-                    if (message != null && 6 <= gemCurrentUpgrade)
+                    if (message != null && _upgradePinMessageGrade - 1 <= gemCurrentUpgrade)
                     {
                         await message.PinAsync();
                     }

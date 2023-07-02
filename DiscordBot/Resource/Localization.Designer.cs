@@ -60,7 +60,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to join the battle. It starts with 2 people..
+        ///   Looks up a localized string similar to join the battle. It can start with 2 people. Bet gold when entering a number with a command. (ex. bj 1000).
         /// </summary>
         internal static string a1_battlejoin_Description {
             get {
@@ -99,11 +99,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Let the battle begin..
+        ///   Looks up a localized string similar to join the basic battle. Items and levels are set to default. It can start with 2 people. Bet gold when entering a number with a command. (ex. bbj 1000).
         /// </summary>
-        internal static string a2_battlestart_Description {
+        internal static string a2_basicbattlejoin_Description {
             get {
-                return ResourceManager.GetString("a2_battlestart_Description", resourceCulture);
+                return ResourceManager.GetString("a2_basicbattlejoin_Description", resourceCulture);
             }
         }
         
@@ -135,11 +135,11 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset the battle..
+        ///   Looks up a localized string similar to Let the battle begin. Turn delay time can be adjusted by command. (ex. bs 1500) (1500 = 1.5 seconds, default 0.7 seconds).
         /// </summary>
-        internal static string a3_battlereset_Description {
+        internal static string a3_battlestart_Description {
             get {
-                return ResourceManager.GetString("a3_battlereset_Description", resourceCulture);
+                return ResourceManager.GetString("a3_battlestart_Description", resourceCulture);
             }
         }
         
@@ -153,7 +153,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level(💠)..
+        ///   Looks up a localized string similar to [📚] Raise your experience. The level rises when the experience reaches a certain level(💠). The number of purchases can be specified by command (ex. bxp 2) (1~10).
         /// </summary>
         internal static string a3_buyxp_Description {
             get {
@@ -167,6 +167,15 @@ namespace DiscordBot.Resource {
         internal static string a3_gamblegamelist_Description {
             get {
                 return ResourceManager.GetString("a3_gamblegamelist_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the battle..
+        /// </summary>
+        internal static string a4_battlereset_Description {
+            get {
+                return ResourceManager.GetString("a4_battlereset_Description", resourceCulture);
             }
         }
         
@@ -216,7 +225,7 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand).
+        ///   Looks up a localized string similar to [💎] Strengthen the gems. (Increase in gold supply and demand, excluding gambling, increase in jewelry supply and demand, increase combat hp).
         /// </summary>
         internal static string a6_upgradegem_Description {
             get {
@@ -717,6 +726,51 @@ namespace DiscordBot.Resource {
         internal static string wrongDice {
             get {
                 return ResourceManager.GetString("wrongDice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recreate YachtBoard.
+        /// </summary>
+        internal static string yachtboradrecreate_Description {
+            get {
+                return ResourceManager.GetString("yachtboradrecreate_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If channel is a Yacht thread channel, join the Yacht.
+        /// </summary>
+        internal static string yachtjoin_Description {
+            get {
+                return ResourceManager.GetString("yachtjoin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the Yacht Thread Channel.
+        /// </summary>
+        internal static string yachtopen_Description {
+            get {
+                return ResourceManager.GetString("yachtopen_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End the Yacht and settle the score.
+        /// </summary>
+        internal static string yachtstop_Description {
+            get {
+                return ResourceManager.GetString("yachtstop_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Surrender.
+        /// </summary>
+        internal static string yachtsurrender_Description {
+            get {
+                return ResourceManager.GetString("yachtsurrender_Description", resourceCulture);
             }
         }
     }

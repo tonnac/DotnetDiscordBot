@@ -53,5 +53,22 @@ public partial class DiscordBotDatabase
         return await ExecuteNonQueryASync(
             $"update USER set equipvalue = equipvalue+{addEquipValue} where id='{GetSHA256(ctx.Guild, ctx.User)}'");
     }
-    
+
+    public async Task<bool> UpdateYachtWin(DiscordGuild guild, DiscordUser user)
+    {
+        return await ExecuteNonQueryASync(
+            $"update USER set yachtwin = yachtwin + 1 where id='{GetSHA256(guild, user)}'");
+    }
+
+    public async Task<bool> UpdateYachtLose(DiscordGuild guild, DiscordUser user)
+    {
+        return await ExecuteNonQueryASync(
+            $"update USER set yachtlose = yachtlose + 1 where id='{GetSHA256(guild, user)}'");
+    }
+
+    public async Task<bool> UpdateYachtDraw(DiscordGuild guild, DiscordUser user)
+    {
+        return await ExecuteNonQueryASync(
+            $"update USER set yachtDraw = yachtDraw + 1 where id='{GetSHA256(guild, user)}'");
+    }
 }
