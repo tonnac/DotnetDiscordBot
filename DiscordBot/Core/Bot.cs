@@ -26,9 +26,6 @@ public class Bot
 
     public Bot()
     {
-#if RELEASE
-        Thread.Sleep(20000);
-#endif
         Localization.Culture = new CultureInfo(Config.Locale, false);
 
         _client = new DiscordClient(new DiscordConfiguration
