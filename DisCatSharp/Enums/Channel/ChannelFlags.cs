@@ -64,17 +64,5 @@ public enum ChannelFlags : int
 	/// Indicated that this channel is a guild resource channel.
 	/// </summary>
 	[DiscordInExperiment]
-	IsGuildResourceChannel = 1<<7,
-
-	/// <summary>
-	/// Indicated that clyde has access to this thread.
-	/// </summary>
-	[DiscordInExperiment]
-	ClydeAi = 1<<8,
-
-	/// <summary>
-	/// Unknown what this flag does.
-	/// </summary>
-	[DiscordUnreleased("We do not have information about this.")]
-	IsScheduledForDeletion = 1<<9
+	IsGuildResourceChannel = 1<<7
 }

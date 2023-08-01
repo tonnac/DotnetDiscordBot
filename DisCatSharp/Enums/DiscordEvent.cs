@@ -24,7 +24,7 @@
 
 using System;
 
-namespace DisCatSharp.Enums;
+namespace DisCatSharp;
 
 /// <summary>
 /// Methods marked with this attribute will be registered as event handling methods

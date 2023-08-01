@@ -163,12 +163,6 @@ internal sealed class RestGuildModifyPayload
 	[JsonProperty("banner")]
 	public Optional<string> BannerBase64 { get; set; }
 
-	/// <summary>
-	/// Gets or sets the home header base64.
-	/// </summary>
-	[JsonProperty("home_header")]
-	public Optional<string> HomeHeaderBase64 { get; set; }
-
 
 	/// <summary>
 	/// Gets or sets the discovery splash base64.

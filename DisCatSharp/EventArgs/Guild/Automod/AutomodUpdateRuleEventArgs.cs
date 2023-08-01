@@ -24,17 +24,18 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.EventArgs;
-
-/// <summary>
-/// Represents arguments for <see cref="DiscordClient.AutomodRuleUpdated"/> event.
-/// </summary>
-public class AutomodRuleUpdateEventArgs : DiscordEventArgs
+namespace DisCatSharp.EventArgs
 {
 	/// <summary>
-	/// Gets the rule that has been updated.
+	/// Represents arguments for <see cref="DiscordClient.AutomodRuleUpdated"/> event.
 	/// </summary>
-	public AutomodRule Rule { get; internal set; }
+	public class AutomodRuleUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the rule that has been updated.
+		/// </summary>
+		public AutomodRule Rule { get; internal set; }
 
-	public AutomodRuleUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+		public AutomodRuleUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

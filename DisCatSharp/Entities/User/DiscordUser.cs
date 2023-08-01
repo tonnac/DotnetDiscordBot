@@ -71,7 +71,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.OAuthFlags = transport.OAuthFlags;
 		this.Bio = transport.Bio;
 		this.Pronouns = transport.Pronouns;
-		this.GlobalName = transport.GlobalName;
+		this.DisplayName = transport.DisplayName;
 	}
 
 	/// <summary>
@@ -89,10 +89,10 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> $"{this.Username}#{this.Discriminator}";
 
 	/// <summary>
-	/// Gets this user's global name.
+	/// Gets this user's display name.
 	/// </summary>
-	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public string GlobalName { get; internal set; }
+	[JsonProperty("display_name"), DiscordInExperiment]
+	public string DisplayName { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.
@@ -353,7 +353,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>

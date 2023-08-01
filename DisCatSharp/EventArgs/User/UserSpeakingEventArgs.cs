@@ -23,7 +23,6 @@
 using System;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 
 namespace DisCatSharp.EventArgs;
 
@@ -45,7 +44,7 @@ public class UserSpeakingEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets whether this user is speaking.
 	/// </summary>
-	public SpeakingFlags Speaking { get; internal set; }
+	public bool Speaking { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UserSpeakingEventArgs"/> class.

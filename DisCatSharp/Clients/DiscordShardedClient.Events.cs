@@ -24,7 +24,6 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
-using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 
 using Microsoft.Extensions.Logging;

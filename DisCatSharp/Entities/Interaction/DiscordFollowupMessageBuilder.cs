@@ -40,49 +40,13 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Whether this followup message should be ephemeral.
 	/// </summary>
-	public bool IsEphemeral
-	{
-		get => this.EPH;
-		set
-		{
-			this.EPH = value;
-			this._flagsChanged = true;
-		}
-	}
-	private bool EPH { get; set; }
+	public bool IsEphemeral { get; set; }
 
 	/// <summary>
-	/// Whether to suppress embeds.
+	/// Indicates this message is ephemeral.
 	/// </summary>
-	public bool EmbedsSuppressed
-	{
-		get => this.EMB_SUP;
-		set
-		{
-			this.EMB_SUP = value;
-			this._flagsChanged = true;
-		}
-	}
-	private bool EMB_SUP { get; set; }
-
-	/// <summary>
-	/// Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed
-	{
-		get => this.NOTI_SUP;
-		set
-		{
-			this.NOTI_SUP = value;
-			this._flagsChanged = true;
-		}
-	}
-	private bool NOTI_SUP { get; set; }
-
-	/// <summary>
-	/// Whether flags were changed.
-	/// </summary>
-	internal bool _flagsChanged = false;
+	internal int? Flags
+		=> this.IsEphemeral ? 64 : null;
 
 	/// <summary>
 	/// Message to send on followup message.
@@ -311,30 +275,10 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Sets the followup message to be ephemeral.
 	/// </summary>
-	public DiscordFollowupMessageBuilder AsEphemeral()
+	/// <param name="ephemeral">Whether the followup should be ephemeral. Defaults to true.</param>
+	public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral = true)
 	{
-		this._flagsChanged = true;
-		this.IsEphemeral = true;
-		return this;
-	}
-
-	/// <summary>
-	/// Sets the followup message to suppress embeds.
-	/// </summary>
-	public DiscordFollowupMessageBuilder SuppressEmbeds()
-	{
-		this._flagsChanged = true;
-		this.EmbedsSuppressed = true;
-		return this;
-	}
-
-	/// <summary>
-	/// Sets the followup message to be send as silent message.
-	/// </summary>
-	public DiscordFollowupMessageBuilder AsSilentMessage()
-	{
-		this._flagsChanged = true;
-		this.NotificationsSuppressed = true;
+		this.IsEphemeral = ephemeral;
 		return this;
 	}
 
