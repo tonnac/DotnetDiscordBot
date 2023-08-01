@@ -45,10 +45,10 @@ internal class TransportUser
 	public string Username { get; internal set; }
 
 	/// <summary>
-	/// Gets this user's global name.
+	/// Gets this user's display name.
 	/// </summary>
-	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public string GlobalName { get; internal set; }
+	[JsonProperty("display_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public string DisplayName { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the discriminator.

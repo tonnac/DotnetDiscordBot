@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.Enums;
+namespace DisCatSharp;
 
 /// <summary>
 /// Represents the token type

@@ -34,7 +34,6 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net;
 

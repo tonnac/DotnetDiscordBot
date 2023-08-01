@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 using DisCatSharp.Attributes;
 
 namespace DisCatSharp.Enums;
@@ -27,7 +29,7 @@ namespace DisCatSharp.Enums;
 /// <summary>
 /// Represents the privacy level for a stage.
 /// </summary>
-[DiscordDeprecated("Discord removed the feature for stage discovery. Option is defaulting to GuildOnly.")]
+[DiscordDeprecated("Discord removed the feature for stage discovery. Option is defaulting to GuildOnly."), Obsolete]
 public enum StagePrivacyLevel : int
 {
 	/// <summary>
