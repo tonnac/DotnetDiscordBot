@@ -20,30 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
+namespace DisCatSharp.Enums;
 
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// Additional data used when an action is executed.
-/// Different fields are relevant based on the action type.
-/// </summary>
-public class AutomodActionMetadata
+public enum SpeakingFlags : int
 {
 	/// <summary>
-	/// The channel to which user content should be logged.
-	/// Only works with SendAlertMessage.
+	/// Not speaking.
 	/// </summary>
-	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ChannelId { get; internal set; }
+	NotSpeaking = 0,
 
 	/// <summary>
-	/// The timeout duration in seconds.
-	/// Maximum of 2419200 seconds (4 weeks).
+	/// Normal transmission of voice audio.
 	/// </summary>
-	[JsonProperty("duration_seconds", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Duration { get; internal set; }
+	Microphone = 1<<0,
 
-	[JsonProperty("custom_message", NullValueHandling = NullValueHandling.Ignore)]
-	public string? CustomMessage { get; set; }
+	/// <summary>
+	/// Transmission of context audio for video, no speaking indicator.
+	/// </summary>
+	Soundshare = 1<<1,
+
+	/// <summary>
+	/// Priority speaker, lowering audio of other speakers.
+	/// </summary>
+	Priority = 1<<2
 }

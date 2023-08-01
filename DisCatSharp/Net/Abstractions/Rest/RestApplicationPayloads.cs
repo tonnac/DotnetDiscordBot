@@ -20,30 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
+namespace DisCatSharp.Net.Abstractions;
 
-/// <summary>
-/// Additional data used when an action is executed.
-/// Different fields are relevant based on the action type.
-/// </summary>
-public class AutomodActionMetadata
+internal sealed class RestApplicationModifyPayload
 {
 	/// <summary>
-	/// The channel to which user content should be logged.
-	/// Only works with SendAlertMessage.
+	/// Gets or sets the description.
 	/// </summary>
-	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ChannelId { get; internal set; }
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<string> Description { get; set; }
 
 	/// <summary>
-	/// The timeout duration in seconds.
-	/// Maximum of 2419200 seconds (4 weeks).
+	/// Gets or sets the interactions endpoint url.
 	/// </summary>
-	[JsonProperty("duration_seconds", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Duration { get; internal set; }
+	[JsonProperty("interactions_endpoint_url", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<string> InteractionsEndpointUrl { get; set; }
 
-	[JsonProperty("custom_message", NullValueHandling = NullValueHandling.Ignore)]
-	public string? CustomMessage { get; set; }
+	/// <summary>
+	/// Gets or sets the role connections verification url.
+	/// </summary>
+	[JsonProperty("role_connections_verification_url", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<string> RoleConnectionsVerificationUrl { get; set; }
+
+	/// <summary>
+	/// Gets or sets the tags.
+	/// </summary>
+	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<string>?> Tags { get; set; }
+
+	/// <summary>
+	/// Gets or sets the icon base64.
+	/// </summary>
+	[JsonProperty("icon")]
+	public Optional<string> IconBase64 { get; set; }
 }
