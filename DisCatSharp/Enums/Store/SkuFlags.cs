@@ -20,61 +20,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DisCatSharp.Attributes;
-using DisCatSharp.Entities;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a channel's flags.
+/// Represents sku flags.
 /// </summary>
-public enum ChannelFlags : int
+public enum SkuFlags : long
 {
-	/// <summary>
-	/// Indicates that this channel is removed from the guilds home feed / from highlights.
-	/// Applicable for <see cref="ChannelType"/> Text, Forum and News.
-	/// </summary>
-	RemovedFromHome = 1 << 0,
-	RemovedFromHighlights = RemovedFromHome,
 
 	/// <summary>
-	/// Indicates that this thread is pinned to the top of its parent forum channel.
-	/// Forum channel thread only.
+	/// Whether the SKU is a premium purchase.
 	/// </summary>
-	Pinned = 1 << 1,
+	PremiumPurchase = 1<<0,
 
 	/// <summary>
-	/// Indicates that this channel is removed from the active now within the guilds home feed.
-	/// Applicable for <see cref="ChannelType"/> Text, News, Thread, Forum, Stage and Voice.
+	/// Whether the SKU is free premium content.
 	/// </summary>
-	RemovedFromActiveNow = 1 << 2,
+	HasFreePremiumContent = 1<<1,
 
 	/// <summary>
-	/// Indicates that the channel requires users to select at least one <see cref="ForumPostTag"/>.
-	/// Only applicable for <see cref="ChannelType.Forum"/>.
+	/// Whether the SKU is available for purchase.
 	/// </summary>
-	RequireTags = 1<<4,
+	Available = 1<<2,
 
 	/// <summary>
-	/// Indicated that this channel is spam.
+	/// Whether the SKU is a premium or distribution product.
 	/// </summary>
-	IsSpam = 1<<5,
+	PremiumAndDistribution = 1<<3,
 
 	/// <summary>
-	/// Indicated that this channel is a guild resource channel.
+	/// Whether the SKU is a premium sticker pack.
 	/// </summary>
-	[DiscordInExperiment]
-	IsGuildResourceChannel = 1<<7,
+	StickerPack = 1<<4,
 
 	/// <summary>
-	/// Indicated that clyde has access to this thread.
+	/// Whether the SKU is a guild role subscription. These are subscriptions made to guilds for premium perks.
 	/// </summary>
-	[DiscordInExperiment]
-	ClydeAi = 1<<8,
+	GuildRoleSubscription = 1<<5,
 
 	/// <summary>
-	/// Unknown what this flag does.
+	/// Whether the SKU is a Discord premium subscription or related first-party product.
+	/// These are subscriptions like Nitro and Server Boosts. These are the only giftable subscriptions.
 	/// </summary>
-	[DiscordUnreleased("We do not have information about this.")]
-	IsScheduledForDeletion = 1<<9
+	PremiumSubscription = 1<<6,
+
+	/// <summary>
+	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a guild.
+	/// </summary>
+	ApplicationGuildSubscription = 1<<7,
+
+	/// <summary>
+	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a user.
+	/// </summary>
+	ApplicationUserSubscription = 1<<8
 }

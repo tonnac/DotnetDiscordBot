@@ -51,6 +51,21 @@ public sealed class DiscordWebhookBuilder
 	public bool IsTts { get; set; }
 
 	/// <summary>
+	/// Whether to suppress embeds.
+	/// </summary>
+	public bool EmbedsSuppressed { get; set; }
+
+	/// <summary>
+	/// Whether to send as silent message.
+	/// </summary>
+	public bool NotificationsSuppressed { get; set; }
+
+	/// <summary>
+	/// Whether flags were changed.
+	/// </summary>
+	internal bool _flagsChanged = false;
+
+	/// <summary>
 	/// Message to send on this webhook request.
 	/// </summary>
 	public string Content
@@ -113,6 +128,25 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public DiscordWebhookBuilder() { } // I still see no point in initializing collections with empty collections. //
 
+	/// <summary>
+	/// Sets the webhook response to suppress embeds.
+	/// </summary>
+	public DiscordWebhookBuilder SuppressEmbeds()
+	{
+		this._flagsChanged = true;
+		this.EmbedsSuppressed = true;
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the webhook to be send as silent message.
+	/// </summary>
+	public DiscordWebhookBuilder AsSilentMessage()
+	{
+		this._flagsChanged = true;
+		this.NotificationsSuppressed = true;
+		return this;
+	}
 
 	/// <summary>
 	/// Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
@@ -122,7 +156,6 @@ public sealed class DiscordWebhookBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordWebhookBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
-
 
 	/// <summary>
 	/// Appends several rows of components to the builder

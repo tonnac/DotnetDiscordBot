@@ -20,30 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Entities;
+namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Additional data used when an action is executed.
-/// Different fields are relevant based on the action type.
+/// Represents the store application state.
 /// </summary>
-public class AutomodActionMetadata
+public enum StoreApplicationState : int
 {
-	/// <summary>
-	/// The channel to which user content should be logged.
-	/// Only works with SendAlertMessage.
-	/// </summary>
-	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ChannelId { get; internal set; }
-
-	/// <summary>
-	/// The timeout duration in seconds.
-	/// Maximum of 2419200 seconds (4 weeks).
-	/// </summary>
-	[JsonProperty("duration_seconds", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Duration { get; internal set; }
-
-	[JsonProperty("custom_message", NullValueHandling = NullValueHandling.Ignore)]
-	public string? CustomMessage { get; set; }
+	None = 1,
+	Paid = 2,
+	Submitted = 3,
+	Approved = 4,
+	Rejected = 5,
+	Blocked = 6
 }

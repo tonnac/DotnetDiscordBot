@@ -44,7 +44,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Lavalink;
 
-public delegate void NodeDisconnectedEventHandler(LavalinkNodeConnection node);
+internal delegate void NodeDisconnectedEventHandler(LavalinkNodeConnection node);
 
 /// <summary>
 /// Represents a connection to a Lavalink node.
@@ -622,5 +622,5 @@ public sealed class LavalinkNodeConnection
 		await this._webSocket.SendMessageAsync(payload).ConfigureAwait(false);
 	}
 
-	public event NodeDisconnectedEventHandler NodeDisconnected;
+	internal event NodeDisconnectedEventHandler NodeDisconnected;
 }

@@ -427,7 +427,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.AvatarDecorationHash = usr.AvatarDecorationHash;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
 				old.Pronouns = usr.Pronouns;
-				old.DisplayName = usr.DisplayName;
+				old.GlobalName = usr.GlobalName;
 				return old;
 			});
 
@@ -444,7 +444,44 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
-		=> await this.ApiClient.GetApplicationInfoAsync(applicationId);
+		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId);
+
+	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
+	{
+		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync();
+		var app = new DiscordApplication
+		{
+			Discord = this,
+			Id = tapp.Id,
+			Name = tapp.Name,
+			Description = tapp.Description,
+			Summary = tapp.Summary,
+			IconHash = tapp.IconHash,
+			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+			Flags = tapp.Flags,
+			IsHook = tapp.IsHook,
+			Type = tapp.Type,
+			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
+			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
+			CustomInstallUrl = tapp.CustomInstallUrl,
+			InstallParams = tapp.InstallParams,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
+			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
+			GuildId = tapp.GuildId.ValueOrDefault(),
+			Slug = tapp.Slug.ValueOrDefault(),
+			PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault(),
+			VerifyKey = tapp.VerifyKey.ValueOrDefault(),
+			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
+			Guild = tapp.Guild.ValueOrDefault(),
+			ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault(),
+			RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault(),
+			IsPublic = tapp.IsPublicBot.ValueOrDefault(),
+			RedirectUris = tapp.RedirectUris.ValueOrDefault(),
+			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault()
+		};
+
+		return app;
+	}
 
 	/// <summary>
 	/// Tries to get a user.
@@ -1339,7 +1376,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
-					old.DisplayName = usr.DisplayName;
+					old.GlobalName = usr.GlobalName;
 					return old;
 				});
 
@@ -1381,7 +1418,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
-				old.DisplayName = usr.DisplayName;
+				old.GlobalName = usr.GlobalName;
 				return old;
 			});
 		}
@@ -1485,7 +1522,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Discriminator = xu.Discriminator;
 					old.AvatarHash = xu.AvatarHash;
 					old.PremiumType = xu.PremiumType;
-					old.DisplayName = xu.DisplayName;
+					old.GlobalName = xu.GlobalName;
 					return old;
 				});
 
