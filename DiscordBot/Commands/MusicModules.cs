@@ -28,7 +28,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            await player.Play(ctx, search);
+            await player.Play(ctx, search, 0);
         }
         
         [Command, Aliases("lp", "긴재생")]
@@ -40,7 +40,19 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            await player.Play(ctx, search, true);
+            await player.Play(ctx, search, 1);
+        }
+        
+        [Command, Aliases("bgm")]
+        public async Task BackGroundMusic(CommandContext ctx, [RemainingText] string search)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Play(ctx, search, 2);
         }
 
         [Command, Aliases("l", "음악중지")]

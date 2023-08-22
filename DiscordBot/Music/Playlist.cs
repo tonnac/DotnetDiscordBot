@@ -4,6 +4,7 @@ namespace DiscordBot.Music;
 
 public class PlayingMusic
 {
+    [JsonProperty] public int PlayListIndex;
     [JsonProperty] public string Url;
     [JsonProperty] public TimeSpan? Time;
     [JsonProperty] public ulong RequestChannel;
@@ -13,6 +14,5 @@ public class PlayingMusic
 public class Playlist
 {
     [JsonProperty] public ulong Channel;
-    [JsonProperty] public List<PlayingMusic> List = new ();
-    [JsonProperty] public List<PlayingMusic> LongPlaylist = new ();
+    [JsonProperty] public Dictionary<int, List<PlayingMusic>> List = new ();
 }
