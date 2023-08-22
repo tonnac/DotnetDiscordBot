@@ -12,10 +12,10 @@ namespace DiscordBot.Music;
 
 public class MusicPlayer
 {
-    private readonly List<MusicTrack> _trackList = new List<MusicTrack>();
-    private readonly List<MusicTrack> _lpTrackList = new List<MusicTrack>();
+    private readonly Dictionary<int, List<MusicTrack>> _trackList = new ();
     public readonly LavalinkGuildConnection Connection;
     private static readonly int QueuePagePerCount = 10;
+    private static readonly int MaxTrackCount = 3;
     private DiscordMessage? _trackStartMessage;
 
     public MusicPlayer(LavalinkGuildConnection connection)
@@ -34,63 +34,44 @@ public class MusicPlayer
         }
 
         bool bPlayed = false;
-        
-        foreach (PlayingMusic playingMusic in playlist.List)
+
+        foreach (var keyValuePair in playlist.List)
         {
-            LavalinkLoadResult? loadResult = await GetLoadResult(playingMusic.Url);
-
-            if (loadResult == null)
+            foreach (var playingMusic in keyValuePair.Value)
             {
-                continue;
-            }
+                LavalinkLoadResult? loadResult = await GetLoadResult(playingMusic.Url);
 
-            Connection.Guild.Members.TryGetValue(playingMusic.MemberId, out DiscordMember? member);
-            Connection.Guild.Channels.TryGetValue(playingMusic.RequestChannel, out DiscordChannel? channel);
+                if (loadResult == null)
+                {
+                    continue;
+                }
 
-            if (member == null || channel == null)
-            {
-                continue;
-            }
+                Connection.Guild.Members.TryGetValue(playingMusic.MemberId, out DiscordMember? member);
+                Connection.Guild.Channels.TryGetValue(playingMusic.RequestChannel, out DiscordChannel? channel);
 
-            var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), false);
-            if (bPlayed == false && playingMusic.Time != null)
-            {
-                await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
-                bPlayed = true;
-            }
+                if (member == null || channel == null)
+                {
+                    continue;
+                }
 
-            _trackList.Add(musicTrack);
-        }
-        
-        foreach (PlayingMusic playingMusic in playlist.LongPlaylist)
-        {
-            LavalinkLoadResult? loadResult = await GetLoadResult(playingMusic.Url);
-
-            if (loadResult == null)
-            {
-                continue;
-            }
-            Connection.Guild.Members.TryGetValue(playingMusic.MemberId, out DiscordMember? member);
-            Connection.Guild.Channels.TryGetValue(playingMusic.RequestChannel, out DiscordChannel? channel);
-
-            if (member == null || channel == null)
-            {
-                continue;
-            }
-            
-            var musicTrack = (LongPlayTrack)MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), true);
-            if (playingMusic.Time != null)
-            {
-                musicTrack.TimeSpan = (TimeSpan)playingMusic.Time;
-
-                if (bPlayed == false)
+                var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), keyValuePair.Key);
+                if (bPlayed == false && playingMusic.Time != null)
                 {
                     await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
                     bPlayed = true;
                 }
+                
+                if (_trackList.TryGetValue(keyValuePair.Key, out List<MusicTrack>? musicTracks))
+                {
+                    musicTracks.Add(musicTrack);
+                }
+                else
+                {
+                    List<MusicTrack> newTrack = new List<MusicTrack>();
+                    newTrack.Add(musicTrack);
+                    _trackList.Add(keyValuePair.Key, newTrack);
+                }
             }
-
-            _lpTrackList.Add(musicTrack);
         }
     }
 
@@ -99,52 +80,42 @@ public class MusicPlayer
         var playList = new Playlist
         {
             Channel = Connection.Channel.Id,
-            List = new List<PlayingMusic>(),
+            List = new Dictionary<int, List<PlayingMusic>>()
         };
 
-        foreach (MusicTrack musicTrack in _trackList)
+        foreach (var keyValuePair in _trackList)
         {
-            var playingMusic = new PlayingMusic
+            foreach (var musicTrack in keyValuePair.Value)
             {
-                Url = musicTrack.LavaLinkTrack.Uri.ToString(),
-                RequestChannel = musicTrack.Channel.Id,
-                MemberId = musicTrack.User.Id
-            };
+                var playingMusic = new PlayingMusic
+                {
+                    Url = musicTrack.LavaLinkTrack.Uri.ToString(),
+                    RequestChannel = musicTrack.Channel.Id,
+                    MemberId = musicTrack.User.Id
+                };
 
-            if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
-            {
-                playingMusic.Time = Connection.CurrentState.PlaybackPosition;
-            }
+                if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
+                {
+                    playingMusic.Time = Connection.CurrentState.PlaybackPosition;
+                }
 
-            playList.List.Add(playingMusic);
-        }
-        
-        foreach (MusicTrack musicTrack in _lpTrackList)
-        {
-            var playingMusic = new PlayingMusic
-            {
-                Url = musicTrack.LavaLinkTrack.Uri.ToString(),
-                MemberId = musicTrack.User.Id,
-                RequestChannel = musicTrack.Channel.Id
-            };
-
-            LongPlayTrack longPlayTrack = (LongPlayTrack)musicTrack;
-            if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
-            {
-                playingMusic.Time = Connection.CurrentState.PlaybackPosition;
+                if (playList.List.TryGetValue(keyValuePair.Key, out List<PlayingMusic>? musicList))
+                {
+                    musicList.Add(playingMusic);
+                }
+                else
+                {
+                    List<PlayingMusic> newTrack = new List<PlayingMusic>();
+                    newTrack.Add(playingMusic);
+                    playList.List.Add(keyValuePair.Key, newTrack);
+                }
             }
-            else if (longPlayTrack.TimeSpan != TimeSpan.Zero)
-            {
-                playingMusic.Time = longPlayTrack.TimeSpan;
-            }
-            
-            playList.LongPlaylist.Add(playingMusic);
         }
 
         return playList;
     }
 
-    public async Task Play(CommandContext ctx, string searchQuery, bool isLongPlay = false)
+    public async Task Play(CommandContext ctx, string searchQuery, int index)
     {
         LavalinkLoadResult? loadResult = await GetLoadResult(searchQuery);
 
@@ -153,20 +124,43 @@ public class MusicPlayer
             return;
         }
 
-        List<MusicTrack> addedTrack = loadResult.LoadResultType == LavalinkLoadResultType.PlaylistLoaded ? loadResult.Tracks.Select(track => MusicTrack.CreateMusicTrack(ctx, track, isLongPlay)).ToList() : new List<MusicTrack> {MusicTrack.CreateMusicTrack(ctx, loadResult.Tracks.First(), isLongPlay)};
+        List<MusicTrack> addedTrack = loadResult.LoadResultType == LavalinkLoadResultType.PlaylistLoaded ? loadResult.Tracks.Select(track => MusicTrack.CreateMusicTrack(ctx, track, index)).ToList() : new List<MusicTrack> {MusicTrack.CreateMusicTrack(ctx, loadResult.Tracks.First(), index)};
 
-        int position;
-        if (isLongPlay)
+        addedTrack.RemoveAll(track =>
         {
-            addedTrack.RemoveAll(track => { return _trackList.Find(musicTrack => musicTrack.LavaLinkTrack.Identifier == track.LavaLinkTrack.Identifier) != null; });
+            for (int i = 0; i < MaxTrackCount; i++)
+            {
+                if (_trackList.TryGetValue(i, out List<MusicTrack>? trackList))
+                {
+                    if (trackList.Find(musicTrack =>
+                            musicTrack.LavaLinkTrack.Identifier == track.LavaLinkTrack.Identifier) != null)
+                    {
+                        return true;
+                    }
+                }
+            }
 
-            position = _trackList.Count + _lpTrackList.Count;
-            _lpTrackList.AddRange(addedTrack);
+            return false;
+        });
+
+        if (_trackList.TryGetValue(index, out List<MusicTrack>? musicTracks))
+        {
+            musicTracks.AddRange(addedTrack);
         }
         else
         {
-            position = _trackList.Count;
-            _trackList.AddRange(addedTrack);
+            List<MusicTrack> tracks = new List<MusicTrack>();
+            tracks.AddRange(addedTrack);
+            _trackList.Add(index, tracks);
+        }
+
+        int position = -1;
+        for (int i = 0; i <= index; i++)
+        {
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? trackList))
+            {
+                position += trackList.Count;
+            }
         }
 
         if (addedTrack.Count > 0)
@@ -176,25 +170,29 @@ public class MusicPlayer
             if (Connection.CurrentState.CurrentTrack == null)
             {
                 await Connection.PlayAsync(newTrack.LavaLinkTrack);
+                return;
             }
-            else if (_lpTrackList.Count > 0 && _lpTrackList.First().LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier && isLongPlay == false)
+
+            for (int i = index + 1; i < MaxTrackCount; i++)
             {
-                if (_lpTrackList.First() is LongPlayTrack longPlayTrack)
+                if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
                 {
-                    longPlayTrack.TimeSpan = Connection.CurrentState.PlaybackPosition;
+                    if (tracks.First().LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
+                    {
+                        tracks.First().TimeSpan = Connection.CurrentState.PlaybackPosition;
+                        await Connection.PlayAsync(newTrack.LavaLinkTrack);
+                        return;
+                    }
                 }
-                await Connection.PlayAsync(newTrack.LavaLinkTrack);
             }
-            else
-            {
-                var embedBuilder = new DiscordEmbedBuilder()
-                    .WithAuthor(Localization.addedQueue)
-                    .WithDescription(newTrack.GetTrackTitle())
-                    .AddField(new DiscordEmbedField(Localization.RequestedBy, newTrack.User.Mention, true))
-                    .AddField(new DiscordEmbedField(Localization.Duration, newTrack.LavaLinkTrack.Length.ToDuration().InlineCode(), true))
-                    .AddField(new DiscordEmbedField(Localization.positionInQueue, Convert.ToString(position).InlineCode(), true));
-                await ctx.RespondAsync(embedBuilder);
-            }
+            
+            var embedBuilder = new DiscordEmbedBuilder()
+                .WithAuthor(Localization.addedQueue)
+                .WithDescription(newTrack.GetTrackTitle())
+                .AddField(new DiscordEmbedField(Localization.RequestedBy, newTrack.User.Mention, true))
+                .AddField(new DiscordEmbedField(Localization.Duration, newTrack.LavaLinkTrack.Length.ToDuration().InlineCode(), true))
+                .AddField(new DiscordEmbedField(Localization.positionInQueue, Convert.ToString(position).InlineCode(), true));
+            await ctx.RespondAsync(embedBuilder);
         }
     }
 
@@ -209,8 +207,14 @@ public class MusicPlayer
 
     public async Task Queue(CommandContext ctx)
     {
-        var copyTrack = _trackList.ToList();
-        copyTrack.AddRange(_lpTrackList.ToList());
+        var copyTrack = new List<MusicTrack>();
+        for (int i = 0; i < MaxTrackCount; i++)
+        {
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                copyTrack.AddRange(tracks);
+            }
+        }
         if (copyTrack.Count == 0)
         {
             return;
@@ -332,9 +336,11 @@ public class MusicPlayer
 
         int index = int.Parse(indexString);
 
-        var copyTracks = _trackList.ToList();
-        int beginBgmIndex = copyTracks.Count;
-        copyTracks.AddRange(_lpTrackList.ToList());
+        var copyTracks = new List<MusicTrack>();
+        foreach (var keyValuePair in _trackList)
+        {
+            copyTracks.AddRange(keyValuePair.Value);
+        }
 
         if (index < 1 || index >= copyTracks.Count)
         {
@@ -343,13 +349,24 @@ public class MusicPlayer
         }
 
         var track = copyTracks[index];
-        if (index >= beginBgmIndex)
+        
+        foreach (var keyValuePair in _trackList)
         {
-            _lpTrackList.RemoveAt(index - beginBgmIndex);
+            if (keyValuePair.Value.Remove(track))
+            {
+                break;
+            }
         }
-        else
+
+        for (int i = 0; i < MaxTrackCount; i++)
         {
-            _trackList.RemoveAt(index);
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                if (tracks.Count == 0)
+                {
+                    _trackList.Remove(i);
+                }
+            }
         }
 
         var embedBuilder = new DiscordEmbedBuilder()
@@ -409,7 +426,7 @@ public class MusicPlayer
 
     private async Task OnTractStarted(LavalinkGuildConnection connection, TrackStartEventArgs args)
     {
-        if (_trackList.Count == 0 && _lpTrackList.Count == 0)
+        if (_trackList.Count == 0)
         {
             connection.Node.Discord.Logger.LogError(new EventId(701, "unknown track started"), "MusicPlayer queue has not track");
             return;
@@ -435,7 +452,7 @@ public class MusicPlayer
 
     private async Task OnTrackFinished(LavalinkGuildConnection connection, TrackFinishEventArgs args)
     {
-        if (_trackList.Count == 0 && _lpTrackList.Count == 0)
+        if (_trackList.Count == 0)
         {
             connection.Node.Discord.Logger.LogError(new EventId(702, "queue already empty"), "track finished but MusicPlayer queue is already empty");
             return;
@@ -447,14 +464,7 @@ public class MusicPlayer
 
             if (trackPair.Value != null)
             {
-                if (trackPair.Value is LongPlayTrack longPlayTrack)
-                {
-                    await Connection.PlayPartialAsync(longPlayTrack.LavaLinkTrack, longPlayTrack.TimeSpan, longPlayTrack.LavaLinkTrack.Length);
-                }
-                else
-                {
-                    await Connection.PlayAsync(trackPair.Value.LavaLinkTrack);
-                }
+                await Connection.PlayPartialAsync(trackPair.Value.LavaLinkTrack, trackPair.Value.TimeSpan, trackPair.Value.LavaLinkTrack.Length);
             }
             else
             {
@@ -470,7 +480,15 @@ public class MusicPlayer
 
     MusicTrack FindTrack(LavalinkTrack track)
     {
-        var foundTrack = _trackList.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier) ?? _lpTrackList.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier);
+        MusicTrack? foundTrack = null;
+        foreach (var keyValuePair in _trackList)
+        {
+            foundTrack = keyValuePair.Value.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier);
+            if (foundTrack != null)
+            {
+                break;
+            }
+        }
 
         if (foundTrack == null)
         {
@@ -484,19 +502,24 @@ public class MusicPlayer
     {
         Connection.Node.Discord.Logger.LogDebug(new EventId(704, "Track Finished"), $"Track Started {track.Title}");
 
-        var foundTrack = _trackList.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier);
-
-        if (foundTrack != null)
+        MusicTrack? foundTrack = null;
+        foreach (var keyValuePair in _trackList)
         {
-            _trackList.RemoveAt(0);
-        }
-        else
-        {
-            foundTrack = _lpTrackList.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier);
-
-            if (foundTrack != null)
+            foundTrack = keyValuePair.Value.Find(musicTrack => track.Identifier == musicTrack.LavaLinkTrack.Identifier);
+            if (foundTrack != null && keyValuePair.Value.Remove(foundTrack))
             {
-                _lpTrackList.RemoveAt(0);
+                break;
+            }
+        }
+        
+        for (int i = 0; i < MaxTrackCount; i++)
+        {
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                if (tracks.Count == 0)
+                {
+                    _trackList.Remove(i);
+                }
             }
         }
 
@@ -505,14 +528,12 @@ public class MusicPlayer
             throw new Exception("found track is null");
         }
 
-        if (_trackList.Count > 0)
+        for (int i = 0; i < MaxTrackCount; i++)
         {
-            return new KeyValuePair<MusicTrack, MusicTrack?>(foundTrack, _trackList.First());
-        }
-
-        if (_lpTrackList.Count > 0)
-        {
-            return new KeyValuePair<MusicTrack, MusicTrack?>(foundTrack, _lpTrackList.First());
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                return new KeyValuePair<MusicTrack, MusicTrack?>(foundTrack, tracks.First());
+            }
         }
 
         return new KeyValuePair<MusicTrack, MusicTrack?>(foundTrack, null);
