@@ -29,7 +29,7 @@ services:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
   
   mysql:
-    image: mysql:latest
+    image: mysql:8.0.34
     container_name: mysql
     hostname: mysql
     ports:
