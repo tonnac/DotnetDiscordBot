@@ -40,12 +40,7 @@ public class MusicTrack
         FinishTime = Utility.GetCurrentTime();
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        await database.RegisterMusic(this);
-
-        var lists = await database.GetDatabaseMusics(Channel.Guild);
-
-        int m = 53;
-        return true;
+        return await database.RegisterMusic(this);
     }
 
     public virtual string GetTrackTitle()

@@ -5,7 +5,8 @@ namespace DiscordBot.Database.Tables;
 public class DatabaseMusic
 {
     [JsonProperty] public string identifier;
-    [JsonProperty] public Uri url;
+    [JsonProperty] public string title;
+    [JsonProperty] public string uri;
     [JsonProperty] public ulong guildid;
     [JsonProperty] public DateTime starttime;
     [JsonProperty] public DateTime finishtime;

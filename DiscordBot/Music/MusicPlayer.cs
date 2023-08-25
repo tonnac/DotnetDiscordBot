@@ -5,6 +5,8 @@ using DisCatSharp.Interactivity;
 using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Lavalink.EventArgs;
+using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Resource;
 using Microsoft.Extensions.Logging;
 
@@ -91,7 +93,8 @@ public class MusicPlayer
                 {
                     Url = musicTrack.LavaLinkTrack.Uri.ToString(),
                     RequestChannel = musicTrack.Channel.Id,
-                    MemberId = musicTrack.User.Id
+                    MemberId = musicTrack.User.Id,
+                    PlayListIndex = musicTrack.TrackIndex
                 };
 
                 if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)
