@@ -56,7 +56,7 @@ public class MusicPlayer
                     continue;
                 }
 
-                var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), keyValuePair.Key);
+                var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), playingMusic);
                 if (bPlayed == false && playingMusic.Time != null)
                 {
                     await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
@@ -94,7 +94,9 @@ public class MusicPlayer
                     Url = musicTrack.LavaLinkTrack.Uri.ToString(),
                     RequestChannel = musicTrack.Channel.Id,
                     MemberId = musicTrack.User.Id,
-                    PlayListIndex = musicTrack.TrackIndex
+                    PlayListIndex = musicTrack.TrackIndex,
+                    AddedTime = musicTrack.AddedTime,
+                    StartTime = musicTrack.StartTime
                 };
 
                 if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)

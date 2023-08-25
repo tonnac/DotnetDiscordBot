@@ -27,6 +27,15 @@ public class MusicTrack
         TrackIndex = trackIndex;
         AddedTime = Utility.GetCurrentTime();
     }
+    private MusicTrack(DiscordUser requester, DiscordChannel channel, LavalinkTrack lavaLinkTrack, PlayingMusic playingMusic)
+    {
+        User = requester;
+        Channel = channel;
+        LavaLinkTrack = lavaLinkTrack;
+        TrackIndex = playingMusic.PlayListIndex;
+        AddedTime = playingMusic.AddedTime;
+        StartTime = playingMusic.StartTime;
+    }
 
     public void TrackStart()
     {
@@ -60,10 +69,13 @@ public class MusicTrack
     {
         return CreateMusicTrack(ctx.Member, ctx.Channel, track, trackIndex);
     }
+    public static MusicTrack CreateMusicTrack(DiscordMember member, DiscordChannel channel, LavalinkTrack track, PlayingMusic playingMusic)
+    {
+        return new MusicTrack(member, channel, track, playingMusic);
+    }
     public static MusicTrack CreateMusicTrack(DiscordMember member, DiscordChannel channel, LavalinkTrack track, int trackIndex)
     {
-        MusicTrack newMusicTrack = new MusicTrack(member, channel, track, trackIndex);
-        return newMusicTrack;
+        return new MusicTrack(member, channel, track, trackIndex);
     }
     
 }

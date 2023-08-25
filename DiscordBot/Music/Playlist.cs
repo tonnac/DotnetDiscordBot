@@ -9,6 +9,8 @@ public class PlayingMusic
     [JsonProperty] public TimeSpan? Time;
     [JsonProperty] public ulong RequestChannel;
     [JsonProperty] public ulong MemberId;
+    [JsonProperty] public DateTime AddedTime;
+    [JsonProperty] public DateTime StartTime;
 }
 
 public class Playlist
