@@ -93,8 +93,8 @@ public partial class DiscordBotDatabase
         }
 
         return false;
-
     }
+
     private async Task<List<T>> GetDatabaseTable<T>(MySqlCommand command)
     {
         try

@@ -4,6 +4,7 @@ using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
 using Discord;
+using DiscordBot.Database;
 
 namespace DiscordBot.Music;
 
@@ -14,12 +15,37 @@ public class MusicTrack
     public DiscordUser User { get; }
     public int TrackIndex { get; }
     public TimeSpan TimeSpan = TimeSpan.Zero;
-    protected MusicTrack(DiscordUser requester, DiscordChannel channel, LavalinkTrack lavaLinkTrack, int trackIndex)
+    public DateTime AddedTime = DateTime.MinValue;
+    public DateTime StartTime = DateTime.MinValue;
+    public DateTime FinishTime = DateTime.MinValue;
+
+    private MusicTrack(DiscordUser requester, DiscordChannel channel, LavalinkTrack lavaLinkTrack, int trackIndex)
     {
         User = requester;
         Channel = channel;
         LavaLinkTrack = lavaLinkTrack;
         TrackIndex = trackIndex;
+        AddedTime = Utility.GetCurrentTime();
+    }
+
+    public void TrackStart()
+    {
+        if (StartTime == DateTime.MinValue)
+        {
+            StartTime = Utility.GetCurrentTime();
+        }
+    }
+    public async Task<bool> TrackFinished()
+    {
+        FinishTime = Utility.GetCurrentTime();
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        await database.RegisterMusic(this);
+
+        var lists = await database.GetDatabaseMusics(Channel.Guild);
+
+        int m = 53;
+        return true;
     }
 
     public virtual string GetTrackTitle()

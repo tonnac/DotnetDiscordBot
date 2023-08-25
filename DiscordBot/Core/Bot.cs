@@ -47,7 +47,7 @@ public class Bot
             PollBehaviour = PollBehaviour.DeleteEmojis,
             Timeout = TimeSpan.FromSeconds(5)
         });
-
+        
         var services = new ServiceCollection()
             .AddSingleton(musicPlayers)
             .AddSingleton(_terminateReceiver)

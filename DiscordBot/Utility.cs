@@ -151,4 +151,9 @@ public static class Utility
     {
         return char.ConvertFromUtf32(int.Parse("003" + num.ToString(), System.Globalization.NumberStyles.HexNumber)) + "\uFE0F\u20E3";
     }
+
+    public static DateTime GetCurrentTime()
+    {
+        return DateTime.UtcNow.AddHours(9);
+    }
 }
