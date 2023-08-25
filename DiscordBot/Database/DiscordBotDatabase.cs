@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using DisCatSharp.Entities;
+using DiscordBot.Music;
 using MySqlConnector;
 
 namespace DiscordBot.Database;
@@ -43,22 +44,24 @@ public partial class DiscordBotDatabase : IDisposable
     // ReSharper disable once InconsistentNaming
     private static string GetSHA256(DiscordGuild guild, DiscordUser user)
     {
-        SHA256 sha256Hash = SHA256.Create();
-        byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes($"{guild.Id}{user.Id}"));
-
-        StringBuilder builder = new StringBuilder();
-        foreach (var t in bytes)
-        {
-            builder.Append(t.ToString("x2"));
-        }
-
-        return builder.ToString();
+        return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{guild.Id}{user.Id}"));
     }
     // ReSharper disable once InconsistentNaming
     private static string GetSHA256(DiscordGuild guild, DiscordChannel channel)
     {
+        return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{guild.Id}{channel.Id}"));
+    }
+
+    // ReSharper disable once InconsistentNaming
+    private static string GetSHA256(MusicTrack track)
+    {
+        return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{track.AddedTime.Ticks}{track.LavaLinkTrack.Identifier}{track.User.Id}"));
+    }
+    
+    private static string GetSHA256_Internal(byte[] inBytes)
+    {
         SHA256 sha256Hash = SHA256.Create();
-        byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes($"{guild.Id}{channel.Id}"));
+        byte[] bytes = sha256Hash.ComputeHash(inBytes);
 
         StringBuilder builder = new StringBuilder();
         foreach (var t in bytes)
@@ -68,5 +71,4 @@ public partial class DiscordBotDatabase : IDisposable
 
         return builder.ToString();
     }
-
 }

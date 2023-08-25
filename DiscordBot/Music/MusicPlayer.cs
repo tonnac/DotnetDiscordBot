@@ -433,6 +433,7 @@ public class MusicPlayer
         }
 
         MusicTrack track = FindTrack(args.Track);
+        track.TrackStart();
 
         connection.Node.Discord.Logger.LogDebug(new EventId(703, "Track Start"), $"Track Started {args.Track.Title}");
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder()
@@ -462,6 +463,8 @@ public class MusicPlayer
         {
             var trackPair = GetNextTrack(args.Track);
 
+            await trackPair.Key.TrackFinished();
+            
             if (trackPair.Value != null)
             {
                 await Connection.PlayPartialAsync(trackPair.Value.LavaLinkTrack, trackPair.Value.TimeSpan, trackPair.Value.LavaLinkTrack.Length);
