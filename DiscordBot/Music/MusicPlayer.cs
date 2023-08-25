@@ -5,6 +5,8 @@ using DisCatSharp.Interactivity;
 using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Lavalink.EventArgs;
+using DiscordBot.Database;
+using DiscordBot.Database.Tables;
 using DiscordBot.Resource;
 using Microsoft.Extensions.Logging;
 
@@ -54,7 +56,7 @@ public class MusicPlayer
                     continue;
                 }
 
-                var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), keyValuePair.Key);
+                var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), playingMusic);
                 if (bPlayed == false && playingMusic.Time != null)
                 {
                     await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
@@ -91,7 +93,10 @@ public class MusicPlayer
                 {
                     Url = musicTrack.LavaLinkTrack.Uri.ToString(),
                     RequestChannel = musicTrack.Channel.Id,
-                    MemberId = musicTrack.User.Id
+                    MemberId = musicTrack.User.Id,
+                    PlayListIndex = musicTrack.TrackIndex,
+                    AddedTime = musicTrack.AddedTime,
+                    StartTime = musicTrack.StartTime
                 };
 
                 if (musicTrack.LavaLinkTrack.Identifier == Connection.CurrentState.CurrentTrack.Identifier)

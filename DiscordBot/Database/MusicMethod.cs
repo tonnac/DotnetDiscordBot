@@ -11,8 +11,11 @@ public partial class DiscordBotDatabase
     {
         var member = await track.User.ConvertToMember(track.Channel.Guild);
         string format = "yyyy-MM-dd HH:mm:ss";
+
+        string title = track.LavaLinkTrack.Title.Replace("'", "\\'");
+        
         return await ExecuteNonQueryASync(
-            $"insert into MUSIC (id, identifier, title, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Identifier}', '{track.LavaLinkTrack.Title}', '{track.LavaLinkTrack.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(format)}', '{track.StartTime.ToString(format)}', '{track.FinishTime.ToString(format)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
+            $"insert into MUSIC (id, identifier, title, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Identifier}', '{title}', '{track.LavaLinkTrack.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(format)}', '{track.StartTime.ToString(format)}', '{track.FinishTime.ToString(format)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
     }
 
     public async Task<List<DatabaseMusic>> GetDatabaseMusics(DiscordGuild guild)
@@ -23,7 +26,7 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select * FROM MUSIC where guildid='{guild.Id}'";
+        command.CommandText = $"select * FROM MUSIC where guildid='{1098168846222897214}'";
 
         return await GetDatabaseTable<DatabaseMusic>(command);
     }
