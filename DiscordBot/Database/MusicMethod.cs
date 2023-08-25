@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using DisCatSharp.Entities;
+﻿using DisCatSharp.Entities;
 using DiscordBot.Database.Tables;
 using DiscordBot.Music;
 using MySqlConnector;
@@ -14,7 +12,7 @@ public partial class DiscordBotDatabase
         var member = await track.User.ConvertToMember(track.Channel.Guild);
         string format = "yyyy-MM-dd HH:mm:ss";
         return await ExecuteNonQueryASync(
-            $"insert into MUSIC (id, identifier, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Identifier}', '{track.LavaLinkTrack.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(format)}', '{track.StartTime.ToString(format)}', '{track.FinishTime.ToString(format)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
+            $"insert into MUSIC (id, identifier, title, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Identifier}', '{track.LavaLinkTrack.Title}', '{track.LavaLinkTrack.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(format)}', '{track.StartTime.ToString(format)}', '{track.FinishTime.ToString(format)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
     }
 
     public async Task<List<DatabaseMusic>> GetDatabaseMusics(DiscordGuild guild)
