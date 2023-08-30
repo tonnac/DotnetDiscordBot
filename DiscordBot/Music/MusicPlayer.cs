@@ -346,6 +346,9 @@ public class MusicPlayer
         {
             copyTracks.AddRange(keyValuePair.Value);
         }
+        
+        // 현재 재생중인 트랙은 제외
+        copyTracks.RemoveAt(0);
 
         if (index < 1 || index >= copyTracks.Count)
         {
