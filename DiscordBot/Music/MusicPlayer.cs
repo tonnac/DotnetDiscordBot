@@ -94,6 +94,7 @@ public class MusicPlayer
                     Url = musicTrack.LavaLinkTrack.Uri.ToString(),
                     RequestChannel = musicTrack.Channel.Id,
                     MemberId = musicTrack.User.Id,
+                    Time = musicTrack.TimeSpan,
                     PlayListIndex = musicTrack.TrackIndex,
                     AddedTime = musicTrack.AddedTime,
                     StartTime = musicTrack.StartTime
