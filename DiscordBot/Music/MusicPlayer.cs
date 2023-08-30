@@ -35,8 +35,6 @@ public class MusicPlayer
             return;
         }
 
-        bool bPlayed = false;
-
         foreach (var keyValuePair in playlist.List)
         {
             foreach (var playingMusic in keyValuePair.Value)
@@ -57,12 +55,6 @@ public class MusicPlayer
                 }
 
                 var musicTrack = MusicTrack.CreateMusicTrack(member, channel, loadResult.Tracks.First(), playingMusic);
-                if (bPlayed == false && playingMusic.Time != null)
-                {
-                    await Connection.PlayPartialAsync(musicTrack.LavaLinkTrack, (TimeSpan)playingMusic.Time, musicTrack.LavaLinkTrack.Length);
-                    bPlayed = true;
-                }
-                
                 if (_trackList.TryGetValue(keyValuePair.Key, out List<MusicTrack>? musicTracks))
                 {
                     musicTracks.Add(musicTrack);
@@ -75,6 +67,19 @@ public class MusicPlayer
                 }
             }
         }
+
+        for (int i = 0; i < MaxTrackCount; i++)
+        {
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? musicTracks))
+            {
+                if (musicTracks.Count > 0)
+                {
+                    await Connection.PlayPartialAsync(musicTracks[0].LavaLinkTrack, musicTracks[0].TimeSpan, musicTracks[0].LavaLinkTrack.Length);
+                    break;
+                }
+            }
+        }
+        
     }
 
     public Playlist GetPlayList()
