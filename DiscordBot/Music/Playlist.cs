@@ -6,7 +6,7 @@ public class PlayingMusic
 {
     [JsonProperty] public int PlayListIndex;
     [JsonProperty] public string Url;
-    [JsonProperty] public TimeSpan? Time;
+    [JsonProperty] public TimeSpan Time;
     [JsonProperty] public ulong RequestChannel;
     [JsonProperty] public ulong MemberId;
     [JsonProperty] public DateTime AddedTime;
