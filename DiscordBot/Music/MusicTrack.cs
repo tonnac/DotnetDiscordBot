@@ -1,9 +1,7 @@
-﻿using System.Reflection;
-using DisCatSharp;
+﻿using DisCatSharp;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
-using Discord;
 using DiscordBot.Database;
 
 namespace DiscordBot.Music;
@@ -15,7 +13,7 @@ public class MusicTrack
     public DiscordUser User { get; }
     public int TrackIndex { get; }
     public TimeSpan TimeSpan = TimeSpan.Zero;
-    public DateTime AddedTime = DateTime.MinValue;
+    public DateTime AddedTime;
     public DateTime StartTime = DateTime.MinValue;
     public DateTime FinishTime = DateTime.MinValue;
 
@@ -73,7 +71,8 @@ public class MusicTrack
     {
         return new MusicTrack(member, channel, track, playingMusic);
     }
-    public static MusicTrack CreateMusicTrack(DiscordMember member, DiscordChannel channel, LavalinkTrack track, int trackIndex)
+
+    private static MusicTrack CreateMusicTrack(DiscordMember member, DiscordChannel channel, LavalinkTrack track, int trackIndex)
     {
         return new MusicTrack(member, channel, track, trackIndex);
     }

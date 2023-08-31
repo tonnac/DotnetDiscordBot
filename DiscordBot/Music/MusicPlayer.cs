@@ -345,18 +345,15 @@ public class MusicPlayer
             return;
         }
 
-        int index = int.Parse(indexString) - 1;
+        int index = int.Parse(indexString);
 
         var copyTracks = new List<MusicTrack>();
         foreach (var keyValuePair in _trackList)
         {
             copyTracks.AddRange(keyValuePair.Value);
         }
-        
-        // 현재 재생중인 트랙은 제외
-        copyTracks.RemoveAt(0);
 
-        if (index < 0 || index >= copyTracks.Count)
+        if (index < 1 || index >= copyTracks.Count)
         {
             await ctx.RespondAsync(String.Format(Localization.remove_Usage, Config.Prefix));
             return;
@@ -384,7 +381,7 @@ public class MusicPlayer
         }
 
         var embedBuilder = new DiscordEmbedBuilder()
-            .WithDescription($"Removed Track {Convert.ToString(index + 1).InlineCode()} {track.GetTrackTitle()}");
+            .WithDescription($"Removed Track {Convert.ToString(index).InlineCode()} {track.GetTrackTitle()}");
         await ctx.RespondAsync(embedBuilder);
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
     }
