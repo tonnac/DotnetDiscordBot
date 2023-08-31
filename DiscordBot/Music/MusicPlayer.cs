@@ -348,9 +348,12 @@ public class MusicPlayer
         int index = int.Parse(indexString);
 
         var copyTracks = new List<MusicTrack>();
-        foreach (var keyValuePair in _trackList)
+        for (int i = 0; i < MaxTrackCount; i++)
         {
-            copyTracks.AddRange(keyValuePair.Value);
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                copyTracks.AddRange(tracks);
+            }
         }
 
         if (index < 1 || index >= copyTracks.Count)
