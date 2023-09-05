@@ -16,7 +16,7 @@ public partial class DiscordBotDatabase
 
         await using MySqlCommand command = _connection.CreateCommand();
         command.CommandText =
-            $"select * FROM ROULETTEMEMBER A INNER JOIN ROULETTEMEMBER B on B.guildid = '{guild.Id}' and B.name = '{name}' and A.rouletteid = B.rouletteid";
+            $"select * FROM ROULETTEMEMBER A INNER JOIN ROULETTEMEMBER B on B.name = '{name}' and A.rouletteid = B.rouletteid";
 
         var databaseMembers = await GetDatabaseTable<DatabaseRouletteMember>(command);
 
