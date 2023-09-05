@@ -7,6 +7,8 @@ namespace DiscordBot;
 public static class Utility
 {
     private static readonly int BarLength = 15;
+    public static string TimeFormat = "yyyy-MM-dd HH:mm:ss";
+
 
     private static class DefaultOpts
     {

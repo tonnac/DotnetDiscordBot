@@ -57,6 +57,11 @@ public partial class DiscordBotDatabase : IDisposable
     {
         return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{track.AddedTime.Ticks}{track.LavaLinkTrack.Identifier}{track.User.Id}"));
     }
+    // ReSharper disable once InconsistentNaming
+    private static string GetSHA256(DateTime time, ulong guildid)
+    {
+        return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{guildid}{time}"));
+    }
     
     private static string GetSHA256_Internal(byte[] inBytes)
     {
