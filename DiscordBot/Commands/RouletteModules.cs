@@ -37,7 +37,7 @@ public class RouletteModules : BaseCommandModule
             .WithColor(DiscordColor.Orange)
             .AddField(new DiscordEmbedField("참가한 게임", takingPartCount.ToString(), true))
             .AddField(new DiscordEmbedField("은혜를 입은 사람", numberOfMan.ToString(), true))
-            .AddField(new DiscordEmbedField("염치없게 얻어먹은 게임", losses.ToString(), true));
+            .AddField(new DiscordEmbedField("염치없게 얻어먹은 게임", (takingPartCount - losses).ToString(), true));
 
         await ctx.RespondAsync(embedBuilder);
     }
