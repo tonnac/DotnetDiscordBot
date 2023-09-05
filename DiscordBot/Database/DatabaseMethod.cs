@@ -4,6 +4,7 @@ using DisCatSharp.Entities;
 using DiscordBot.Database.Tables;
 using MySqlConnector;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DiscordBot.Database;
 
