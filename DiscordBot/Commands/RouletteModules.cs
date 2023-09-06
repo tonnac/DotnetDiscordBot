@@ -67,7 +67,7 @@ public class RouletteModules : BaseCommandModule
         DiscordEmbedBuilder embedBuilder = new DiscordEmbedBuilder();
 
         const int partitionNumber = 4;
-        const string timeFormat = "yyyy-MM-dd HH:mm";
+        const string timeFormat = "yyyy년 MM월 dd일 HH:mm";
 
         string MakeMemberString()
         {
