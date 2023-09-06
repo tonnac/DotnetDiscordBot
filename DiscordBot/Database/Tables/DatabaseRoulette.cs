@@ -8,6 +8,7 @@ public class DatabaseRoulette
     [JsonProperty] public ulong guildid;
     [JsonProperty] public DateTime time;
     [JsonProperty] public string winner;
+    [JsonProperty] public string messagelink;
 }
 
 public class DatabaseRouletteMember
