@@ -30,6 +30,7 @@ public class MusicTrack
         User = requester;
         Channel = channel;
         LavaLinkTrack = lavaLinkTrack;
+        TimeSpan = playingMusic.Time;
         TrackIndex = playingMusic.PlayListIndex;
         AddedTime = playingMusic.AddedTime;
         StartTime = playingMusic.StartTime;
