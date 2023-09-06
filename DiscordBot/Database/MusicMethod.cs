@@ -25,7 +25,7 @@ public partial class DiscordBotDatabase
         }
 
         await using MySqlCommand command = _connection.CreateCommand();
-        command.CommandText = $"select * FROM MUSIC where guildid='{1098168846222897214}'";
+        command.CommandText = $"select * FROM MUSIC where guildid='{guild.Id}'";
 
         return await GetDatabaseTable<DatabaseMusic>(command);
     }
