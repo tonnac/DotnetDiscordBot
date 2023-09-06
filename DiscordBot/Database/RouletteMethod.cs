@@ -41,7 +41,7 @@ public partial class DiscordBotDatabase
         }
         
 
-        command.CommandText = $"select * FROM ROULETTE where ";
+        command.CommandText = $"select * from ROULETTE where guildid='{guild.Id}' and (";
 
         var keys = rouletteMembers.Keys.ToList();
         for (var i = 0; i < keys.Count; i++)
@@ -51,6 +51,10 @@ public partial class DiscordBotDatabase
             if (i != keys.Count - 1)
             {
                 id += " or ";
+            }
+            else
+            {
+                id += ")";
             }
 
             command.CommandText += id;
