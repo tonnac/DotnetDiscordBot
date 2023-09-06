@@ -39,7 +39,7 @@ public partial class DiscordBotDatabase
                 rouletteMembers.TryAdd(databaseRouletteMember.rouletteid, news);
             }
         }
-        
+
 
         command.CommandText = $"select * from ROULETTE where guildid='{guild.Id}' and (";
 
@@ -59,7 +59,7 @@ public partial class DiscordBotDatabase
 
             command.CommandText += id;
         }
-        
+
         var databaseRouletteList = await GetDatabaseTable<DatabaseRoulette>(command);
 
         if (databaseRouletteList.Count == 0)
@@ -68,24 +68,55 @@ public partial class DiscordBotDatabase
         }
 
         List<Roulette> roulette = new List<Roulette>();
-        
+
         foreach (var databaseRoulette in databaseRouletteList)
         {
             if (rouletteMembers.TryGetValue(databaseRoulette.id, out List<string>? value))
             {
-                roulette.Add(new Roulette(databaseRoulette.time, databaseRoulette.winner, value));
+                roulette.Add(new Roulette(databaseRoulette.time, databaseRoulette.winner, value, databaseRoulette.messagelink));
             }
         }
 
         return roulette;
     }
-    
-   public async Task RegisterRoulette(Roulette roulette, DiscordGuild guild)
-   {
+
+    public async Task<List<Roulette>> GetRecentRoulette(DiscordGuild guild, int count)
+    {
+        if (null == _connection)
+        {
+            return new List<Roulette>();
+        }
+
+        await using MySqlCommand command = _connection.CreateCommand();
+        command.CommandText =
+            $"select * from ROULETTE where guildid='{guild.Id}' order by time desc limit {count}";
+
+        var databaseRouletteList = await GetDatabaseTable<DatabaseRoulette>(command);
+
+        List<Roulette> rouletteList = new List<Roulette>();
+
+        foreach (var databaseRoulette in databaseRouletteList)
+        {
+            command.CommandText =
+                $"select * from ROULETTEMEMBER where rouletteid='{databaseRoulette.id}'";
+
+            var databaseRouletteMembers = await GetDatabaseTable<DatabaseRouletteMember>(command);
+            var rouletteMembers = databaseRouletteMembers.Select((member => member.name)).ToList();
+            if (databaseRouletteMembers.Count > 0)
+            {
+                rouletteList.Add(new Roulette(databaseRoulette.time, databaseRoulette.winner, rouletteMembers, databaseRoulette.messagelink));
+            }
+        }
+
+        return rouletteList;
+    }
+
+    public async Task RegisterRoulette(Roulette roulette, DiscordGuild guild)
+    {
         var key = GetSHA256(roulette.Time, guild.Id);
         bool result = await ExecuteNonQueryASync(
             $"insert into ROULETTE (id, guildid, time, winner) values ('{key}', '{guild.Id}', '{roulette.Time.ToString(Utility.TimeFormat)}', '{roulette.Winner}')");
-        
+
         if (result)
         {
             string query = $"insert into ROULETTEMEMBER (id, rouletteid, name) values ";
@@ -106,5 +137,5 @@ public partial class DiscordBotDatabase
 
             await ExecuteNonQueryASync(query);
         }
-   }
+    }
 }
