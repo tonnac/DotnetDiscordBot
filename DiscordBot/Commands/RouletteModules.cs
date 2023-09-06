@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using System.Text.RegularExpressions;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
@@ -8,6 +8,52 @@ namespace DiscordBot.Commands;
 
 public class RouletteModules : BaseCommandModule
 {
+    [Command, Aliases("룰렛등록")]
+    public async Task RouletteRegister(CommandContext ctx, [RemainingText] string? members)
+    {
+        if (members == null || ctx.Member.Id != 194280090589200385)
+        {
+            return;
+        }
+        
+        Regex regex = new Regex("[a-zA-Z가-힣0-9()]*[^;',/| .]");
+
+        var mc = regex.Matches(members);
+
+        if (mc.Count == 0)
+        {
+            throw new Exception("can't find unit value");
+        }
+
+        List<string> membersList = new List<string>();
+        string winner = String.Empty;
+        
+        foreach (Match match in mc)
+        {
+            string name = match.Value;
+            if (match.Value.Contains("(") || match.Value.Contains(")"))
+            {
+                 name = match.Value.Replace("(", string.Empty);
+                 name = name.Replace(")", string.Empty);
+                 winner = name;
+            }
+            membersList.Add(name);
+        }
+
+        if (winner == String.Empty)
+        {
+            throw new Exception();
+        }
+
+        Roulette roulette = new Roulette(Utility.GetCurrentTime(), winner, membersList);
+        
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        await database.RegisterRoulette(roulette, ctx.Guild);
+        
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+    }
+    
     [Command, Aliases("룰렛정보")]
     public async Task RouletteInfo(CommandContext ctx, [RemainingText] string? name)
     {
