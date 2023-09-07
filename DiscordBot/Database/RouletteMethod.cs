@@ -138,4 +138,80 @@ public partial class DiscordBotDatabase
             await ExecuteNonQueryASync(query);
         }
     }
+    public async Task<RouletteRanking> GetRouletteRanking(DiscordGuild guild)
+    {
+        if (null == _connection)
+        {
+            throw new Exception();
+        }
+
+        const int limitCount = 3;
+
+        await using MySqlCommand command = _connection.CreateCommand();
+        
+        command.CommandText =
+            $@"
+            select name, wins, takingpartcount, (wins / takingpartcount) * 100 as winrate from
+            (
+            select ROULETTEMEMBER.name, count(ROULETTE.winner) as wins, count(ROULETTEMEMBER.rouletteid) as takingpartcount
+            from ROULETTEMEMBER
+            left join ROULETTE
+            on ROULETTEMEMBER.name = ROULETTE.winner 
+            and ROULETTE.guildid = '{guild.Id}'
+            and ROULETTEMEMBER.rouletteid = ROULETTE.id
+            group by ROULETTEMEMBER.name
+            ) A
+            where takingpartcount > (
+            select avg(tc) from 
+            (select name, count(name) as tc from ROULETTEMEMBER
+            group by name
+            having count(name) > 1) B)
+            order by winrate
+            limit {limitCount}";
+
+        var winRates = await GetDatabaseTable<RouletteWinRate>(command);
+        
+        command.CommandText =
+            $@"
+            select name, spentcount, wins from
+            (
+            select ROULETTEMEMBER.name, count(ROULETTE.winner) as wins
+            from ROULETTEMEMBER
+            left join ROULETTE on ROULETTEMEMBER.name = ROULETTE.winner 
+            and ROULETTE.guildid = '{guild.Id}'
+            and ROULETTEMEMBER.rouletteid = ROULETTE.id
+            group by ROULETTEMEMBER.name
+            ) A
+            left join (select
+            ROULETTE.winner as rightwinner, 
+            count(ROULETTEMEMBER.rouletteid) as spentcount
+            from ROULETTEMEMBER
+            inner join ROULETTE on ROULETTE.id = ROULETTEMEMBER.rouletteid 
+            and ROULETTE.winner != ROULETTEMEMBER.name
+            and ROULETTE.guildid = '{guild.Id}'
+            group by rightwinner
+            order by spentcount desc) B
+            on A.name = B.rightwinner
+            group by name
+            order by spentcount desc
+            limit {limitCount}";
+
+        var spentCounts = await GetDatabaseTable<RouletteSpentCount>(command);
+
+        command.CommandText =
+            $@"
+            select ROULETTEMEMBER.name, count(ROULETTEMEMBER.name) as takingpartcount,
+            (select count(*) from ROULETTE where ROULETTE.guildid = '{guild.Id}') as totalgame, 
+            count(ROULETTEMEMBER.name) / (select count(*) from ROULETTE) * 100 as playedgamerate
+            FROM ROULETTE
+            inner join ROULETTEMEMBER on ROULETTEMEMBER.rouletteid = ROULETTE.id
+            where ROULETTE.guildid = '{guild.Id}'
+            group by ROULETTEMEMBER.name
+            order by takingpartcount desc
+            limit {limitCount}";
+
+        var takingParts = await GetDatabaseTable<RouletteTakingPart>(command);
+        
+        return new RouletteRanking(winRates, spentCounts, takingParts);
+    }
 }
