@@ -107,6 +107,71 @@ public class RouletteModules : BaseCommandModule
 
         await ctx.RespondAsync(messageBuilder);
     }
+    
+    [Command, Aliases("룰렛랭킹")]
+    public async Task RouletteRanking(CommandContext ctx)
+    {
+        using var database = new DiscordBotDatabase();
+        await database.ConnectASync();
+        var rouletteRanking = await database.GetRouletteRanking(ctx.Guild);
+
+        DiscordMessageBuilder messageBuilder = new DiscordMessageBuilder();
+
+        var discordEmbedBuilder = new DiscordEmbedBuilder();
+        var embedFields = new List<DiscordEmbedField>();
+        var prevRate = new { index = int.MaxValue, rate = float.MaxValue };
+        for (var i = 0; i < rouletteRanking.WinRates.Count; i++)
+        {
+            var elem = rouletteRanking.WinRates[i];
+            if (Math.Abs(prevRate.rate - elem.winrate) > 0.0001f)
+            {
+                prevRate = new { index = i, rate = elem.winrate }; 
+            }
+            embedFields.Add(new DiscordEmbedField($"{ prevRate.index + 1 }. { elem.name }", $"{elem.winrate:0.0}% ({elem.wins}/{elem.takingpartcount})", true));
+        }
+        discordEmbedBuilder
+            .WithAuthor("좀 걸려라")
+            .WithColor(DiscordColor.Wheat)
+            .AddFields(embedFields);
+        messageBuilder.AddEmbed(discordEmbedBuilder);
+        
+        discordEmbedBuilder = new DiscordEmbedBuilder();
+        embedFields = new List<DiscordEmbedField>();
+        prevRate = new { index = int.MaxValue, rate = float.MaxValue };
+        for (var i = 0; i < rouletteRanking.TakingParts.Count; i++)
+        {
+            var elem = rouletteRanking.TakingParts[i];
+            if (Math.Abs(prevRate.rate - elem.playedgamerate) > 0.0001f)
+            {
+                prevRate = new { index = i, rate = elem.playedgamerate }; 
+            }
+            embedFields.Add(new DiscordEmbedField($"{ prevRate.index + 1 }. { elem.name }", $"{elem.playedgamerate:0.0}% ({elem.takingpartcount}/{elem.totalgame})", true));
+        }
+        discordEmbedBuilder
+            .WithAuthor("참여왕")
+            .WithColor(DiscordColor.Wheat)
+            .AddFields(embedFields);
+        messageBuilder.AddEmbed(discordEmbedBuilder);
+        
+        discordEmbedBuilder = new DiscordEmbedBuilder();
+        embedFields = new List<DiscordEmbedField>();
+        var prevSpentCount = new { index = int.MaxValue, spentCount = int.MaxValue };
+        for (var i = 0; i < rouletteRanking.SpentCounts.Count; i++)
+        {
+            var elem = rouletteRanking.SpentCounts[i];
+            if (Math.Abs(prevSpentCount.spentCount - elem.spentcount) > 0.0001f)
+            {
+                prevSpentCount = new { index = i, spentCount = elem.spentcount }; 
+            }
+            embedFields.Add(new DiscordEmbedField($"{ prevSpentCount.index + 1 }. { elem.name }", $"{elem.spentcount} ({elem.wins})", true));
+        }
+        discordEmbedBuilder
+            .WithAuthor("기부왕")
+            .WithColor(DiscordColor.Wheat)
+            .AddFields(embedFields);
+        messageBuilder.AddEmbed(discordEmbedBuilder);
+        await ctx.RespondAsync(messageBuilder);
+    }
 
     private DiscordEmbedBuilder MakeRouletteEmbedBuilder(Roulette roulette)
     {
