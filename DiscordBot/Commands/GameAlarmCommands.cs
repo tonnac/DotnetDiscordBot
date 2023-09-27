@@ -50,8 +50,21 @@ public class GameAlarmCommands : ApplicationCommandsModule
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         var users = await database.GetSubscribedUser(ctx, gameFlag);
-        
-        // users.RemoveAll(user => user.userid == ctx.User.Id);
+
+        var calledMember = users.Find((user => user.userid == ctx.Member.Id));
+        if (null == calledMember)
+        {
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                new DiscordInteractionResponseBuilder
+                {
+                    Content = "Unsubscribed games can't send alarms."
+                });
+            return;
+        }
+        else
+        {
+            users.RemoveAll(user => user.userid == ctx.User.Id);
+        }
             
         foreach (var databaseUser in users)
         {
@@ -63,13 +76,20 @@ public class GameAlarmCommands : ApplicationCommandsModule
         
         if (users.Count > 0)
         {
-            // await ctx.RespondAsync("메세지를 전송했습니다.");
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                new DiscordInteractionResponseBuilder
+                {
+                    Content = "The message has been sent."
+                });
         }
-        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-            new DiscordInteractionResponseBuilder
-            {
-                Content = "123123"
-            });
+        else
+        {
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                new DiscordInteractionResponseBuilder
+                {
+                    Content = "The subscribed member does not exist."
+                });
+        }
     }
     
     [DisCatSharp.ApplicationCommands.Attributes.SlashCommand("SubscribeGame", "Register as a user in the game you want to be alarm about.")]
