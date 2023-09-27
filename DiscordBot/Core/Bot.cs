@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Reflection;
 using DisCatSharp;
+using DisCatSharp.ApplicationCommands;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
@@ -10,6 +11,7 @@ using DisCatSharp.Interactivity.Extensions;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Net;
 using DiscordBot.Channels;
+using DiscordBot.Commands;
 using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +60,11 @@ public class Bot
             .BuildServiceProvider();
         
         _client.GuildDownloadCompleted += ClientOnGuildDownloadCompleted;
+
+        var appCommands = _client.UseApplicationCommands();
+        appCommands.RegisterGlobalCommands<MyCommand>();
+        appCommands.RegisterGlobalCommands<MySecondCommand>();
+        appCommands.RegisterGlobalCommands<GameAlarmCommands>();
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
         {
