@@ -52,44 +52,36 @@ public class GameAlarmCommands : ApplicationCommandsModule
         var users = await database.GetSubscribedUser(ctx, gameFlag);
 
         var calledMember = users.Find((user => user.userid == ctx.Member.Id));
+        var embedBuilder = new DiscordEmbedBuilder();
         if (null == calledMember)
         {
-            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-                new DiscordInteractionResponseBuilder
-                {
-                    Content = "Unsubscribed games can't send alarms."
-                });
-            return;
+            embedBuilder.WithDescription("Unsubscribed games can't send alarms.");
         }
         else
         {
             users.RemoveAll(user => user.userid == ctx.User.Id);
-        }
             
-        foreach (var databaseUser in users)
-        {
-            if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
+            foreach (var databaseUser in users)
             {
-                await member.SendMessageAsync(GetGameAlarmEmbed( ctx.Member, member, gameFlag));
+                if (ctx.Guild.Members.TryGetValue(databaseUser.userid, out DiscordMember? member))
+                {
+                    await member.SendMessageAsync(GetGameAlarmEmbed( ctx.Member, member, gameFlag));
+                }
+            }
+            
+            if (users.Count > 0)
+            {
+                embedBuilder.WithDescription("The message has been sent.");
+            }
+            else
+            {
+                embedBuilder.WithDescription("The subscribed member does not exist.");
             }
         }
-        
-        if (users.Count > 0)
-        {
-            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-                new DiscordInteractionResponseBuilder
-                {
-                    Content = "The message has been sent."
-                });
-        }
-        else
-        {
-            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-                new DiscordInteractionResponseBuilder
-                {
-                    Content = "The subscribed member does not exist."
-                });
-        }
+
+        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+            new DiscordInteractionResponseBuilder()
+                .AddEmbed(embedBuilder));
     }
     
     [DisCatSharp.ApplicationCommands.Attributes.SlashCommand("SubscribeGame", "Register as a user in the game you want to be alarm about.")]
