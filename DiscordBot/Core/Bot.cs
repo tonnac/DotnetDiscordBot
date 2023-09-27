@@ -62,8 +62,6 @@ public class Bot
         _client.GuildDownloadCompleted += ClientOnGuildDownloadCompleted;
 
         var appCommands = _client.UseApplicationCommands();
-        appCommands.RegisterGlobalCommands<MyCommand>();
-        appCommands.RegisterGlobalCommands<MySecondCommand>();
         appCommands.RegisterGlobalCommands<GameAlarmCommands>();
 
         CommandsNextExtension? commandNext = _client.UseCommandsNext(new CommandsNextConfiguration
