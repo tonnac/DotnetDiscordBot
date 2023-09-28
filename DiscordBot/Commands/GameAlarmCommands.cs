@@ -47,6 +47,9 @@ public class GameAlarmCommands : ApplicationCommandsModule
     [DisCatSharp.ApplicationCommands.Attributes.SlashCommand("GameAlarm", "Send an alarm to registered users.")]
     public static async Task GameAlarm(InteractionContext ctx, [Option("Game", "Select a Game")] GameFlag gameFlag)
     {
+        await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource,
+            new DiscordInteractionResponseBuilder());
+        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         var users = await database.GetSubscribedUser(ctx, gameFlag);
@@ -79,14 +82,15 @@ public class GameAlarmCommands : ApplicationCommandsModule
             }
         }
 
-        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-            new DiscordInteractionResponseBuilder()
-                .AddEmbed(embedBuilder));
+        await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(embedBuilder));
     }
     
     [DisCatSharp.ApplicationCommands.Attributes.SlashCommand("SubscribeGame", "Register as a user in the game you want to be alarm about.")]
     public static async Task SubscribeGame(InteractionContext ctx, [Option("Game", "Select a Game")] SubscribeGameFlag gameParameter, [Option("Action", "Select a Action")] ActionFlag actionParameter)
     {
+        await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource,
+            new DiscordInteractionResponseBuilder());
+        
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         var user = await database.GetDatabaseUser(ctx.Guild, ctx.User);
@@ -132,8 +136,7 @@ public class GameAlarmCommands : ApplicationCommandsModule
             }
         }
 
-        await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-            new DiscordInteractionResponseBuilder().AddEmbed(embedBuilder));
+        await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(embedBuilder));
     }
 
     private static DiscordEmbedBuilder GetGameAlarmEmbed(DiscordMember callingMember, DiscordMember calledMember, GameFlag gameFlag)
