@@ -478,6 +478,51 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Moved Track From &lt;bold&gt;{0}&lt;/bold&gt; To {1} {2}.
+        /// </summary>
+        internal static string move_Complete {
+            get {
+                return ResourceManager.GetString("move_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move songs around in the queue..
+        /// </summary>
+        internal static string move_Description {
+            get {
+                return ResourceManager.GetString("move_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find {0} Track..
+        /// </summary>
+        internal static string move_InvalidIndex {
+            get {
+                return ResourceManager.GetString("move_InvalidIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move index can&apos;t 0.
+        /// </summary>
+        internal static string move_MoveIndexWarning {
+            get {
+                return ResourceManager.GetString("move_MoveIndexWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: {0}move &lt;find music track order&gt; &lt;move order&gt; Example : {0}move 5 3.
+        /// </summary>
+        internal static string move_Usage {
+            get {
+                return ResourceManager.GetString("move_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Make the current channel a bot help channel..
         /// </summary>
         internal static string noticechannel_Description {

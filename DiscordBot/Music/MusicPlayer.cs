@@ -388,6 +388,68 @@ public class MusicPlayer
         await ctx.RespondAsync(embedBuilder);
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
     }
+    
+    public async Task Move(CommandContext ctx, string indexString, string moveIndexString)
+    {
+        if (Connection.CurrentState.CurrentTrack == null)
+        {
+            await ctx.RespondAsync(Localization.ErrorNotQueue);
+            return;
+        }
+
+        int inputFindMusicIndex = int.Parse(indexString);
+        int inputMoveMusicIndex = int.Parse(moveIndexString);
+
+        if (inputFindMusicIndex < 1)
+        {
+            await ctx.RespondAsync(String.Format(Localization.move_Usage, Config.Prefix));
+            return;
+        }
+
+        if (inputMoveMusicIndex == 0)
+        {
+            await ctx.RespondAsync(Localization.move_MoveIndexWarning.Bold());
+            return;
+        }
+
+        MusicTrack? foundMusic = null;
+
+        int playListIndex = 0;
+        for (int i = 0; i < MaxTrackCount; i++)
+        {
+            if (_trackList.TryGetValue(i, out List<MusicTrack>? tracks))
+            {
+                if (inputFindMusicIndex < playListIndex + tracks.Count)
+                {
+                    int findMusicIndex = inputFindMusicIndex - playListIndex;
+                    int moveMusicIndex = inputMoveMusicIndex - playListIndex;
+                    foundMusic = tracks[findMusicIndex];
+
+                    if (tracks.ElementAtOrDefault(moveMusicIndex) == null)
+                    {
+                        moveMusicIndex = Math.Clamp(0, tracks.Count - 1, moveMusicIndex);
+                    }
+
+                    tracks.Remove(foundMusic);
+                    tracks.Insert(moveMusicIndex, foundMusic);
+                    
+                    break;
+                }
+                playListIndex += tracks.Count;
+            }
+        }
+
+        if (foundMusic == null)
+        {
+            await ctx.RespondAsync(String.Format(Localization.move_InvalidIndex.Bold(), inputFindMusicIndex));
+            return;
+        }
+
+        var embedBuilder = new DiscordEmbedBuilder()
+            .WithDescription(String.Format(Localization.move_Complete, inputFindMusicIndex.ToString().InlineCode(), inputMoveMusicIndex.ToString().InlineCode(), foundMusic.GetTrackTitle()));
+        await ctx.RespondAsync(embedBuilder);
+        await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
+    }
 
     public async Task Grab(CommandContext ctx)
     {

@@ -339,4 +339,19 @@
 	<data name="yachtsurrender_Description" xml:space="preserve">
 		<value>항복</value>
 	</data>
+	<data name="move_InvalidIndex" xml:space="preserve">
+		<value>{0}번 음악을 찾을 수 없습니다.</value>
+	</data>
+	<data name="move_Description" xml:space="preserve">
+		<value>대기열에서 음악을 이동합니다.</value>
+	</data>
+	<data name="move_MoveIndexWarning" xml:space="preserve">
+		<value>0번으로는 이동할 수 없습니다.</value>
+	</data>
+	<data name="move_Usage" xml:space="preserve">
+		<value>사용방법: {0}move &lt;찾는 음악 순서&gt; &lt;이동시킬 순서&gt; 예: {0}move 5 3</value>
+	</data>
+	<data name="move_Complete" xml:space="preserve">
+		<value>{2} 음악이 {0} 에서 {1}로 이동했습니다.</value>
+	</data>
 </root>

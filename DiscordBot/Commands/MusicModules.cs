@@ -163,6 +163,18 @@ namespace DiscordBot.Commands
 
             await player.Grab(ctx);
         }
+        
+        [Command, Aliases("m", "이동")]
+        public async Task Move(CommandContext ctx, string indexString, string moveIndexString)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx, false);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Move(ctx, indexString, moveIndexString);
+        }
 
         private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx, bool notCreating = true)
         {
