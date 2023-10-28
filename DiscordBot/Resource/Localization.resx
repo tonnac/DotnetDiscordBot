@@ -339,4 +339,19 @@ This has a lower priority than music added with play.</value>
 	<data name="yachtsurrender_Description" xml:space="preserve">
 		<value>Surrender</value>
 	</data>
+	<data name="move_Description" xml:space="preserve">
+		<value>Move songs around in the queue.</value>
+	</data>
+	<data name="move_Usage" xml:space="preserve">
+		<value>Usage: {0}move &lt;find music track order&gt; &lt;move order&gt; Example : {0}move 5 3</value>
+	</data>
+	<data name="move_MoveIndexWarning" xml:space="preserve">
+		<value>Move index can't 0</value>
+	</data>
+	<data name="move_InvalidIndex" xml:space="preserve">
+		<value>Can't find {0} Track.</value>
+	</data>
+	<data name="move_Complete" xml:space="preserve">
+		<value>Moved Track From &lt;bold&gt;{0}&lt;/bold&gt; To {1} {2}</value>
+	</data>
 </root>
