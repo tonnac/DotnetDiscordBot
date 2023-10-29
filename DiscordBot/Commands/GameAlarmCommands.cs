@@ -18,6 +18,8 @@ public enum GameFlag
     Er = LolAram << 1,
     [ChoiceName("ORD")]
     Ord = Er << 1,
+    [ChoiceName("HPD")]
+    Hpd = Ord << 1,
 }
 
 [Flags]
@@ -29,8 +31,10 @@ public enum SubscribeGameFlag
     Er = GameFlag.Er,
     [ChoiceName("ORD")]
     Ord = GameFlag.Ord,
+    [ChoiceName("HPD")]
+    Hpd = GameFlag.Hpd,
     [ChoiceName("All")]
-    All = LolAram | Er | Ord
+    All = LolAram | Er | Ord | Hpd
 }
 
 [Flags]
@@ -153,6 +157,9 @@ public class GameAlarmCommands : ApplicationCommandsModule
             case GameFlag.Ord:
                 SetORDAlarmEmbed(callingMember, calledMember, embedBuilder);
                 break;
+            case GameFlag.Hpd:
+                SetHPDAlarmEmbed(callingMember, calledMember, embedBuilder);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(gameFlag), gameFlag, null);
         }
@@ -200,5 +207,17 @@ public class GameAlarmCommands : ApplicationCommandsModule
             .WithDescription($"{name}님의 항해 호출이 왔습니다!")
             .WithImageUrl(
                 "https://e1.pxfuel.com/desktop-wallpaper/916/442/desktop-wallpaper-straw-hat-pirates-one-piece-one-piece-crew.jpg");
+    }
+    
+    // ReSharper disable once InconsistentNaming
+    private static void SetHPDAlarmEmbed(DiscordMember callingMember, DiscordMember calledMember,
+        in DiscordEmbedBuilder embedBuilder)
+    {
+        string name = Utility.GetMemberDisplayName(callingMember);
+        embedBuilder
+            .WithColor(DiscordColor.Azure)
+            .WithDescription($"{name}님의 헬포디 호출이 왔습니다!")
+            .WithImageUrl(
+                "https://i.ytimg.com/vi/AHAc8zu07yw/maxresdefault.jpg");
     }
 }
