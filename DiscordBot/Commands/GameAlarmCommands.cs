@@ -20,6 +20,8 @@ public enum GameFlag
     Ord = Er << 1,
     [ChoiceName("Stardew Valley")]
     StardewValley = Ord << 1,
+    [ChoiceName("Lethal Company")]
+    LethalCompany = StardewValley << 1,
 }
 
 [Flags]
@@ -33,8 +35,10 @@ public enum SubscribeGameFlag
     Ord = GameFlag.Ord,
     [ChoiceName("Stardew Valley")]
     StardewValley = GameFlag.StardewValley,
+    [ChoiceName("Lethal Company")]
+    LethalCompany = GameFlag.LethalCompany,
     [ChoiceName("All")]
-    All = LolAram | Er | Ord | GameFlag.StardewValley
+    All = LolAram | Er | Ord | StardewValley | LethalCompany
 }
 
 [Flags]
