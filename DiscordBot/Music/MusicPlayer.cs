@@ -481,7 +481,16 @@ public class MusicPlayer
 
     private async Task<LavalinkTrackLoadingResult?> GetLoadResult(string searchQuery)
     {
-        LavalinkTrackLoadingResult loadResult = await Connection.LoadTracksAsync(LavalinkSearchType.Youtube, searchQuery);
+        LavalinkTrackLoadingResult? loadResult;
+        
+        if (searchQuery.Contains("https://"))
+        {
+            loadResult = await Connection.LoadTracksAsync(searchQuery);
+        }
+        else
+        {
+            loadResult = await Connection.LoadTracksAsync(LavalinkSearchType.Youtube, searchQuery);
+        }
 
         if (loadResult.LoadType == LavalinkLoadResultType.Error || loadResult.LoadType == LavalinkLoadResultType.Empty)
         {
