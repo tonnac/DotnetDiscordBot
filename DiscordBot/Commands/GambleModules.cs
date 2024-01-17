@@ -72,7 +72,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 1, CooldownBucketType.UserAndChannel)]
+    // [Command, Aliases("ddg", "주사위도박"), Cooldown(1, 1, CooldownBucketType.UserAndChannel)]
     public async Task A1_DoDiceGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
@@ -145,7 +145,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
 
-    [Command, Aliases("dfg", "수금도박"), Cooldown(1, 4, CooldownBucketType.UserAndChannel, true, true, 5)]
+    // [Command, Aliases("dfg", "수금도박"), Cooldown(1, 4, CooldownBucketType.UserAndChannel, true, true, 5)]
     public async Task A2_DoFundsGamble(CommandContext ctx, [RemainingText] string? gambleCommand)
     {
         bool isGambleChannel = await _contentsChannels.IsGambleChannel(ctx);
@@ -269,7 +269,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
+    // [Command, Aliases("thx", "감사", "왕왕"), Cooldown(1, 10, CooldownBucketType.User, true, true, 5)]
     public async Task A5_Thanks(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();
@@ -334,7 +334,7 @@ public class GambleModules : BaseCommandModule
         await ctx.RespondAsync(embedBuilder);
     }
     
-    [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
+    // [Command, Aliases("rthx", "랜덤감사", "랜덤왕왕"), Cooldown(1, 5, CooldownBucketType.User, true, true, 5)]
     public async Task A7_RandomThanks(CommandContext ctx)
     {
         using var database = new DiscordBotDatabase();

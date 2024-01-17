@@ -25,7 +25,7 @@ public class BossModules : BaseCommandModule
     }
     
     //[Command, Aliases("ba")]
-    [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
+    // [Command, Aliases("ba", "공격", "보스공격"), Cooldown(1, 300, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task A1_BossAttack(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         bool isBossGameChannel = await _contentsChannels.IsBossGameChannel(ctx);
