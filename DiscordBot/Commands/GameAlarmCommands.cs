@@ -164,6 +164,9 @@ public class GameAlarmCommands : ApplicationCommandsModule
             case GameFlag.StardewValley:
                 SetStardewValleyAlarmEmbed(callingMember, calledMember, embedBuilder);
                 break;
+            case GameFlag.LethalCompany:
+                SetLethalCompanyAlarmEmbed(callingMember, calledMember, embedBuilder);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(gameFlag), gameFlag, null);
         }
@@ -223,5 +226,16 @@ public class GameAlarmCommands : ApplicationCommandsModule
             .WithDescription($"{name}님의 스타듀밸리 호출이 왔습니다!")
             .WithImageUrl(
                 "https://nas.battlepage.com/upload/2019/0616/161422100dcf2aaa5da5c42626650f7ff19e651e.png");
+    }
+    
+    private static void SetLethalCompanyAlarmEmbed(DiscordMember callingMember, DiscordMember calledMember,
+        in DiscordEmbedBuilder embedBuilder)
+    {
+        string name = Utility.GetMemberDisplayName(callingMember);
+        embedBuilder
+            .WithColor(DiscordColor.Azure)
+            .WithDescription($"{name}님의 리썰컴퍼니 호출이 왔습니다!")
+            .WithImageUrl(
+                "https://i.ytimg.com/vi/CGmAkS4YbAg/hqdefault.jpg");
     }
 }
