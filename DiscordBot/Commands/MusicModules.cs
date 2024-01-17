@@ -3,6 +3,7 @@ using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
+using DisCatSharp.Net;
 using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.Logging;
@@ -191,7 +192,7 @@ namespace DiscordBot.Commands
 
                 if (player.Connection.Channel != ctx.Member.VoiceState?.Channel)
                 {
-                    await ctx.RespondAsync(String.Format(Localization.NotInSameChannel, player.Connection.Node.Discord.CurrentUser.Username));
+                    await ctx.RespondAsync(String.Format(Localization.NotInSameChannel, player.Connection.Discord.CurrentUser.Username));
                     return null;
                 }
 
@@ -216,9 +217,10 @@ namespace DiscordBot.Commands
             var musicPlayer = await CreateMusicPlayer(client, channel);
             if (musicPlayer != null)
             {
-                musicPlayer.Connection.ChannelDisconnected += (connection) =>
+                musicPlayer.Connection.Session.GuildPlayerDestroyed += (sender, args) =>
                 {
-                    musicPlayers.Remove(connection.Guild);
+                    musicPlayers.Remove(args.Guild);
+                    return Task.CompletedTask;
                 };
                 musicPlayers.TryAdd(channel.Guild, musicPlayer);
             }
@@ -235,18 +237,18 @@ namespace DiscordBot.Commands
                 return null;
             }
 
-            LavalinkNodeConnection? node = lava.ConnectedNodes.Values.First();
-            if (node == null)
-            {
-                client.Logger.LogError(new EventId(201, "LavaLinkNodeConnection"), null, "LavaLinkNodeConnection null");
-                return null;
-            }
-
-            LavalinkGuildConnection? conn = await node.ConnectAsync(channel);
+            var conn = lava.GetGuildPlayer(channel.Guild);
             if (conn == null)
             {
-                client.Logger.LogError(new EventId(202, "LavaLinkGuildConnection"), null, "LavaLinkGuildConnection null");
-                return null;
+                var session = lava.ConnectedSessions.Values.First();
+                await session.ConnectAsync(channel);
+                conn = lava.GetGuildPlayer(channel.Guild);
+                if (conn == null)
+                {
+                    client.Logger.LogError(new EventId(202, "LavaLinkGuildConnection"), null,
+                        "LavaLinkGuildConnection null");
+                    return null;
+                }
             }
 
             MusicPlayer musicPlayer = new MusicPlayer(conn);

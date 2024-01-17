@@ -2,6 +2,7 @@
 using DisCatSharp.CommandsNext;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink;
+using DisCatSharp.Lavalink.Entities;
 using DiscordBot.Database;
 
 namespace DiscordBot.Music;
@@ -53,7 +54,7 @@ public class MusicTrack
 
     public virtual string GetTrackTitle()
     {
-        string trackName = $"[{LavaLinkTrack.Title}]({LavaLinkTrack.Uri})";
+        string trackName = $"[{LavaLinkTrack.Info.Title}]({LavaLinkTrack.Info.Uri})";
         switch (TrackIndex)
         {
             case 2:

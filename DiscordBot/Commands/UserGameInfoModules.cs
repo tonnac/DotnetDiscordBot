@@ -449,7 +449,7 @@ public class UserGameInfoModules : BaseCommandModule
         }
     }
     
-    [Command, Aliases("ug", "보석강화"), Cooldown(1, 1800, CooldownBucketType.UserAndChannel, true)]
+    // [Command, Aliases("ug", "보석강화"), Cooldown(1, 1800, CooldownBucketType.UserAndChannel, true)]
     public async Task A6_UpgradeGem(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         bool isForgeChannel = await _contentsChannels.IsForgeChannel(ctx);
@@ -689,7 +689,7 @@ public class UserGameInfoModules : BaseCommandModule
         }
     }
 
-    [Command, Aliases("ggp", "보석수급"), Cooldown(1, 3600, CooldownBucketType.User, true)]
+    // [Command, Aliases("ggp", "보석수급"), Cooldown(1, 3600, CooldownBucketType.User, true)]
     public async Task A8_GetGemPay(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         using var database = new DiscordBotDatabase();

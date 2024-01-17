@@ -11,10 +11,10 @@ public partial class DiscordBotDatabase
     {
         var member = await track.User.ConvertToMember(track.Channel.Guild);
 
-        string title = track.LavaLinkTrack.Title.Replace("'", "\\'");
+        string title = track.LavaLinkTrack.Info.Title.Replace("'", "\\'");
         
         return await ExecuteNonQueryASync(
-            $"insert into MUSIC (id, identifier, title, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Identifier}', '{title}', '{track.LavaLinkTrack.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(Utility.TimeFormat)}', '{track.StartTime.ToString(Utility.TimeFormat)}', '{track.FinishTime.ToString(Utility.TimeFormat)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
+            $"insert into MUSIC (id, identifier, title, uri, guildid, addedtime, starttime, finishtime, userid, nickname, priority) values ('{GetSHA256(track)}', '{track.LavaLinkTrack.Info.Identifier}', '{title}', '{track.LavaLinkTrack.Info.Uri}', '{track.Channel.GuildId}', '{track.AddedTime.ToString(Utility.TimeFormat)}', '{track.StartTime.ToString(Utility.TimeFormat)}', '{track.FinishTime.ToString(Utility.TimeFormat)}','{track.User.Id}', '{Utility.GetMemberDisplayName(member)}', '{track.TrackIndex}')");
     }
 
     public async Task<List<DatabaseMusic>> GetDatabaseMusics(DiscordGuild guild)
