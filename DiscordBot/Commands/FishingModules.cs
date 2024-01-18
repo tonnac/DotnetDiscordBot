@@ -40,7 +40,7 @@ public class FishingModules : BaseCommandModule
     }
 
     //[Command, Aliases("f")]
-    // [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.UserAndChannel, true, true, 10)]
+    [Command, Aliases("f", "낚시"), Cooldown(1, 900, CooldownBucketType.UserAndChannel, true, true, 10)]
     public async Task Fishing(CommandContext ctx, [RemainingText] string? tempCommand)
     {
         bool isFishingChannel = await _contentsChannels.IsFishingChannel(ctx);
