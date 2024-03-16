@@ -334,6 +334,29 @@ internal sealed class LavalinkRestClient
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
+	internal async Task<LavalinkPlayer> UpdatePlayerSpeedAsync(
+		string sessionId,
+		ulong guildId,
+		LavalinkSpeedFilters filters,
+		bool noReplace = false
+	)
+	{
+		var queryDict = this.GetDefaultParams();
+		queryDict.Add("noReplace", noReplace.ToString().ToLower());
+		var pld = new LavalinkRestPlayerSpeedPayload(guildId.ToString())
+		{
+			Filters = filters
+		};
+		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
+		var path = GetPath(route, new
+		{
+			session_id = sessionId,
+			guild_id = guildId
+		});
+		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
+	}
+
 	/// <summary>
 	/// Updates the players voice state.
 	/// </summary>
