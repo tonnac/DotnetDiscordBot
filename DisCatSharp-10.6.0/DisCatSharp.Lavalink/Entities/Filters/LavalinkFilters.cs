@@ -79,3 +79,15 @@ public sealed class LavalinkFilters
 	[JsonProperty("pluginFilters")]
 	public Optional<Dictionary<string, IPluginFilter>> PluginFilters { get; set; }
 }
+
+/// <summary>
+/// Represents various lavalink filters.
+/// </summary>
+public sealed class LavalinkSpeedFilters
+{
+	/// <summary>
+	/// Gets or sets the timescale.
+	/// </summary>
+	[JsonProperty("timescale")]
+	public LavalinkTimescale Timescale { get; set; }
+}

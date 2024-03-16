@@ -10,7 +10,9 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Lavalink.Entities.Filters;
 using DisCatSharp.Lavalink.Enums;
+using DisCatSharp.Lavalink.Enums.Filters;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Lavalink.Models;
 using DisCatSharp.Lavalink.Payloads;
@@ -402,6 +404,16 @@ public sealed class LavalinkGuildPlayer
 	public async Task<LavalinkGuildPlayer> PauseAsync()
 	{
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: true).ConfigureAwait(false);
+		return this;
+	}
+
+	public async Task<LavalinkGuildPlayer> SpeedAsync(float speed)
+	{
+		var filter = new LavalinkSpeedFilters
+		{
+			Timescale = new(speed, 1.0f, 1.0f),
+		};
+		this.Player = await this.Session.Rest.UpdatePlayerSpeedAsync(this.Session.Config.SessionId!, this.GuildId, filter).ConfigureAwait(false);
 		return this;
 	}
 

@@ -721,6 +721,33 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sets the Player speed {0}.
+        /// </summary>
+        internal static string speed_complete {
+            get {
+                return ResourceManager.GetString("speed_complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sets the speed of the track Min 0.1 Max 3.0.
+        /// </summary>
+        internal static string speed_Description {
+            get {
+                return ResourceManager.GetString("speed_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: {0}speed 1.5.
+        /// </summary>
+        internal static string speed_Usage {
+            get {
+                return ResourceManager.GetString("speed_Usage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Length.
         /// </summary>
         internal static string TotalLength {

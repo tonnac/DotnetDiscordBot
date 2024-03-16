@@ -354,4 +354,13 @@
 	<data name="move_Complete" xml:space="preserve">
 		<value>{2} 음악이 {0} 에서 {1}로 이동했습니다.</value>
 	</data>
+	<data name="speed_Description" xml:space="preserve">
+		<value>플레이어의 재생속도를 변경합니다 최소 0.1 최대 3.0</value>
+	</data>
+	<data name="speed_Usage" xml:space="preserve">
+		<value>사용방법: {0}speed 1.5</value>
+	</data>
+	<data name="speed_complete" xml:space="preserve">
+		<value>재생속도가 변경되었습니다. {0}</value>
+	</data>
 </root>

@@ -67,3 +67,18 @@ internal sealed class LavalinkRestPlayerUpdatePayload
 		this.GuildId = guildId;
 	}
 }
+
+
+internal sealed class LavalinkRestPlayerSpeedPayload
+{
+	[JsonProperty("filters")]
+	internal LavalinkSpeedFilters Filters { get; set; }
+
+	internal LavalinkRestPlayerSpeedPayload(string guildId)
+	{
+		this.GuildId = guildId;
+	}
+
+	[JsonProperty("guildId")]
+	internal string GuildId { get; set; }
+}

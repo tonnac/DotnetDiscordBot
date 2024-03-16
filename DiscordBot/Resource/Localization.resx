@@ -354,4 +354,13 @@ This has a lower priority than music added with play.</value>
 	<data name="move_Complete" xml:space="preserve">
 		<value>Moved Track From &lt;bold&gt;{0}&lt;/bold&gt; To {1} {2}</value>
 	</data>
+	<data name="speed_Description" xml:space="preserve">
+		<value>Sets the speed of the track Min 0.1 Max 3.0</value>
+	</data>
+	<data name="speed_Usage" xml:space="preserve">
+		<value>Usage: {0}speed 1.5</value>
+	</data>
+	<data name="speed_complete" xml:space="preserve">
+		<value>Sets the Player speed {0}</value>
+	</data>
 </root>

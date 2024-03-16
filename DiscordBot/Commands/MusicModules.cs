@@ -176,6 +176,18 @@ namespace DiscordBot.Commands
 
             await player.Move(ctx, indexString, moveIndexString);
         }
+        
+        [Command, Aliases("sp", "재생속도")]
+        public async Task Speed(CommandContext ctx, [RemainingText] string speed)
+        {
+            MusicPlayer? player = await GetMusicPlayer(ctx);
+            if (player == null)
+            {
+                return;
+            }
+
+            await player.Speed(ctx, speed);
+        }
 
         private async Task<MusicPlayer?> GetMusicPlayer(CommandContext ctx, bool notCreating = true)
         {
