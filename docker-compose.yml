@@ -17,7 +17,7 @@ services:
       - ./DiscordBot/playlists.json:/app/playlists.json:rw
   
   lavalink:
-    image: fredboat/lavalink:dev
+    image: fredboat/lavalink:4.0
     container_name: music-lavalink
     hostname: lavalink
     ports:
@@ -36,6 +36,13 @@ services:
       - ${SQL_PORT}:${SQL_PORT}
     environment:
       MYSQL_ROOT_PASSWORD: ${SQL_PASSWORD}
+    command:
+      - --innodb-buffer-pool-size=1G
+      - --innodb-flush-log-at-trx-commit=0
+      - --innodb-log-file-size=1G
+      - --max-allowed-packet=100M
+    volumes:
+      - mysqlvolume:/var/lib/mysql
     restart: unless-stopped
     networks:
       - discord
