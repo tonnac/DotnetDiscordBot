@@ -24,6 +24,19 @@ namespace DiscordBot.Commands
 
         private readonly DiscordMessageHandler _messageHandler;
         private readonly OpenAIAPI _openAiApi;
+        
+        [Command]
+        [RequireBotPermissions(Permissions.ManageMessages), RequirePermissions(Permissions.Administrator)]
+        public async Task MusicChannel(CommandContext ctx)
+        {
+            string result = await ContentsChannels.ToggleChannelContent(ctx.Channel, ContentsFlag.Music);
+            string emoji = VEmoji.RedCrossMark;
+            if ("+" == result)
+            {
+                emoji = VEmoji.GreenCheckBox;
+            }
+            await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode(emoji));
+        }
 
         [Command]
         [RequireBotPermissions(Permissions.ManageMessages), RequirePermissions(Permissions.Administrator)]

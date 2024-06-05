@@ -235,6 +235,27 @@ public class MusicPlayer
         await ctx.RespondAsync(embedBuilder);
         await ctx.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
     }
+    
+    public async Task Leave()
+    {
+        var embedBuilder = new DiscordEmbedBuilder()
+            .WithDescription($"{DiscordEmoji.FromName(Connection.Discord, ":notes:")} | {Localization.disconnectedmembernotexist.Bold()}");
+        MusicTrack? currentTrack = null;
+        foreach (var (_, value) in _trackList)
+        {
+            if (value.Count > 0)
+            {
+                currentTrack = value[0];
+                break;
+            }
+        }
+
+        if (currentTrack != null)
+        {
+            await currentTrack.Channel.SendMessageAsync(embedBuilder);
+        }
+        await Connection.DisconnectAsync();
+    }
 
     public async Task Queue(CommandContext ctx)
     {
@@ -603,12 +624,15 @@ public class MusicPlayer
             }
             else
             {
-                var embedBuilder = new DiscordEmbedBuilder()
-                    .WithColor(DiscordColor.Gold)
-                    .WithAuthor(Localization.ErrorNotQueue)
-                    .WithTimestamp(DateTime.Now);
-                await trackPair.Key.Channel.SendMessageAsync(embedBuilder);
-                await Connection.DisconnectAsync();
+                if (Connection.IsConnected)
+                {
+                    var embedBuilder = new DiscordEmbedBuilder()
+                        .WithColor(DiscordColor.Gold)
+                        .WithAuthor(Localization.ErrorNotQueue)
+                        .WithTimestamp(DateTime.Now);
+                    await trackPair.Key.Channel.SendMessageAsync(embedBuilder);
+                    await Connection.DisconnectAsync();
+                }
             }
         }
     }

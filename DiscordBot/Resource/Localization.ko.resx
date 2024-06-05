@@ -363,4 +363,13 @@
 	<data name="speed_complete" xml:space="preserve">
 		<value>재생속도가 변경되었습니다. {0}</value>
 	</data>
+	<data name="disconnectedmembernotexist" xml:space="preserve">
+		<value>채널에 멤버가 존재하지 않아 종료합니다.</value>
+	</data>
+	<data name="NotMusicChannel" xml:space="preserve">
+		<value>음악 채널이 아닙니다.</value>
+	</data>
+	<data name="NotMusicChannelExistMusicChannel" xml:space="preserve">
+		<value>음악 채널이 아닙니다. {0}채널에서 다시 시도해 주세요.</value>
+	</data>
 </root>

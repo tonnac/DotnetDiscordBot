@@ -45,12 +45,22 @@ public class ContentsChannels
     }
     private async Task<ulong> GetNoticeChannelId(DiscordGuild guild)
     {
+        return await GetChannelId(guild, ContentsFlag.Notice);
+    }
+    
+    public async Task<ulong> GetMusicChannelId(DiscordGuild guild)
+    {
+        return await GetChannelId(guild, ContentsFlag.Music);
+    }
+
+    private async Task<ulong> GetChannelId(DiscordGuild guild, ContentsFlag flag)
+    {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
         var channelContents = await database.GetChannelContents(guild);
         foreach (ChannelContents content in channelContents)
         {
-            if (((ContentsFlag)content.contentsvalue).HasFlag(ContentsFlag.Notice))
+            if (((ContentsFlag)content.contentsvalue).HasFlag(flag))
             {
                 return content.channelid;
             }
@@ -81,6 +91,10 @@ public class ContentsChannels
     public async Task<bool> IsDisableChatChannel(CommandContext ctx)
     {
         return await IsAvailableContents(ctx.Channel, ContentsFlag.DisableChat);
+    }
+    public async Task<bool> IsMusicChannel(CommandContext ctx)
+    {
+        return await IsAvailableContents(ctx.Channel, ContentsFlag.Music);
     }
 
     private async Task<bool> IsAvailableContents(DiscordChannel channel, ContentsFlag flag)
