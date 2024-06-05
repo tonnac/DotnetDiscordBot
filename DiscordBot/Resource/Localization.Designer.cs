@@ -342,6 +342,15 @@ namespace DiscordBot.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disconnected No members exist in the channel.
+        /// </summary>
+        internal static string disconnectedmembernotexist {
+            get {
+                return ResourceManager.GetString("disconnectedmembernotexist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sends calls to registered members..
         /// </summary>
         internal static string doaram_Description {
@@ -546,6 +555,24 @@ namespace DiscordBot.Resource {
         internal static string NotInSameChannel {
             get {
                 return ResourceManager.GetString("NotInSameChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a Music Channel..
+        /// </summary>
+        internal static string NotMusicChannel {
+            get {
+                return ResourceManager.GetString("NotMusicChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a Music Channel. Try again {0} Channel.
+        /// </summary>
+        internal static string NotMusicChannelExistMusicChannel {
+            get {
+                return ResourceManager.GetString("NotMusicChannelExistMusicChannel", resourceCulture);
             }
         }
         

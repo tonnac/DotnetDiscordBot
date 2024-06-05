@@ -363,4 +363,13 @@ This has a lower priority than music added with play.</value>
 	<data name="speed_complete" xml:space="preserve">
 		<value>Sets the Player speed {0}</value>
 	</data>
+	<data name="disconnectedmembernotexist" xml:space="preserve">
+		<value>Disconnected No members exist in the channel</value>
+	</data>
+	<data name="NotMusicChannel" xml:space="preserve">
+		<value>Not a Music Channel.</value>
+	</data>
+	<data name="NotMusicChannelExistMusicChannel" xml:space="preserve">
+		<value>Not a Music Channel. Try again {0} Channel</value>
+	</data>
 </root>
