@@ -10,6 +10,12 @@ public partial class DiscordBotDatabase : IDisposable
 {
     private MySqlConnection? _connection = null;
 
+    public async Task<bool> RegisterMessage(string message)
+    {
+        return await ExecuteNonQueryASync(
+            $"insert into MESSAGE (time, message) values ('{Utility.GetCurrentTime().ToString(Utility.TimeFormat)}', '{message}')");
+    }
+
     public void Dispose()
     {
         if (_connection != null)
