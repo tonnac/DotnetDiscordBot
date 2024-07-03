@@ -87,6 +87,13 @@ public class DiscordMessageHandler
             });
         }
 
+        if (args.Author.Id == 0)
+        {
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.RegisterMessage(args.Message.Content);
+        }
+
         if (IsDisableChatChannel(args.Channel) && args.Message.Content != string.Empty)
         {
             DeleteMessage();
