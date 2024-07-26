@@ -14,7 +14,7 @@ public partial class DiscordBotDatabase : IDisposable
     public async Task<bool> RegisterMessage(MessageCreateEventArgs args)
     {
         return await ExecuteNonQueryASync(
-            $"insert into MESSAGE (id, time, guildid, nickname, message) values ('{GetSHA256(args.Guild, args.Message.Author)}', '{Utility.GetCurrentTime().ToString(Utility.TimeFormat)}', '{args.Guild.Id}', '{args.Message.Author.Username}','{args.Message.Content}')");
+            $"insert into MESSAGE (id, time, guildid, nickname, message) values ('{GetSHA256(Utility.GetCurrentTime(), args.Message.Author)}', '{Utility.GetCurrentTime().ToString(Utility.TimeFormat)}', '{args.Guild.Id}', '{args.Message.Author.Username}','{args.Message.Content}')");
     }
 
     public void Dispose()
