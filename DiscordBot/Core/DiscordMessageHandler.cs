@@ -10,6 +10,7 @@ public class DiscordMessageHandler
 {
     private readonly SortedSet<ulong> _disableChatChannels = new();
     private readonly SortedSet<ulong> _noticeChannels = new();
+    private readonly SortedSet<ulong> _saveChannels = new();
     public DiscordMessageHandler(DiscordClient client)
     {
         client.MessageCreated += MessageCreated;
@@ -28,6 +29,11 @@ public class DiscordMessageHandler
         {
             _noticeChannels.Remove(channel.channelid);
         }
+        else if (_saveChannels.Contains(channel.channelid) &&
+                 ((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Save) == false)
+        {
+            _saveChannels.Remove(channel.channelid);
+        }
         else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.DisableChat))
         {
             _disableChatChannels.Add(channel.channelid);
@@ -35,6 +41,10 @@ public class DiscordMessageHandler
         else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Notice))
         {
             _noticeChannels.Add(channel.channelid);
+        }
+        else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Save))
+        {
+            _saveChannels.Add(channel.channelid);
         }
     }
 
@@ -45,6 +55,11 @@ public class DiscordMessageHandler
     private bool IsNoticeChannel(DiscordChannel discordChannel)
     {
         return _noticeChannels.Contains(discordChannel.Id);
+    }
+    
+    private bool IsSaveChannel(DiscordChannel discordChannel)
+    {
+        return _saveChannels.Contains(discordChannel.Id);
     }
 
     public async Task RunASync()
@@ -58,9 +73,15 @@ public class DiscordMessageHandler
             {
                 _disableChatChannels.Add(channel.channelid);
             }
-            else if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Notice))
+            
+            if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Notice))
             {
                 _noticeChannels.Add(channel.channelid);
+            }
+            
+            if (((ContentsFlag)channel.contentsvalue).HasFlag(ContentsFlag.Save))
+            {
+                _saveChannels.Add(channel.channelid);
             }
         }
     }
@@ -87,20 +108,21 @@ public class DiscordMessageHandler
             });
         }
 
-        if (args.Author.Id == 0)
-        {
-            using var database = new DiscordBotDatabase();
-            await database.ConnectASync();
-            await database.RegisterMessage(args.Message.Content);
-        }
-
         if (IsDisableChatChannel(args.Channel) && args.Message.Content != string.Empty)
         {
             DeleteMessage();
         }
-        else if (IsNoticeChannel(args.Channel))
+        
+        if (IsNoticeChannel(args.Channel))
         {
             DeleteMessage();
+        }
+        
+        if (IsSaveChannel(args.Channel))
+        {
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.RegisterMessage(args);
         }
     }
 }

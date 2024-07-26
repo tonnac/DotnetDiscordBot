@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 using DiscordBot.Music;
 using MySqlConnector;
 
@@ -10,10 +11,10 @@ public partial class DiscordBotDatabase : IDisposable
 {
     private MySqlConnection? _connection = null;
 
-    public async Task<bool> RegisterMessage(string message)
+    public async Task<bool> RegisterMessage(MessageCreateEventArgs args)
     {
         return await ExecuteNonQueryASync(
-            $"insert into MESSAGE (time, message) values ('{Utility.GetCurrentTime().ToString(Utility.TimeFormat)}', '{message}')");
+            $"insert into MESSAGE (id, time, guildid, nickname, message) values ('{GetSHA256(args.Guild, args.Message.Author)}', '{Utility.GetCurrentTime().ToString(Utility.TimeFormat)}', '{args.Guild.Id}', '{args.Message.Author.Username}','{args.Message.Content}')");
     }
 
     public void Dispose()
@@ -67,6 +68,11 @@ public partial class DiscordBotDatabase : IDisposable
     private static string GetSHA256(DateTime time, ulong guildid)
     {
         return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{guildid}{time}"));
+    }
+    
+    private static string GetSHA256(DateTime time, DiscordUser user)
+    {
+        return GetSHA256_Internal(Encoding.UTF8.GetBytes($"{user.Id}{time}"));
     }
     
     private static string GetSHA256_Internal(byte[] inBytes)
