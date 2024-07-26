@@ -11,4 +11,5 @@ public enum ContentsFlag : ulong
     Forge = Gamble << 1,
     Battle = Forge << 1,
     Music = Battle << 1,
+    Save = Music << 1,
 }
