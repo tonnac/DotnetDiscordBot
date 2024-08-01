@@ -46,6 +46,8 @@ services:
     restart: unless-stopped
     networks:
       - discord
-        
+
+volumes:
+  mysqlvolume:
 networks:
   discord:
