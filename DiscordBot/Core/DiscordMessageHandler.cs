@@ -14,6 +14,7 @@ public class DiscordMessageHandler
     public DiscordMessageHandler(DiscordClient client)
     {
         client.MessageCreated += MessageCreated;
+        client.MessageDeleted += OnMessageDeleted;
         
         DiscordBotDatabase.OnChannelContentsChanged += OnChannelContentsChanged;
     }
@@ -83,6 +84,16 @@ public class DiscordMessageHandler
             {
                 _saveChannels.Add(channel.channelid);
             }
+        }
+    }
+
+    private async Task OnMessageDeleted(DiscordClient sender, MessageDeleteEventArgs args)
+    {
+        if (IsSaveChannel(args.Channel))
+        {
+            using var database = new DiscordBotDatabase();
+            await database.ConnectASync();
+            await database.DeleteMessage(args);
         }
     }
     
