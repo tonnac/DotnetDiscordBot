@@ -3,7 +3,7 @@ server: # REST and WS server
   address: 0.0.0.0
 lavalink:
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.2"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
       snapshot: false
   server:
     password: "bonsoirDocker"
@@ -38,6 +38,25 @@ lavalink:
     #proxyUser: "" # Optional user for basic authentication fields, leave blank if you don't use basic auth
     #proxyPassword: "" # Password for basic authentication
 
+plugins:
+  youtube:
+    enabled: true
+    allowDirectPlaylistIds: true
+    allowDirectVideoIds: true
+    allowSearch: true
+    oauth:
+      enabled: true
+    clients:
+      - MUSIC
+      - TVHTML5EMBEDDED
+      - ANDROID_MUSIC
+      - ANDROID_TESTSUITE
+      - WEB
+      - WEBEMBEDDED
+      - ANDROID
+      - ANDROID_LITE
+      - MEDIA_CONNECT
+      - IOS
 metrics:
   prometheus:
     enabled: false
