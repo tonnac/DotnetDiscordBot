@@ -3,20 +3,8 @@ server: # REST and WS server
   address: 0.0.0.0
 lavalink:
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.2"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
       snapshot: false
-      youtube:
-        enabled: true
-        allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
-        allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
-        allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
-        # The clients to use for track loading. See below for a list of valid clients.
-        # Clients are queried in the order they are given (so the first client is queried first and so on...)
-        clients:
-          - MUSIC
-          - ANDROID_TESTSUITE
-          - WEB
-          - TVHTML5EMBEDDED
   server:
     password: "bonsoirDocker"
     sources:
@@ -50,6 +38,25 @@ lavalink:
     #proxyUser: "" # Optional user for basic authentication fields, leave blank if you don't use basic auth
     #proxyPassword: "" # Password for basic authentication
 
+plugins:
+  youtube:
+    enabled: true
+    allowDirectPlaylistIds: true
+    allowDirectVideoIds: true
+    allowSearch: true
+    oauth:
+      enabled: true
+    clients:
+      - MUSIC
+      - TVHTML5EMBEDDED
+      - ANDROID_MUSIC
+      - ANDROID_TESTSUITE
+      - WEB
+      - WEBEMBEDDED
+      - ANDROID
+      - ANDROID_LITE
+      - MEDIA_CONNECT
+      - IOS
 metrics:
   prometheus:
     enabled: false
@@ -70,4 +77,19 @@ logging:
 
   level:
     root: INFO
-    lavalink: INFO
+    # Set this to DEBUG to enable more detailed logging from Lavalink
+    lavalink: DEBUG
+    # Set this to TRACE to see all WebSocket messages sent
+    lavalink.server.io.SocketContext: TRACE
+    # Log all track exceptions (COMMON, SUSPICIOUS & FAULT)
+    com.sedmelluq.discord.lavaplayer.tools.ExceptionTools: DEBUG
+    # Log YouTube Plugin stuff (only needed if you have issues with YouTube)
+    dev.lavalink.youtube: DEBUG
+    dev.lavalink.youtube.http.YoutubeOauth2Handler: INFO
+    
+  request:
+    enabled: true
+    includeClientInfo: true
+    includeHeaders: false
+    includeQueryString: true
+    includePayload: true
