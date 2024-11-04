@@ -8,7 +8,7 @@ lavalink:
   server:
     password: "bonsoirDocker"
     sources:
-      youtube: true
+      youtube: false
       bandcamp: true
       soundcloud: true
       twitch: true
@@ -77,4 +77,19 @@ logging:
 
   level:
     root: INFO
-    lavalink: INFO
+    # Set this to DEBUG to enable more detailed logging from Lavalink
+    lavalink: DEBUG
+    # Set this to TRACE to see all WebSocket messages sent
+    lavalink.server.io.SocketContext: TRACE
+    # Log all track exceptions (COMMON, SUSPICIOUS & FAULT)
+    com.sedmelluq.discord.lavaplayer.tools.ExceptionTools: DEBUG
+    # Log YouTube Plugin stuff (only needed if you have issues with YouTube)
+    dev.lavalink.youtube: DEBUG
+    dev.lavalink.youtube.http.YoutubeOauth2Handler: INFO
+    
+  request:
+    enabled: true
+    includeClientInfo: true
+    includeHeaders: false
+    includeQueryString: true
+    includePayload: true
