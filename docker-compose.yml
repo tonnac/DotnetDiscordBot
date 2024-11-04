@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   dotnetdiscordbot:
     build: .
@@ -17,7 +15,7 @@ services:
       - ./DiscordBot/playlists.json:/app/playlists.json:rw
   
   lavalink:
-    image: fredboat/lavalink:4.0
+    image: fredboat/lavalink:4.0.8
     container_name: music-lavalink
     hostname: lavalink
     ports:
