@@ -15,7 +15,7 @@ services:
       - ./DiscordBot/playlists.json:/app/playlists.json:rw
   
   lavalink:
-    image: fredboat/lavalink:4.0.8
+    image: fredboat/lavalink:4.1.1
     container_name: music-lavalink
     hostname: lavalink
     ports:
