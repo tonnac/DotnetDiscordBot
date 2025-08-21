@@ -13,9 +13,6 @@ public static class Config
     public static readonly string LavaLinkAuthorization;
     public static readonly ushort LavaLinkPort;
     
-    // OpenAi
-    public static readonly string OpenAiApiKey;
-    
     // Database
     public static readonly string DatabaseServer;
     public static readonly ushort DatabasePort;
