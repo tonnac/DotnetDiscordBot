@@ -101,7 +101,14 @@ public class ContentsChannels
     {
         using var database = new DiscordBotDatabase();
         await database.ConnectASync();
-        ChannelContents channelContents = await database.GetChannelContent(channel);
-        return ((ContentsFlag)channelContents.contentsvalue).HasFlag(flag);
+        if (database.IsConnected())
+        {
+            ChannelContents channelContents = await database.GetChannelContent(channel);
+            return ((ContentsFlag)channelContents.contentsvalue).HasFlag(flag);
+        }
+        else
+        {
+            return true;
+        }
     }
 }

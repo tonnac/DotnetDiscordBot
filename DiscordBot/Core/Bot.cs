@@ -17,7 +17,6 @@ using DiscordBot.Music;
 using DiscordBot.Resource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OpenAI_API;
 
 namespace DiscordBot.Core;
 public class Bot
@@ -57,7 +56,6 @@ public class Bot
             .AddSingleton(_contentsChannels)
             .AddSingleton(_client)
             .AddSingleton(_messageHandler)
-            .AddSingleton(new OpenAIAPI(new APIAuthentication(Config.OpenAiApiKey)))
             .BuildServiceProvider();
         
         _client.GuildDownloadCompleted += ClientOnGuildDownloadCompleted;

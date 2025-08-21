@@ -5,18 +5,6 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordBot", "DiscordBot\DiscordBot.csproj", "{E7269906-AFDE-4A68-8731-65D305246917}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp", "DisCatSharp-10.6.0\DisCatSharp\DisCatSharp.csproj", "{89F47395-8855-4887-A635-8A8279F45CB3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCatSharp-10.6.0\DisCatSharp.Common\DisCatSharp.Common.csproj", "{5930A780-ECE2-4BDA-A53D-103DA8E0AD2A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp-10.6.0\DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{675D822E-D43C-414F-8552-0A9E436FC2B5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp-10.6.0\DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{E70FAB1A-A4F3-41AF-8985-CC16E02979A4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands", "DisCatSharp-10.6.0\DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj", "{60118F90-B270-4AAA-9CC9-759F83145C67}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Interactivity", "DisCatSharp-10.6.0\DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj", "{9DE3ADB6-ED4C-4552-807A-67331DC06396}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,30 +15,6 @@ Global
 		{E7269906-AFDE-4A68-8731-65D305246917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7269906-AFDE-4A68-8731-65D305246917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7269906-AFDE-4A68-8731-65D305246917}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89F47395-8855-4887-A635-8A8279F45CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89F47395-8855-4887-A635-8A8279F45CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89F47395-8855-4887-A635-8A8279F45CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89F47395-8855-4887-A635-8A8279F45CB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5930A780-ECE2-4BDA-A53D-103DA8E0AD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5930A780-ECE2-4BDA-A53D-103DA8E0AD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5930A780-ECE2-4BDA-A53D-103DA8E0AD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5930A780-ECE2-4BDA-A53D-103DA8E0AD2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{675D822E-D43C-414F-8552-0A9E436FC2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{675D822E-D43C-414F-8552-0A9E436FC2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{675D822E-D43C-414F-8552-0A9E436FC2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{675D822E-D43C-414F-8552-0A9E436FC2B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E70FAB1A-A4F3-41AF-8985-CC16E02979A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E70FAB1A-A4F3-41AF-8985-CC16E02979A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E70FAB1A-A4F3-41AF-8985-CC16E02979A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E70FAB1A-A4F3-41AF-8985-CC16E02979A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{60118F90-B270-4AAA-9CC9-759F83145C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60118F90-B270-4AAA-9CC9-759F83145C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60118F90-B270-4AAA-9CC9-759F83145C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60118F90-B270-4AAA-9CC9-759F83145C67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DE3ADB6-ED4C-4552-807A-67331DC06396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DE3ADB6-ED4C-4552-807A-67331DC06396}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DE3ADB6-ED4C-4552-807A-67331DC06396}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DE3ADB6-ED4C-4552-807A-67331DC06396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

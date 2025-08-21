@@ -31,6 +31,11 @@ public partial class DiscordBotDatabase : IDisposable
         }
     }
 
+    public bool IsConnected()
+    {
+        return _connection != null;
+    }
+
     public async Task ConnectASync()
     {
         var builder = new MySqlConnectionStringBuilder

@@ -1,7 +1,0 @@
-{
-	"DisCatSharp": {
-		"Discord": {
-			"Intents": "GuildEmojisAndStickers,GuildMembers,GuildInvites,GuildMessageReactions"
-		}
-	}
-}

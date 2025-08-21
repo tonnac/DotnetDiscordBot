@@ -1,8 +1,0 @@
-### YamlMime:TableOfContent
-items:
-- uid: DisCatSharp.Hosting.DependencyInjection
-  name: DisCatSharp.Hosting.DependencyInjection
-  items:
-  - uid: DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions
-    name: ServiceCollectionExtensions
-memberLayout: SeparatePages

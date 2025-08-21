@@ -528,29 +528,6 @@ public class MusicPlayer
         await ctx.RespondAsync(respondEmbed);
     }
 
-    public async Task Speed(CommandContext ctx, string speedString)
-    {
-        if (Connection.Player.Track == null)
-        {
-            await ctx.RespondAsync(Localization.ErrorNotQueue);
-            return;
-        }
-
-        if (float.TryParse(speedString, out float speed))
-        {
-            speed = Math.Clamp(speed, 0.1f, 3.0f);
-            
-            await Connection.SpeedAsync(speed);
-            var embedBuilder = new DiscordEmbedBuilder()
-                .WithDescription($"{DiscordEmoji.FromName(ctx.Client, ":dash:")} | {string.Format(Localization.speed_complete, speed).Bold()}");
-            await ctx.RespondAsync(embedBuilder);
-        }
-        else
-        {
-            await ctx.RespondAsync(String.Format(Localization.speed_Usage, Config.Prefix));
-        }
-    }
-
     private async Task<LavalinkTrackLoadingResult?> GetLoadResult(string searchQuery)
     {
         LavalinkTrackLoadingResult? loadResult;
